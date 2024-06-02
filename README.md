@@ -12,15 +12,31 @@ Frontend: Interactive interface with React/Angular and Socket.IO.
 
 Contacts:
 Amar Kumal - amarkumal9137@gmail.com
+
+
 Suraj Padase - shripadase@gmail.com
+
+
 Chetan Almaje - chetanalmaje2001@gmail.com
+
+
 Shreyansh Dubey - shrayanshdubey.sd@gmail.com 
+
+
 Maheshwar Mitkari - maheshmitkari6229@gmail.com
 
 
 Project Link: https://github.com/hehegiggle/Hehegiggle.git
+
+
 Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
+
+
 High Level Document: https://1drv.ms/w/s!AltDnJQqRgq3mKhZ2uhud1kyvUDijw
+
+
 Jira Board:  https://hehegiggle.atlassian.net/jira/software/projects/SCRUM/boards/1
+
+
 Confluence: https://hehegiggle.atlassian.net/wiki/home
 
