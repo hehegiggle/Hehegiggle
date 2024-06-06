@@ -1,5 +1,16 @@
 Project name: Hehe-Where giggle matter
 
+🌟 Tech stack: SpringBoot + React + Socket.io 
+🎃 Authentication & Authorization with JWT
+📝 Create Post
+🗑️ Delete Post
+❤️ Like/Unlike Post
+💬 Comment to a Post
+👥 Follow/Unfollow Users
+🌓 Dark/Light Mode
+💬 Chat App With Image Support
+🔊 Notification
+⭐ Deployment 
 
 Features:
 
