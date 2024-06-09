@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* background-color: rgb(6,5,47); */
+  background: black;
+  color: rgb(0, 0, 0);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Button {
+  background-color: #13111a;
+  padding: 1rem 2rem;
+  border-radius: 0.5px;
+}
+.Button:hover {
+  background-color: white;
+}
+.hideScrollbar::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+
+.logo {
+  font-family: "Playball", cursive;
+  font-weight: bold;
+  font-size: 2rem;
+  /* font-family: 'Poppins', sans-serif; */
+}
+
+
+.card {
+  background: black;
+  position: relative;
+  border-radius: 6px;
+  border-color: rgb(119, 130, 139);
+  display: flex;
+  flex-direction: column;
+  /* font-size: 1.5em; */
+  color: rgb(255, 255, 255);
+}
+
+.card-post{
+  background: black;
+  position: relative;
+  border-radius: 6px;
+  border-color: rgb(119, 130, 139);
+  display: flex;
+  flex-direction: column;
+  /* font-size: 1.5em; */
+  color: rgb(88 199 250 / 100%);
+}
