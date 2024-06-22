@@ -1,0 +1,58 @@
+version: '3'
+services:
+  eureka-server:
+    image: shreyansh432/eurekaservice:latest
+    restart: unless-stopped
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+  
+  
+  api-gw-server:
+    image: shreyansh432/apigateway:latest
+    restart: unless-stopped
+    container_name: apigw-service
+    ports:
+      - "8082:8082"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  userservice:
+    image: shreyansh432/usermicroservice:latest
+    restart: unless-stopped
+    container_name: userservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  postservice:
+    image: shreyansh432/postmicroservice:latest
+    restart: unless-stopped
+    container_name: postservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  reelservice:
+    image: shreyansh432/reelmicroservice:latest
+    restart: unless-stopped
+    container_name: reelservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  commentservice:
+    image: shreyansh432/commentmicroservice:latest
+    restart: unless-stopped
+    container_name: commentservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
