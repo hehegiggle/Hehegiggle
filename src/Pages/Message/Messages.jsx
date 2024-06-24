@@ -40,7 +40,7 @@ function Messages() {
   const [stompClient, setStompClient] = useState(null);
 
   useEffect(() => {
-    const sock = new SockJS("http://localhost:8087/ws");
+    const sock = new SockJS("https://hehegiggle-web.vercel.app/ws");
     const stomp = Stomp.over(sock);
     setStompClient(stomp);
 
