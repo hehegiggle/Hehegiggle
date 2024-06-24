@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/Chetan
 Project name: Hehe-Where giggle matter
 
 🌟 Tech stack: SpringBoot + React + Socket.io 
@@ -50,21 +46,17 @@ Maheshwar Mitkari - maheshmitkari6229@gmail.com
 
 Project Link:  https://github.com/hehegiggle/Hehegiggle.git
 
-<<<<<<< HEAD
 Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
-=======
+
 Product and Sprint Backlog:   https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
->>>>>>> origin/Chetan
+
+Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
 
 High Level Document:  https://1drv.ms/w/s!AltDnJQqRgq3mKhZ2uhud1kyvUDijw
 
 Jira Board:   https://hehegiggle.atlassian.net/jira/software/projects/SCRUM/boards/1
 
 Confluence:  https://hehegiggle.atlassian.net/wiki/home
-
-<<<<<<< HEAD
-=======
-# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -134,6 +126,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> 67f573e (hehe giggle commited)
-=======
->>>>>>> origin/Chetan
