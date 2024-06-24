@@ -1,0 +1,27 @@
+.edit-post-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .edit-post-card {
+    background-color: #fff;
+  }
+  
+  .edit-post-image-card img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .edit-post-caption-card textarea {
+    width: 100%;
+    resize: none;
+    border-radius: 20px;
+  }
+  
+  .edit-post-location-card input {
+    width: 100%;
+    border-radius: 20px;
+  }
