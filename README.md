@@ -48,10 +48,6 @@ Project Link:  https://github.com/hehegiggle/Hehegiggle.git
 
 Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
 
-Product and Sprint Backlog:   https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
-
-Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
-
 High Level Document:  https://1drv.ms/w/s!AltDnJQqRgq3mKhZ2uhud1kyvUDijw
 
 Jira Board:   https://hehegiggle.atlassian.net/jira/software/projects/SCRUM/boards/1
@@ -66,10 +62,10 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the app in the development mode.
+Open (http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
+The page will reload when you make changes.
 You may also see any lint errors in the console.
 
 ### `npm test`
