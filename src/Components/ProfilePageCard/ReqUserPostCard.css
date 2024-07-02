@@ -1,0 +1,72 @@
+.post {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Crop the image to cover the entire container */
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 8px;
+}
+
+.overlay-text {
+  font-size: 12px;
+}
+
+.icon {
+  font-size: 16px;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  width: 600px; /* Set your desired fixed width */
+  height: 600px; /* Set your desired fixed height */
+  max-width: 90%;
+  max-height: 90%;
+  overflow: hidden; /* Hide overflowing content */
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensure image fits within container without stretching */
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
