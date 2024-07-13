@@ -93,10 +93,8 @@ textarea:focus {
   }
 
   .locationInput{
-    border: none;
-    outline: none;
     width: 90%;
-    border:1x solid red
+    font-size: large;
   }
   .locationInput::placeholder{
     font-size: medium;

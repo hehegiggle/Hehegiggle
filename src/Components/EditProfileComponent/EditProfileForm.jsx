@@ -22,7 +22,7 @@ const EditProfileForm = () => {
   const { user } = useSelector((store) => store);
   const toast = useToast();
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import { Box } from "@chakra-ui/react"; // Import Box from Chakra UI
 import SearchUserCard from "./SearchUserCard";
 
 const SearchComponent = ({ setIsSearchVisible, searchQuery }) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
 

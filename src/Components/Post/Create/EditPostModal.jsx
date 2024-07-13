@@ -26,7 +26,7 @@ const EditPostModal = ({ isOpen, onClose }) => {
   const { postId } = useParams();
   const toast = useToast();
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { post, user } = useSelector((store) => store);
 
   const [postData, setPostData] = useState({
@@ -91,12 +91,12 @@ const EditPostModal = ({ isOpen, onClose }) => {
       finalFocusRef={finalRef}
       isOpen={isOpen}
       onClose={handleClose}
-      size="lg"
+      size="sm"
     >
       <ModalOverlay />
       <ModalContent
         style={{
-          marginTop: "20px",
+          marginTop: "4%",
           borderRadius: "20px",
           background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
         }}

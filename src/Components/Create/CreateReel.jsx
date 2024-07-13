@@ -15,7 +15,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
   const [isImageUploaded, setIsImageUploaded] = useState("");
   const toast = useToast();
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { user, reels } = useSelector((store) => store);
   const [videoUrl, setVideoUrl] = useState();
   const [postData, setPostData] = useState({
@@ -89,11 +89,13 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
           style={{
             borderRadius: "20px",
             background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
+            width: "60%",
+            height: "75%"
           }}
         >
           <div className="flex justify-between py-1 px-10 items-center text-white">
             <p>Create New Reel</p>
-            <Button onClick={handleSubmit} size={"sm"} variant="ghost">
+            <Button onClick={handleSubmit} size={"sm"} variant="ghost" textColor="black">
               Upload Reel
             </Button>
           </div>
@@ -101,10 +103,10 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
           <hr className="hrLine" />
 
           <ModalBody>
-            <div className="modalBodyBox flex flex-col h-[70vh] justify-start items-center">
-              <div className="w-full mb-4">
+            <div className="modalBodyBox flex flex-col justify-start items-center">
+              <div className="w-full">
                 <div
-                  className="card bg-white shadow-md rounded px-4 py-2 mb-4"
+                  className="card bg-white shadow-md rounded px-4 py-2 mb-5"
                   style={{
                     borderRadius: "20px",
                     background: "linear-gradient(135deg, #8697C4, #EDE8F5)"
@@ -127,7 +129,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="w-full flex flex-col justify-center items-center mb-4">
+              <div className="w-full flex flex-col justify-center items-center mb-2">
                 {isImageUploaded === "" && (
                   <div
                     onDragLeave={handleDragLeave}
@@ -164,13 +166,13 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                 {postData.video && (
                   <div className="w-full flex justify-center">
                     <video
-                      width="250"
-                      height="250"
+                      width="30%"
+                      height="35%"
                       controls
                       className="object-contain"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: "20px"}}
                     >
-                      <source src={videoUrl} type="video/mp4" />
+                      <source src={videoUrl} type="video/mp4"/>
                     </video>
                   </div>
                 )}

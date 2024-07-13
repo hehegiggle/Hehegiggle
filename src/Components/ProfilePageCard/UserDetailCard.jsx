@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { followUserAction, unFollowUserAction } from "../../Redux/User/Action";
-import "./UserDetailCard.css"
-import { useToast } from "@chakra-ui/react";
+import { useToast, Box, Image, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 
 const UserDetailCard = ({ user, isRequser, isFollowing }) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { post } = useSelector((store) => store);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,7 +29,7 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
       status: "success",
       duration: 1000,
       isClosable: true,
-    })
+    });
   };
 
   const handleUnFollowUser = () => {
@@ -48,60 +47,55 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
   }, [isFollowing]);
 
   return (
-    <div className="py-10 mb-5" style={{background: "linear-gradient(135deg, #8697C4, #EDE8F5)", borderRadius:"20px"}}>
-      <div className="flex items-center">
-        <div className="ml-6">
-          <img
-            className="h-20 w-20 lg:w-32 lg:h-32 rounded-full"
+    <Box py={10} mb={5} bgGradient="linear(to-r, #8697C4, #EDE8F5)" borderRadius="20px">
+      <Flex alignItems="center">
+        <Box ml={6}>
+          <Image
+            boxSize={{ base: "120px", lg: "128px" }}
+            borderRadius="full"
             src={
               user?.image ||
               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             }
             alt=""
-            style={{objectFit:"cover"}}
+            objectFit="cover"
           />
-        </div>
-        <div className="ml-20 space-y-5 text-lg w-[50%] md:w-[60%] lg:w-[80%]">
-          <div className="flex space-x-10 items-center">
-            <p className="text-xl">{user?.username}</p>
-            <button className="text-xs py-1 px-5 bg-slate-100 hover:bg-slate-300 rounded-md font-semibold">
-              {isRequser ? (
-                <span onClick={goToAccountEdit}>Edit profile</span>
-              ) : isFollow ? (
-                <span onClick={handleUnFollowUser}>Unfollow</span>
-              ) : (
-                <span onClick={handleFollowUser}>Follow</span>
-              )}
-            </button>
-            </div>
-          <div className="flex space-x-10">
-            <div>
-              <span className="font-semibold mr-2">
+        </Box>
+        <Box ml={20} w={{ base: "50%", md: "60%", lg: "80%" }} textAlign={{ base: "center", md: "left" }}>
+          <Flex alignItems="center" justifyContent={{ base: "center", md: "flex-start" }} mb={5}>
+            <Text fontSize="xl">{user?.username}</Text>
+            <Spacer mx={2} />
+            <Button size="xl" mr={{md:'66%'}} bg="white" onClick={isRequser ? goToAccountEdit : isFollow ? handleUnFollowUser : handleFollowUser}>
+              {isRequser ? "Edit profile" : isFollow ? "Unfollow" : "Follow"}
+            </Button>
+          </Flex>
+          <Flex justifyContent={{ base: "center", md: "flex-start" }} mb={5}>
+            <Box mr={10}>
+              <Text as="span" fontWeight="semibold" mr={2}>
                 {post?.reqUserPost?.length || 0}
-              </span>
-              <span>Posts</span>
-            </div>
-
-            <div>
-              <span className="font-semibold mr-2">
+              </Text>
+              <Text as="span">Posts</Text>
+            </Box>
+            <Box mr={10}>
+              <Text as="span" fontWeight="semibold" mr={2}>
                 {user?.follower?.length}
-              </span>
-              <span>Followers</span>
-            </div>
-            <div>
-              <span className="font-semibold mr-2">
+              </Text>
+              <Text as="span">Followers</Text>
+            </Box>
+            <Box>
+              <Text as="span" fontWeight="semibold" mr={2}>
                 {user?.following?.length}
-              </span>
-              <span>Following</span>
-            </div>
-          </div>
-          <div>
-            <p className="font-semibold">{user?.name}</p>
-            <p className="font-thin text-sm">{user?.bio}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+              </Text>
+              <Text as="span">Following</Text>
+            </Box>
+          </Flex>
+          <Box textAlign={{ base: "left", md: "left" }}>
+            <Text fontWeight="semibold">{user?.name}</Text>
+            <Text fontSize="sm" fontStyle="italic">{user?.bio}</Text>
+          </Box>
+        </Box>
+      </Flex>
+    </Box>
   );
 };
 

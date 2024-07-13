@@ -44,9 +44,9 @@ export const createPost = (data) => async (dispatch) => {
 
 
 //Find All Posts By Users ID (All posts are displayed using this)
-export const findUserPost = (data) => async (dispatch) => {
+export const findUserPost = () => async () => {
   
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   useEffect(() => {
     axios
       .get(`${BASE_URL}/api/posts/`, {
@@ -80,6 +80,7 @@ export const findUserPost = (data) => async (dispatch) => {
 
 //Displaying all uploaded Posts in Profile section
 export const reqUserPostAction = (data) => async (dispatch) => {
+  
   try {
     const res = await fetch(`${BASE_URL}/api/posts/all/${data.userId}`, {
       method: "GET",
@@ -88,10 +89,6 @@ export const reqUserPostAction = (data) => async (dispatch) => {
         Authorization: `Bearer ${data.jwt}`,
       },
     });
-
-    if (!res.ok) {
-      throw new Error("Failed to find user posts");
-    }
 
     const resData = await res.json();
     dispatch({ type: REQ_USER_POST, payload: resData });

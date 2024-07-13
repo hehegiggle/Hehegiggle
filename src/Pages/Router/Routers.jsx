@@ -17,7 +17,7 @@ import Notification from "../Notification/Notification";
 const Routers = () => {
   const { reels } = useSelector((state) => state.reel);
   const location = useLocation();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Routers = () => {
   const isResetPassword = location.pathname === "/resetpassword";
 
   return (
-    <div>
+   <>
       {/* donot display navbar in Login and Signup page */}
       {!isLoginPage && !isSignupPage && !isForgotPasswordPage && !isMessagePage  && !isResetPassword && <Navbar />}
       {/* donot display sidebar in Login and Signup page */}
@@ -67,7 +67,7 @@ const Routers = () => {
           <Route path="/resetpassword" element={<ResetPassword />}/>
         </Routes>
       )}
-    </div>
+      </>
   );
 };
 

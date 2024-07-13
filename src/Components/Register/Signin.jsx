@@ -22,7 +22,7 @@ const Signin = () => {
   const { error } = useSelector((store) => store.auth);
   const toast = useToast();
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     if (token) dispatch(getUserProfileAction(token));
@@ -34,7 +34,7 @@ const Signin = () => {
       toast({
         title: "Welcome to HeHe Giggle 🤭🤭🤭",
         status: "success",
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
     }
@@ -52,7 +52,7 @@ const Signin = () => {
       toast({
         title: errorMessage,
         status: "error",
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
     }

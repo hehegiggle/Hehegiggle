@@ -5,14 +5,12 @@ import { BsBookmark, BsBookmarkFill, BsDot } from "react-icons/bs";
 import { FaRegComment } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import {
   isPostLikedByUser,
   isReqUserPost,
   isSavedPost,
   timeDifference,
 } from "../../../Config/Logic";
-
 import {
   deletePostAction,
   likePostAction,
@@ -21,7 +19,6 @@ import {
   unSavePostAction,
 } from "../../../Redux/Post/Action";
 import CommentModal from "../../Comment/CommentModal";
-
 import "./PostCard.css";
 import EditPostModal from "../Create/EditPostModal";
 import { CgMoreVertical } from "react-icons/cg";
@@ -29,7 +26,7 @@ import { CgMoreVertical } from "react-icons/cg";
 const PostCard = ({ username, location, postImage, post }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { user } = useSelector((store) => store);
   const [isSaved, setIsSaved] = useState(false);
   const [isPostLiked, setIsPostLiked] = useState(false);
@@ -93,7 +90,7 @@ const PostCard = ({ username, location, postImage, post }) => {
     toast({
       title: "You have unsaved the post 🔓🔓🔓",
       status: "error",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };
@@ -151,13 +148,13 @@ const PostCard = ({ username, location, postImage, post }) => {
   };
 
   if (!post) {
-    return null; // Early return if post is undefined
+    return null;
   }
 
   return (
-    <div className="w-full mb-6" style={{ maxWidth: "70%" }}>
+    <div className="mb-6" style={{ maxWidth: "70%"}}>
       <div
-        className="shadow-xl rounded-md overflow-hidden"
+        className="shadow-2xl rounded-md overflow-hidden"
         style={{
           borderRadius: 20,
           background: "linear-gradient(135deg, #8697C4, #EDE8F5)",

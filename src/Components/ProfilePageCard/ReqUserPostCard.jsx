@@ -4,13 +4,16 @@ import './ReqUserPostCard.css';
 import { AiFillHeart } from 'react-icons/ai';
 import { BsBookmarkFill, BsBookmark } from "react-icons/bs";
 import { unSavePostAction } from '../../Redux/Post/Action';
+import { Box, useToast } from '@chakra-ui/react';
+
 
 const ReqUserPostCard = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [isSaved, setIsSaved] = useState(true);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const dispatch = useDispatch();
+  const toast = useToast();
   const data = {
     jwt: token,
     postId: post?.id,
@@ -24,14 +27,20 @@ const ReqUserPostCard = ({ post }) => {
   const handleUnSavePost = () => {
     dispatch(unSavePostAction(data));
     setIsSaved(false);
+    toast({
+      title: "You have unsaved the post 💔💔💔",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    });
     window.location.reload(); // Reload the page
   };
 
   return (
     <>
-      <div className='p-2'>
-        <div className='post w-80 h-80'>
-          <div className='image-container'>
+      <Box className='mt-5' marginLeft={{base:'8', md:'10'}}>
+        <Box className='post' w={{md:'80'}} h={{md:'80'}}>
+          <Box className='image-container'>
             <img
               className='image'
               src={post?.image}
@@ -39,15 +48,15 @@ const ReqUserPostCard = ({ post }) => {
               onClick={() => handleImageClick(post?.image)}
               style={{borderRadius:"20px"}}
             />
-          </div>
+          </Box>
           <div className='overlay' style={{borderRadius:"20px"}}>
             <div className='overlay-text flex justify-between '>
               <div className='flex items-center'><AiFillHeart className='icon mr-1' /> <span>{post?.likedByUsers?.length}</span></div>
               <div className='flex items-center'>{isSaved ? <BsBookmarkFill className='icon mr-1' style={{cursor:"pointer"}} onClick={handleUnSavePost}/> : <BsBookmark />}</div>
             </div>
           </div>
-        </div>
-      </div>
+        </Box>
+      </Box>
       {isModalOpen && (
         <div className='modal'>
           <div className='modal-content'>

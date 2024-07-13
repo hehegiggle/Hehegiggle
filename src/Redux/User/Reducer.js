@@ -14,6 +14,7 @@ const initialState = {
   updatedUser: null,
   error: null,
   loading: false,
+  userId: null,
   userByIds: [],
   searchUser: {
     data: [],

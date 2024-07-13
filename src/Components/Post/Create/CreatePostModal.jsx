@@ -1,5 +1,5 @@
 import { Modal, ModalBody, ModalContent, ModalOverlay } from "@chakra-ui/modal";
-import { useToast } from "@chakra-ui/react";
+import { Box, Flex, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FaPhotoVideo } from "react-icons/fa";
 import "./CreatePostModal.css";
@@ -17,7 +17,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
   const toast = useToast();
 
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { user } = useSelector((store) => store);
 
   const [postData, setPostData] = useState({
@@ -31,9 +31,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
     setPostData((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
-  useEffect(() => {
-    
-  }, [file]);
+  useEffect(() => {}, [file]);
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -57,7 +55,6 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
   };
 
   const handleOnChange = async (e) => {
-
     const file = e.target.files[0];
     if (
       file &&
@@ -87,7 +84,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
         status: "success",
         duration: 1000,
         isClosable: true,
-      })
+      });
     }
   };
 
@@ -102,8 +99,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
   return (
     <div>
       <Modal
-        size={"4xl"}
-        className=""
+        size={{ base: "sm", md: "md", lg: "4xl" }}
         finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={handleClose}
@@ -111,43 +107,43 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
         <ModalOverlay />
         <ModalContent
           fontSize={"sm"}
-          style={{
-            borderRadius: "20px",
-            background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
-          }}
+          borderRadius="20px"
+          bgGradient="linear(to-b, #8697C4, #EDE8F5)"
         >
-          <div className="flex justify-between py-1 px-10 items-center text-white">
+          <Flex justify="space-between" py={1} px={10} align="center" textColor="white">
             <p>Create New Post</p>
             <Button
               onClick={handleSubmit}
-              className="inline-flex"
-              size={"sm"}
+              size="sm"
               variant="ghost"
+              textColor="black"
             >
               Upload Post
             </Button>
-          </div>
+          </Flex>
 
           <hr className="hrLine" />
 
           <ModalBody>
-            <div className="modalBodyBox flex h-[70vh] justify-between">
-              <div className="w-[50%] flex flex-col justify-center items-center">
+            <Flex direction={{ base: "column", md: "row" }} h={{ base: "auto", md: "70vh" }} justify="space-between">
+              <Flex
+                w={{ base: "100%", md: "50%" }}
+                direction="column"
+                justify="center"
+                align="center"
+              >
                 {isImageUploaded === "" && (
                   <div
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     className={`drag-drop h-full`}
+                    style={{ borderRadius: "20px", backgroundColor: isDragOver ? "#f0f0f0" : "transparent" }}
                   >
-                    <div className="flex justify-center flex-col items-center">
-                      <FaPhotoVideo
-                        className={`text-3xl ${
-                          isDragOver ? "text-800" : ""
-                        }`}
-                      />
-                      <p>Drag photos here </p>
-                    </div>
+                    <Flex justify="center" direction="column" align="center">
+                      <FaPhotoVideo className={`text-3xl ${isDragOver ? "text-800" : ""}`} />
+                      <p>Drag photos here</p>
+                    </Flex>
 
                     <label
                       htmlFor="file-upload"
@@ -173,19 +169,19 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                     className=""
                     src={postData.image}
                     alt="dropped-img"
-                    style={{ borderRadius: "20px" }}
+                    style={{ borderRadius: "20px", width: "100%", objectFit: "cover", marginRight:"5%"}}
                   />
                 )}
-              </div>
-              <div className="w-[50%]">
-                <div
-                  style={{
-                    background: "linear-gradient(135deg, #8697C4, #EDE8F5)",
-                    borderRadius: "20px",
-                  }}
-                  className="card bg-white shadow-md rounded px-4 py-2 mb-4"
+              </Flex>
+              <Flex w={{ base: "100%", md: "50%" }} direction="column" mt={{ base: 4, md: 0 }}>
+                <Box
+                  bgGradient="linear(to-r, #8697C4, #EDE8F5)"
+                  borderRadius="20px"
+                  p={4}
+                  mb={4}
+                  shadow="md"
                 >
-                  <div className="flex items-center">
+                  <Flex align="center">
                     <img
                       className="w-7 h-7 rounded-full"
                       src={
@@ -193,52 +189,52 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                       }
                       alt=""
-                      style={{objectFit:"cover"}}
-                    />{" "}
-                    <p className="font-semibold ml-4">
-                      {user?.reqUser?.username}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="card bg-white shadow-md rounded px-4 py-2 mb-4"
-                  style={{ borderRadius: "20px", background: "linear-gradient(135deg, #8697C4, #EDE8F5)"}}
-                >
-                  <div className="px-2">
-                    <textarea
-                    style={{background: "linear-gradient(135deg, #8697C4, #EDE8F5)", color:"black"}}
-                      className="captionInput"
-                      placeholder="Write a Caption..."
-                      name="caption"
-                      rows="12"
-                      onChange={handleInputChange}
+                      style={{ objectFit: "cover" }}
                     />
-                  </div>
-                  <div className="flex justify-between px-2">
-                    <p className="opacity-70">
-                      {postData.caption?.length}/2,200
-                    </p>
-                  </div>
-                </div>
+                    <p className="font-semibold ml-4">{user?.reqUser?.username}</p>
+                  </Flex>
+                </Box>
 
-                <div
-                  className="card bg-white shadow-md rounded px-4 py-2 mb-4"
-                  style={{ borderRadius: "20px", background: "linear-gradient(135deg, #8697C4, #EDE8F5)"}}
+                <Box
+                  bgGradient="linear(to-r, #8697C4, #EDE8F5)"
+                  borderRadius="20px"
+                  p={4}
+                  mb={4}
+                  shadow="md"
                 >
-                  <div className="p-2 flex justify-between items-center">
+                  <textarea
+                    style={{ background: "transparent", color: "black", width: "100%", borderRadius: "10px" }}
+                    className="captionInput"
+                    placeholder="Write a Caption..."
+                    name="caption"
+                    rows="10"
+                    onChange={handleInputChange}
+                  />
+                  <Flex justify="space-between" px={2}>
+                    <p className="opacity-70">{postData.caption?.length}/2,200</p>
+                  </Flex>
+                </Box>
+
+                <Box
+                  bgGradient="linear(to-r, #8697C4, #EDE8F5)"
+                  borderRadius="20px"
+                  p={4}
+                  mb={2}
+                  shadow="md"
+                >
+                  <Flex align="center">
                     <input
-                    style={{ background: "linear-gradient(120deg, #8697C4, #EDE8F5)", borderRadius:"20px"}}
+                      style={{ background: "transparent", borderRadius: "20px", width: "100%" }}
                       className="locationInput"
                       type="text"
                       placeholder="Add Location"
                       name="location"
                       onChange={handleInputChange}
                     />
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </Flex>
+                </Box>
+              </Flex>
+            </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>

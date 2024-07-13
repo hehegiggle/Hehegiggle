@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import HomeRight from "../../Components/HomeRight/HomeRight";
 import PostCard from "../../Components/Post/PostCard/PostCard";
 import { suggetions, timeDifference } from "../../Config/Logic";
-import { findUserPost } from "../../Redux/Post/Action";
 import {
   findByUserIdsAction,
   getUserProfileAction,
@@ -16,7 +15,7 @@ import { FaRegLaughWink } from "react-icons/fa";
 const HomePage = () => {
   const dispatch = useDispatch();
   const [userIds, setUserIds] = useState([]);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const reqUser = useSelector((store) => store.user.reqUser);
   const { user, post } = useSelector((store) => store);
   const [suggestedUser, setSuggestedUser] = useState([]);
@@ -43,7 +42,7 @@ const HomePage = () => {
       })
       .then((res) => setPosted(res.data))
       .catch((err) => console.log(err.message));
-  }, [BASE_URL, token]);
+  }, [BASE_URL, token, post.createdPost, post.deletedPost, post.updatedPost]);
 
   useEffect(() => {
     const data = {
@@ -52,43 +51,43 @@ const HomePage = () => {
     };
 
     if (userIds.length > 0) {
-      dispatch(findUserPost(data));
       dispatch(findByUserIdsAction(data));
     }
   }, [userIds, post.createdPost, post.deletedPost, post.updatedPost, dispatch]);
 
   useEffect(() => {
-    // Update posted state when userPost in Redux changes
     setPosted(post.userPost);
   }, [post.userPost]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <Flex mt={20} flex="1" overflow="hidden">
+    <Flex direction="column" height="100vh" overflow="hidden">
+      <Flex mt={{ sm:"5.5%", md:"4.3%", lg:"6.5%", xl:'5.5%'}} flex="1" overflow="hidden">
         <Box
-          width="80%"
-          ml="22%"
-          p={5}
+          width={{ base: "100%", lg: "80%" }}
+          ml={{ base: '15%', lg: "18%" }}
+          p={{ base: 2, md: 5 }}
+          mt={{base:"4.5%", lg:"0%"}}
           overflowY="auto"
-          style={{ height: "calc(100vh - 70px)", scrollbarWidth: "none" }} // Hide scrollbar
-          sx={{ "&::-webkit-scrollbar": { display: "none" } }} // For Webkit browsers
+          height="calc(100vh - 70px)"
+          sx={{
+            "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar for Webkit browsers
+            scrollbarWidth: "none", // Hide scrollbar
+          }}
         >
-          <div
-            className="space-y-10 postsBox w-full"
-            style={{ paddingTop: "10px" }}
-          >
+          <Box className="space-y-10 postsBox" pt={2}>
             {posted.length === 0 ? (
               <Flex
-              justifyContent="center"
-              alignItems="center"
-              mr="32%"
-              flexDirection="column"
-            >
-              <FaRegLaughWink size="15rem" />
-              <Text fontSize="xl" fontWeight="bold" textAlign="center" mt={4}>
-                Be the first to create a post!
-              </Text>
-            </Flex>
+                justifyContent="center"
+                alignItems="flex-start"
+                flexDirection="column"
+                mt={{ base: 10, md: '10%' }}
+                ml={{md:'22%'}}
+              >
+                <FaRegLaughWink size="15rem" />
+                <Text fontSize="xl" fontWeight="bold" textAlign="center" mt={4}>
+                  Be the first to create a post!
+                </Text>
+              </Flex>
             ) : (
               posted.map((post) => (
                 <PostCard
@@ -108,11 +107,12 @@ const HomePage = () => {
                 />
               ))
             )}
-          </div>
+          </Box>
         </Box>
 
         <Box
-          width="23%"
+          display={{ base: "block", md: "block" }}
+          width="24%"
           p={7}
           position="fixed"
           top="80px"
@@ -123,7 +123,7 @@ const HomePage = () => {
           <HomeRight suggestedUser={suggestedUser} />
         </Box>
       </Flex>
-    </div>
+    </Flex>
   );
 };
 

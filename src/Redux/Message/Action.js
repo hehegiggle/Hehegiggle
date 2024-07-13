@@ -50,6 +50,7 @@ const createChat = (chat) => async (dispatch) => {
     
     const data = await res.json();
     dispatch({ type: CREATE_CHAT_SUCCESS, payload: data });
+    console.log("Data got------------", data);
   } catch (error) {
     console.log("Error occurred in Catch:", error);
     dispatch({ type: CREATE_CHAT_FAILURE, payload: error });

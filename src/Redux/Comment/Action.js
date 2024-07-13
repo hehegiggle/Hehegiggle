@@ -73,8 +73,6 @@ export const editComment =
     try {
       const response = await fetch(
         `${BASE_URL}/api/comments/edit/${data.commentId}`,
-        // `http://localhost:8082/api/comments/edit/${data.commentId}`,
-        // `http://hehegiggle.online:8082/api/comments/edit/${data.commentId}`,
         {
           method: "PUT",
           headers: {

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 function ChatMessage({ item }) {
   const { user } = useSelector((state) => state);
   const isReqUserMessage = user.reqUser?.id === item.user.id;
+  
 
   return (
     <Flex
@@ -14,11 +15,11 @@ function ChatMessage({ item }) {
     >
       <Box p={2} borderRadius="20px" bg="white" maxW={["70%", "60%", "50%"]}>
         <Image
-          src={item.image}
+          src={item.sentImage}
           alt="Message"
           borderRadius="20px"
           mb={2}
-          display={item.image ? "block" : "none"}
+          display={item.sentImage ? "block" : "none"}
           objectFit="cover"
           width="100%"
           maxHeight="250px"

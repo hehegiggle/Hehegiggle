@@ -34,7 +34,7 @@ function ForgotPassword() {
       toast({
         title: errorMessage,
         status: "error",
-        duration: 2000,
+        duration: 1000,
         isClosable: true,
       });
     }
@@ -46,7 +46,7 @@ function ForgotPassword() {
     toast({
       title: "Reset Email has been Sent 📧📧📧",
       status: "success",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };

@@ -5,12 +5,13 @@ import ReqUserReelCard from "./ReqUserReelCard";
 import { useDispatch, useSelector } from "react-redux";
 import { reqUserPostAction } from "../../Redux/Post/Action";
 import { getReelByUserId } from "../../Redux/Reel/Action";
+import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 
 const ProfilePostsPart = ({ user }) => {
   const [activeTab, setActiveTab] = useState("Post");
   const { post } = useSelector((store) => store);
-  const { reels } = useSelector((store) => store.reel); // Reels from Redux store
-  const token = localStorage.getItem("token");
+  const { reels } = useSelector((store) => store.reel);
+  const token = sessionStorage.getItem("token");
   const dispatch = useDispatch();
 
   const tabs = [
@@ -24,64 +25,73 @@ const ProfilePostsPart = ({ user }) => {
       jwt: token,
       userId: user?.id,
     };
-    dispatch(reqUserPostAction(data));
+    if (activeTab === "Post") {
+      dispatch(reqUserPostAction(data));
+    }
     if (activeTab === "Reels") {
       dispatch(getReelByUserId(data));
     }
-  }, [user, activeTab]); // Fetch reels when user or activeTab changes
+  }, [user, activeTab]);
+
+  const tabSize = useBreakpointValue({ base: "sm", md: "md" });
 
   return (
-    <div className="">
-      <div className="flex justify-between border-t relative">
+    <Box>
+      <Flex justify="space-between" borderTop="1px solid" borderColor="gray.300" position="relative" >
         {tabs.map((item) => (
-          <div
+          <Flex
             key={item.tab}
             onClick={() => setActiveTab(item.tab)}
-            className={`${
-              item.tab === activeTab ? "border-t border-[#3a7ae3]" : "opacity-60"
-            } flex justify-center items-center cursor-pointer w-1/3 text-lg py-2 transition duration-300 transform ${
-              item.tab === activeTab ? "scale-110 text-[#3a7ae3]" : ""
-            }`}
+            justify="center"
+            align="center"
+            cursor="pointer"
+            w="33.33%"
+            py={2}
+            transition="transform 0.3s"
+            transform={item.tab === activeTab ? "scale(1.1)" : "scale(1)"}
+            color={item.tab === activeTab ? "blue.500" : "gray.500"}
+            borderBottom={item.tab === activeTab ? "2px solid" : "none"}
+            borderBottomColor={item.tab === activeTab ? "blue.500" : "none"}
           >
-            <p className="mr-2 transition duration-300 transform">
+            <Text mr={2} fontSize={tabSize}>
               {item.icon}
-            </p>
-            <p className="text-sm">{item.tab}</p>
-          </div>
+            </Text>
+            <Text fontSize={tabSize}>{item.tab}</Text>
+          </Flex>
         ))}
-      </div>
-      <div>
-        <div className="flex flex-wrap">
+      </Flex>
+      <Box mt={4}>
+        <Flex wrap="wrap" justify="flex-start">
           {activeTab === "Post" && post.reqUserPost?.length > 0 ? (
             post.reqUserPost.map((item, index) => (
               <ReqUserPostCard post={item} key={index} />
             ))
           ) : activeTab === "Post" && post.reqUserPost?.length === 0 ? (
-            <div className="w-full flex justify-center items-center">
-              <h1 className="text-xl">Nothing here yet, start sharing your Giggles!</h1>
-            </div>
+            <Flex w="full" justify="center" align="center">
+              <Text fontSize="xl">Nothing here yet, start sharing your Giggles!</Text>
+            </Flex>
           ) : activeTab === "Saved" && user?.savedPost?.length > 0 ? (
             user.savedPost.map((item, index) => (
               <ReqUserPostCard post={item} key={index} />
             ))
           ) : activeTab === "Saved" && user?.savedPost?.length === 0 ? (
-            <div className="w-full flex justify-center items-center">
-              <h1 className="text-xl">Nothing saved yet, bookmarking your favorite content!</h1>
-            </div>
+            <Flex w="full" justify="center" align="center">
+              <Text fontSize="xl">Nothing saved yet, bookmarking your favorite content!</Text>
+            </Flex>
           ) : activeTab === "Reels" && reels?.length > 0 ? (
-            reels.map((reelItem, index) => {
-              return <ReqUserReelCard key={index} reel={reelItem} />;
-            })
+            reels.map((reelItem, index) => (
+              <ReqUserReelCard key={index} reel={reelItem} />
+            ))
           ) : activeTab === "Reels" && reels?.length === 0 ? (
-            <div className="w-full flex justify-center items-center">
-              <h1 className="text-xl">No reels yet, capture and share your adventures!</h1>
-            </div>
+            <Flex w="full" justify="center" align="center">
+              <Text fontSize="xl">No reels yet, capture and share your adventures!</Text>
+            </Flex>
           ) : (
             ""
           )}
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

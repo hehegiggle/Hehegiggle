@@ -47,7 +47,7 @@ function ResetPassword() {
         toast({
           title: "Password Cannot be Same as Current Password 🛑🛑🛑",
           status: "error",
-          duration: 3000,
+          duration: 1000,
           isClosable: true,
         });
         setSubmitting(false);
@@ -61,14 +61,14 @@ function ResetPassword() {
           toast({
             title: response.error.message || "Something went wrong 😥😥😥",
             status: "error",
-            duration: 3000,
+            duration: 1000,
             isClosable: true,
           });
         } else {
           toast({
             title: "Password has been reset successfully 😎😎😎",
             status: "success",
-            duration: 3000,
+            duration: 1000,
             isClosable: true,
           });
           // Navigate only if password reset is successful
@@ -79,7 +79,7 @@ function ResetPassword() {
         toast({
           title: "Something went wrong 😥😥😥",
           status: "error",
-          duration: 3000,
+          duration: 1000,
           isClosable: true,
         });
       }
@@ -87,7 +87,7 @@ function ResetPassword() {
       toast({
         title: "Password Mismatch ⚠️⚠️⚠️",
         status: "error",
-        duration: 3000,
+        duration: 1000,
         isClosable: true,
       });
     }

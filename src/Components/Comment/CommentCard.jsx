@@ -18,7 +18,7 @@ const CommentCard = ({ comment }) => {
   const [commentLikes, setCommentLikes] = useState(0);
   const dispatch = useDispatch();
   const toast = useToast();
-  const jwt = localStorage.getItem("token");
+  const jwt = sessionStorage.getItem("token");
   const [isEditCommentInputOpen, setIsEditCommentInputOpen] = useState(false);
   const [commentContent, setCommentContent] = useState("");
 

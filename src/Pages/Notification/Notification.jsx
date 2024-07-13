@@ -19,7 +19,7 @@ function Notification() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const jwt = localStorage.getItem("token");
+        const jwt = sessionStorage.getItem("token");
         const response = await axios.get(
           `${BASE_URL}/api/realtime-notifications/user`,
           {
@@ -93,11 +93,11 @@ function Notification() {
           p={2}
           borderRadius="20px"
           boxShadow="2xl"
+          ml={{base:'12%', md:'21%'}}
+          width={{base:'85%', md:'77%'}}
+          mt={{base:'5%', md:'2%'}}
+          mb={{md:'2%', base: '4%'}}
           style={{
-            marginLeft: "23%",
-            width: "74%",
-            marginTop: "2%",
-            marginBottom: "2%",
             position: "relative",
             overflow: "hidden",
             background: "linear-gradient(135deg, #8697C4, #EDE8F5)",
@@ -138,8 +138,8 @@ function Notification() {
                 overflowY="auto"
                 css={{
                   "&::-webkit-scrollbar": { display: "none" },
-                  "-ms-overflow-style": "none" /* IE and Edge */,
-                  "scrollbar-width": "none" /* Firefox */,
+                  "msOverflowStyle": "none" /* IE and Edge */,
+                  "scrollbarWidth": "none" /* Firefox */,
                 }}
               >
                 {notifications.map((notification) => (

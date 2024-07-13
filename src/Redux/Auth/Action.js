@@ -20,7 +20,7 @@ export const signinAction = (data) => async (dispatch) => {
       if (!authToken) {
         throw new Error("Authentication failed");
       }
-      localStorage.setItem("token", authToken);
+      sessionStorage.setItem("token", authToken);
       dispatch({ type: SIGN_IN_SUCCESS, payload: authToken });
     } else {
       const errorData = await res.json();

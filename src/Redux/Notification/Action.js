@@ -7,7 +7,7 @@ import {
 
 export const fetchNotifications = () => async (dispatch) => {
   try {
-    const jwt = localStorage.getItem("token");
+    const jwt = sessionStorage.getItem("token");
     const response = await axios.get(
       `${BASE_URL}/api/realtime-notifications/user`,
       {
@@ -35,7 +35,7 @@ export const fetchNotifications = () => async (dispatch) => {
 
 export const markAllAsRead = () => async (dispatch) => {
   try {
-    const jwt = localStorage.getItem("token");
+    const jwt = sessionStorage.getItem("token");
     await axios.put(
       `${BASE_URL}/api/realtime-notifications/mark-as-read`,
       {},

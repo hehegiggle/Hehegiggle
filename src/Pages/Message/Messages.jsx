@@ -32,7 +32,7 @@ function Messages() {
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { message, user } = useSelector((state) => state);
   const chatContainerRef = useRef(null);
   const isInitialLoad = useRef(true);
@@ -85,7 +85,7 @@ function Messages() {
     const newMessage = {
       chatId: currentChat?.id,
       content: value,
-      image: selectedImage,
+      sentImage: selectedImage,
       senderId: user.reqUser.id,
     };
     dispatch(createMessage({ message: newMessage, token }));
@@ -201,7 +201,11 @@ function Messages() {
                 >
                   <Flex align="center">
                     <Avatar
-                      src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                      src={
+                        user.reqUser.id === currentChat.users[0].id
+                          ? currentChat.users[1].image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                          : currentChat.users[0].image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                      }s
                       size="md"
                     />
                     <Text ml={3} fontSize="xl" fontWeight="bold">

@@ -34,11 +34,10 @@ const DateInput = ({ field, form, ...props }) => {
         placeholderText="Date of Birth"
         onChange={(val) => {
           const formattedDate = val.toISOString().split("T")[0];
-          console.log(formattedDate);
           form.setFieldValue(field.name, formattedDate);
         }}
         customInput={
-          <Input width="178%" bg="white" _placeholder={{ color: "black" }} />
+          <Input w={['100%', '178%', '178%', '178%']} bg="white" _placeholder={{ color: "black" }} />
         }
       />
       <FormErrorMessage>{form.errors.dateOfBirth}</FormErrorMessage>
@@ -95,13 +94,11 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    console.log("auth state changed:", auth);
     if (auth.signup?.jwt) {
-      console.log("Signup successful, navigating to /login");
       toast({
         title: "Account Created Successfully",
         status: "success",
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
       navigate(`/login`);
@@ -116,7 +113,7 @@ const Signup = () => {
           : auth.error.includes("Username Is Already Taken")
           ? "Username Is Already Taken 😔😔😔"
           : auth.error,
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
     }

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { FaPlay, FaPause, FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
 import "./ReqUserPostCard.css";
+import { Box } from '@chakra-ui/react';
 
 const ReqUserReelCard = ({ reel }) => {
   const videoRef = useRef(null);
@@ -37,11 +38,11 @@ const ReqUserReelCard = ({ reel }) => {
   }, []);
 
   return (
-    <div className='p-4'>
-      <div className='post w-80 h-70 relative'>
+    <Box className='mt-5' marginLeft={{base:'25%', md:'10'}}>
+      <Box className='post w-80 h-65 relative'>
         <video
           ref={videoRef}
-          className='w-full h-full'
+          //className='w-full h-full'
           src={reel?.video}
           alt=""
           controls={false}
@@ -62,8 +63,8 @@ const ReqUserReelCard = ({ reel }) => {
             ></div>
           </div>
         </div>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

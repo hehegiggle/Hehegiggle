@@ -1,35 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { Box, Flex, Grid, Button} from "@chakra-ui/react";
 import SuggestionsUserCard from "./SuggestionsUserCard";
 import Confetti from "react-dom-confetti";
 
 const HomeRight = ({ suggestedUser }) => {
-  const [jokes, setJokes] = useState([]);
-  const [currentJokeIndex, setCurrentJokeIndex] = useState(0);
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [winner, setWinner] = useState(null);
   const [isWin, setIsWin] = useState(false);
-
-  useEffect(() => {
-    // Fetch jokes from JokeAPI
-    fetch("https://v2.jokeapi.dev/joke/Any?amount=10")
-      .then((response) => response.json())
-      .then((data) => {
-        setJokes(data.jokes);
-        setCurrentJokeIndex(0);
-      })
-      .catch((error) => console.error("Error fetching jokes:", error));
-  }, []);
-
-  useEffect(() => {
-    // Update the joke every 5 seconds
-    const interval = setInterval(() => {
-      setCurrentJokeIndex((prevIndex) => (prevIndex + 1) % jokes.length);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [jokes]);
 
   useEffect(() => {
     if (!isXNext && !winner) {
@@ -93,75 +72,89 @@ const HomeRight = ({ suggestedUser }) => {
   };
 
   return (
-    <div className="w-full max-w-sm space-y-5">
-      <div
-        className="card bg-white shadow-md rounded-md p-5 w-full"
-        style={{ borderRadius: 20 ,backgroundColor:"#ADBBDA"}}
-        onClick={handleGameModalOpen}
-      >
-        <div className="flex justify-between items-center">
-          <p className="font-semibold opacity-70">Play Tic Tac Toe</p>
-        </div>
-        <div
-          className="card bg-gray-100 shadow-sm rounded-md p-4 mt-4"
-          style={{ borderRadius: 15 }}
+    <Flex direction="column" w="100%" maxW="sm">
+        <Box
+          mt={{base:"", lg:"3%"}}
+          className="shadow-2xl card bg-white shadow-md rounded-md p-5 w-full mt-1"
+          style={{ borderRadius: 20, backgroundColor: "#ADBBDA" }}
+          onClick={handleGameModalOpen}
         >
-          <div className="text-center italic">
-            <p>Click to play!</p>
-          </div>
-        </div>
-      </div>
-      <div
-      className="card bg-white shadow-md rounded-md p-5 w-full"
-      style={{ borderRadius: 20, backgroundColor:"#ADBBDA" }}
-    >
-      <div className="card rounded-md p-3 mb-5" style={{backgroundColor:"#8697C4",color:"black",borderRadius:"20px"}}>
-        <p className="font-semibold opacity-70">Follow Back</p>
-      </div>
-      <div className="space-y-5">
-        {suggestedUser.map((item, index) => (
-          <SuggestionsUserCard
-            key={index}
-            image={
-              item.userImage ||
-              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-            }
-            username={item.username}
-            description={'Follows you'}
-          />
-        ))}
-      </div>
-    </div>
+          <Flex justify="between" align="center">
+            <Box fontWeight="semibold" opacity={0.7}>
+              Play Tic Tac Toe
+            </Box>
+          </Flex>
+          <Box className="card bg-gray-100 shadow-sm rounded-md p-4 mt-1" style={{ borderRadius: 15 }}>
+            <Box textAlign="center" fontStyle="italic" cursor="pointer">
+              Click to play!
+            </Box>
+          </Box>
+        </Box>
+        <Box
+          className="shadow-2xl card bg-white shadow-md rounded-md p-5 w-full mt-5"
+          style={{ borderRadius: 20, backgroundColor: "#ADBBDA" }}
+        >
+          <Box className="card rounded-md p-3 mb-5" style={{ backgroundColor: "#8697C4", color: "black", borderRadius: "20px" }}>
+            <Box fontWeight="semibold" opacity={0.7}>
+              Follow Back
+            </Box>
+          </Box>
+          <Box>
+            {suggestedUser.map((item, index) => (
+              <SuggestionsUserCard
+                key={index}
+                image={item.userImage || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
+                username={item.username}
+                description={'Follows you'}
+              />
+            ))}
+          </Box>
+        </Box>
 
       {isGameModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md mx-auto">
-            <div className="flex justify-end">
-              <button onClick={handleGameModalClose} className="text-gray-700">
+        <Flex
+          pos="fixed"
+          inset="0"
+          alignItems="center"
+          justifyContent="center"
+          bg="blackAlpha.500"
+          zIndex="overlay"
+        >
+          <Box bg="white" rounded="lg" p={6} maxW="md">
+            <Flex justify="end">
+              <Button onClick={handleGameModalClose} colorScheme="gray" size="sm">
                 &#10005;
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-4 mt-4">
+              </Button>
+            </Flex>
+            <Grid templateColumns="repeat(3, 1fr)" gap={4} mt={4}>
               {board.map((value, index) => (
-                <div
+                <Box
                   key={index}
-                  className="w-16 h-16 flex items-center justify-center bg-gray-200 rounded-md text-2xl cursor-pointer"
+                  w="16"
+                  h="16"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="gray.200"
+                  rounded="md"
+                  fontSize="2xl"
+                  cursor="pointer"
                   onClick={() => handleClick(index)}
                 >
                   {value}
-                </div>
+                </Box>
               ))}
-            </div>
+            </Grid>
             {winner && (
-              <div className="text-center mt-4">
-                <p className="font-semibold">Winner: {winner}</p>
+              <Box textAlign="center" mt={4}>
+                <Box fontWeight="semibold">Winner: {winner}</Box>
                 <Confetti active={isWin} />
-              </div>
+              </Box>
             )}
-          </div>
-        </div>
+          </Box>
+        </Flex>
       )}
-    </div>
+    </Flex>
   );
 };
 

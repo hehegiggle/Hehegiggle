@@ -22,7 +22,7 @@ const CommentModal = ({
   isSaved,
 }) => {
   const dispatch = useDispatch();
-  const jwt = localStorage.getItem("token");
+  const jwt = sessionStorage.getItem("token");
   const { post, comments} = useSelector((store) => store);
   const [commentContent, setCommentContent] = useState("");
   const { postId } = useParams();

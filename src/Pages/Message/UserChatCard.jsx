@@ -3,7 +3,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 function UserChatCard({ chat }) {
-  const { message, user } = useSelector((state) => state);
+  const { user } = useSelector((state) => state);
+
+  const chatUser = user.reqUser.id === chat.users[0].id ? chat.users[1] : chat.users[0];
 
   return (
     <Box
@@ -29,7 +31,7 @@ function UserChatCard({ chat }) {
             height={{ base: "2.5rem", md: "3.5rem" }}
             fontSize={{ base: "1rem", md: "1.5rem" }}
             bgColor="white"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+            src={chatUser.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
             mr={4}
           />
           <Box>
