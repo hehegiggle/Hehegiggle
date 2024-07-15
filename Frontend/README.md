@@ -1,10 +1,3 @@
- HEAD
- HEAD
- HEAD
- 
- origin/Chetan
- 
- origin/main
 Project name: Hehe-Where giggle matter
 
 🌟 Tech stack: SpringBoot + React + Socket.io 
@@ -53,15 +46,11 @@ Maheshwar Mitkari - maheshmitkari6229@gmail.com
 
 Project Link:  https://github.com/hehegiggle/Hehegiggle.git
 
- HEAD
- HEAD
 Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
- 
+
 Product and Sprint Backlog:   https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
- origin/Chetan
- 
+
 Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
- origin/main
 
 High Level Document:  https://1drv.ms/w/s!AltDnJQqRgq3mKhZ2uhud1kyvUDijw
 
@@ -69,13 +58,6 @@ Jira Board:   https://hehegiggle.atlassian.net/jira/software/projects/SCRUM/boar
 
 Confluence:  https://hehegiggle.atlassian.net/wiki/home
 
- HEAD
- HEAD
- 
-# Getting Started with Create React App
-
- 
- origin/main
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -84,17 +66,10 @@ In the project directory, you can run:
 
 ### `npm start`
 
- HEAD
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
- 
-Runs the app in the development mode.
-Open (http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.
- origin/main
 You may also see any lint errors in the console.
 
 ### `npm test`
@@ -151,9 +126,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
- HEAD
-  67f573e (hehe giggle commited)
- 
- origin/Chetan
- 
- origin/main
