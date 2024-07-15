@@ -32,10 +32,10 @@ function Messages() {
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
   const token = sessionStorage.getItem("token");
   const { message, user } = useSelector((state) => state);
   const chatContainerRef = useRef(null);
-  const isInitialLoad = useRef(true);
 
   useEffect(() => {
     dispatch(getAllChats({ token }));
@@ -94,24 +94,47 @@ function Messages() {
   };
 
   useEffect(() => {
-    setMessages((prevMessages) => [...prevMessages, message.message]);
-  }, [message.message]);
-
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      if (isInitialLoad.current) {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        isInitialLoad.current = false;
-      } else {
-        const isScrolledToBottom =
-          chatContainerRef.current.scrollHeight - chatContainerRef.current.scrollTop ===
-          chatContainerRef.current.clientHeight;
-        if (isScrolledToBottom) {
-          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
+    if (message.message) {
+      setMessages((prevMessages) => [...prevMessages, message.message]);
+      if (chatContainerRef.current && !isUserScrolling) {
+        scrollToBottom();
       }
     }
-  }, [messages]);
+  }, [message.message, isUserScrolling]);
+
+  useEffect(() => {
+    if (chatContainerRef.current && !isUserScrolling) {
+      scrollToBottom();
+    }
+  }, [messages, isUserScrolling]);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chatContainerRef.current) {
+        const isAtBottom =
+          chatContainerRef.current.scrollHeight - chatContainerRef.current.scrollTop ===
+          chatContainerRef.current.clientHeight;
+        setIsUserScrolling(!isAtBottom);
+      }
+    };
+
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer) {
+      chatContainer.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (chatContainer) {
+        chatContainer.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   const handleNavigateBack = () => {
     navigate(-1);
@@ -174,7 +197,6 @@ function Messages() {
                     onClick={() => {
                       setCurrentChat(item);
                       setMessages(item.messages);
-                      isInitialLoad.current = true;
                     }}
                   >
                     <UserChatCard chat={item} />
@@ -205,7 +227,7 @@ function Messages() {
                         user.reqUser.id === currentChat.users[0].id
                           ? currentChat.users[1].image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                           : currentChat.users[0].image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                      }s
+                      }
                       size="md"
                     />
                     <Text ml={3} fontSize="xl" fontWeight="bold">
@@ -223,8 +245,6 @@ function Messages() {
                 css={{ scrollbarWidth: "none" }}
                 className="hideScrollbar"
                 h="calc(100vh - 160px)"
-                display="flex"
-                flexDirection="column-reverse"
               >
                 {messages.map((item) => (
                   <ChatMessage key={item.id} item={item} />
@@ -274,7 +294,7 @@ function Messages() {
           ) : (
             <Center h="full">
               <Box textAlign="center">
-              <Icon as={BsEmojiFrown} boxSize={"100%"} />
+                <Icon as={BsEmojiFrown} boxSize={24} />
                 <Text fontSize="2xl" mb={5}>
                   No chats selected
                 </Text>

@@ -28,10 +28,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
 
   const handleOnChange = async (e) => {
     const file = e.target.files[0];
-    if (
-      file &&
-      (file.type.startsWith("image/") || file.type.startsWith("video/"))
-    ) {
+    if (file && file.type.startsWith("video/")) {
       setFile(file);
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -46,7 +43,12 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
       setIsImageUploaded("uploaded");
     } else {
       setFile(null);
-      alert("Please select an image/video file.");
+      toast({
+        title: "Only videos can be uploaded.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -63,7 +65,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
         status: "success",
         duration: 1000,
         isClosable: true,
-      })
+      });
     }
   };
 
@@ -90,7 +92,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
             borderRadius: "20px",
             background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
             width: "60%",
-            height: "75%"
+            height: "80%"
           }}
         >
           <div className="flex justify-between py-1 px-10 items-center text-white">
@@ -117,10 +119,10 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                       className="w-7 h-7 rounded-full"
                       src={
                         user?.reqUser?.image ||
-                       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                       }
                       alt=""
-                      style={{objectFit:"cover"}}
+                      style={{ objectFit: "cover" }}
                     />
                     <p className="font-semibold ml-4">
                       {user?.reqUser?.username}
@@ -155,7 +157,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                     <input
                       type="file"
                       id="file-upload"
-                      accept="image/, video/"
+                      accept="video/*"
                       multiple
                       onChange={handleOnChange}
                     />
@@ -170,9 +172,9 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                       height="35%"
                       controls
                       className="object-contain"
-                      style={{ borderRadius: "20px"}}
+                      style={{ borderRadius: "20px" }}
                     >
-                      <source src={videoUrl} type="video/mp4"/>
+                      <source src={videoUrl} type="video/mp4" />
                     </video>
                   </div>
                 )}

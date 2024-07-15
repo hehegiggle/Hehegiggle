@@ -36,11 +36,15 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
   const handleDrop = (event) => {
     event.preventDefault();
     const droppedFile = event.dataTransfer.files[0];
-    if (
-      droppedFile.type.startsWith("image/") ||
-      droppedFile.type.startsWith("video/")
-    ) {
+    if (droppedFile.type.startsWith("image/")) {
       setFile(droppedFile);
+    } else {
+      toast({
+        title: "Only images can be uploaded.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -56,10 +60,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
 
   const handleOnChange = async (e) => {
     const file = e.target.files[0];
-    if (
-      file &&
-      (file.type.startsWith("image/") || file.type.startsWith("video/"))
-    ) {
+    if (file && file.type.startsWith("image/")) {
       setFile(file);
       setIsImageUploaded("uploading");
       const url = await uploadToCloudinary(file);
@@ -67,7 +68,12 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
       setIsImageUploaded("uploaded");
     } else {
       setFile(null);
-      alert("Please select an image/video file.");
+      toast({
+        title: "Only images can be uploaded⚠️⚠️⚠️",
+        status: "error",
+        duration: 1000,
+        isClosable: true,
+      });
     }
   };
 
@@ -80,7 +86,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
       dispatch(createPost(data));
       handleClose();
       toast({
-        title: "Posted successfully 🙂‍↕️🙂‍↕️🙂‍↕️",
+        title: "Posted successfully",
         status: "success",
         duration: 1000,
         isClosable: true,
@@ -155,7 +161,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                     <input
                       type="file"
                       id="file-upload"
-                      accept="image/*, video/*"
+                      accept="image/*"
                       multiple
                       onChange={(e) => handleOnChange(e)}
                     />

@@ -27,7 +27,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("Home");
   const [isCreateReelModalOpen, setIsCreateReelModalOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true); // Initialize as expanded
 
   const showNotificationBadge = useBreakpointValue({ base: false, md: true });
   const showRedDot = useBreakpointValue({ lg: true, md: true, sm: true });
@@ -57,8 +57,8 @@ const Sidebar = () => {
   }, [dispatch]);
 
   const handleTabClick = (tab, icon) => {
-    if (tab === "More") {
-      setIsExpanded((prev) => !prev);
+    if (tab === "Collapse") {
+      setIsExpanded((prev) => !prev); // Toggle the sidebar
     } else {
       setActiveTab(tab);
       if (tab === "Profile" || icon === "CgProfile") {
@@ -126,7 +126,7 @@ const Sidebar = () => {
                     <Box
                       position="absolute"
                       top="-2px"
-                      left="13%"
+                      left="15%"
                       width="10px"
                       height="10px"
                       borderRadius="50%"
