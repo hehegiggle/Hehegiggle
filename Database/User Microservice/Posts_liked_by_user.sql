@@ -7,4 +7,4 @@ CREATE TABLE `post_liked_by_users` (
   `username` varchar(255) DEFAULT NULL,
   KEY `FKacet8j61anp5y4v9p341jpsyf` (`post_id`),
   CONSTRAINT `FKacet8j61anp5y4v9p341jpsyf` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
-) 
+)
