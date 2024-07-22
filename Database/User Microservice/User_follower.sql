@@ -7,4 +7,4 @@ CREATE TABLE `user_follower` (
   `username` varchar(255) DEFAULT NULL,
   KEY `FK31vprrcmt5cwijol72deguk3y` (`user_id`),
   CONSTRAINT `FK31vprrcmt5cwijol72deguk3y` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) 
+)
