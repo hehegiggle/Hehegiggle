@@ -1,0 +1,33 @@
+/* Hide the duration time */
+video::-webkit-media-controls-current-time-display,
+video::-webkit-media-controls-time-remaining-display {
+  display: none;
+}
+
+/* Hide the fullscreen button */
+video::-webkit-media-controls-fullscreen-button {
+  display: none;
+}
+
+/* Hide the picture-in-picture button */
+video::-webkit-media-controls-pip-button {
+  display: none;
+}
+
+/* Hide the settings button (three dots) */
+video::-webkit-media-controls-toggle-closed-captions-button {
+  display: none;
+}
+
+
+@keyframes scrollUpAnimation {
+    0%, 50% { opacity: 2; }
+    50%, 100% { opacity: 0; }
+  }
+  
+  @keyframes scrollDownAnimation {
+    0%, 50% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  
+  
