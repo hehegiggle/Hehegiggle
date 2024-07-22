@@ -7,4 +7,4 @@ CREATE TABLE `comments_liked_by_users` (
   `username` varchar(255) DEFAULT NULL,
   KEY `FK2r9p2rc5x46alsu7u6g3fi8cg` (`comments_comment_id`),
   CONSTRAINT `FK2r9p2rc5x46alsu7u6g3fi8cg` FOREIGN KEY (`comments_comment_id`) REFERENCES `comments` (`comment_id`)
-) 
+)
