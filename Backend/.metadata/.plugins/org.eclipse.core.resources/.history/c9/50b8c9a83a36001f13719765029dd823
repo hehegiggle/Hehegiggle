@@ -1,0 +1,5 @@
+package com.notificationmicroservice.service;
+
+public class RealTimeNotificationService {
+
+}

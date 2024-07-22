@@ -1,0 +1,5 @@
+package com.usermicroservice.Event;
+
+public class NotificationEvent {
+
+}

@@ -1,0 +1,15 @@
+package com.notificationmicroservice.service;
+
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotificationListener {
+
+    @RabbitListener(queues = "${notification.queue}")
+    public void receiveMessage(String message) {
+        // Handle the received message
+        System.out.println("Received notification: " + message);
+        // Save the notification to MongoDB or any other necessary actions
+    }
+}
