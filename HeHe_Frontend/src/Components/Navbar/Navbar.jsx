@@ -82,8 +82,8 @@ function Navbar() {
         zIndex={1000}
       >
         <Flex align="center">
-          <Box ml={{base:'2%', md:'3%'}}>
-            <img src={img} alt="" width={"150px"} height={"100px"} />
+          <Box ml={{base:'2%', md:'3%'}} style={{cursor:"pointer"}}>
+            <img src={img} alt="" width={"150px"} height={"100px"} onClick={()=>navigate("/Home")}/>
           </Box>
           <Spacer />
           <Box
