@@ -54,10 +54,10 @@ const ReelViewer = ({ reels }) => {
     );
   };
 
-  const handleUsernameClick = (username, event) =>{
+  const handleUsernameClick = (username, event) => {
     event.stopPropagation();
     navigate(`/${username}`);
-  }
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -158,7 +158,7 @@ const ReelViewer = ({ reels }) => {
                         borderRadius: "20px",
                         display: "flex",
                         alignItems: "center",
-                        zIndex:'1'
+                        zIndex: "1",
                       }}
                     >
                       <img
@@ -172,7 +172,16 @@ const ReelViewer = ({ reels }) => {
                       />
                       <div>
                         <div>{reelItem.user.name}</div>
-                        <div style={{ fontSize: "0.8em", color: "lightgray", cursor:"pointer"}} onClick={(event)=>handleUsernameClick(reelItem.user.username, event)}>
+                        <div
+                          style={{
+                            fontSize: "0.8em",
+                            color: "lightgray",
+                            cursor: "pointer",
+                          }}
+                          onClick={(event) =>
+                            handleUsernameClick(reelItem.user.username, event)
+                          }
+                        >
                           @{reelItem.user.username}
                         </div>
                       </div>
@@ -213,15 +222,22 @@ const ReelViewer = ({ reels }) => {
                         borderRadius: "20px",
                         display: "flex",
                         alignItems: "center",
-                        zIndex: '1',
-                        bottom: '10%',
-                        left: '0',
-                        textAlign: 'center',
+                        zIndex: "1",
+                        bottom: "10%",
+                        left: "0",
+                        textAlign: "center",
                       }}
                     >
-                      <Text fontSize="sm" fontFamily="semibold" style={{ color: 'white' }}>
-                        {reelItem.user.username}: {reelItem.caption}
-                      </Text>
+                      {reelItem.caption ? (
+                        <Text
+                          fontSize="sm"
+                          style={{ color: "white" }}
+                        >
+                          {reelItem.user.username}: {reelItem.caption}
+                        </Text>
+                      ) : (
+                        " "
+                      )}
                     </div>
                   </div>
                 ))
