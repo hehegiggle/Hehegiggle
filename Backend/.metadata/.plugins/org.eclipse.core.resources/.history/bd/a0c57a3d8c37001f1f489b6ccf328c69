@@ -1,5 +1,0 @@
-package com.axis.commentservice.event;
-
-public class NotificationEvent {
-
-}

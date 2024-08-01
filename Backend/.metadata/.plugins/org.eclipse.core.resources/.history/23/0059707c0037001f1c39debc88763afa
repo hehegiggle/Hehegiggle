@@ -1,9 +1,0 @@
-package com.notificationmicroservice.repository;
-
-import org.springframework.data.mongodb.repository.MongoRepository;
-
-import com.notificationmicroservice.entity.RealTimeNotification;
-
-public interface RealTimeNotificationRepository extends MongoRepository<RealTimeNotification, String> {
-
-}

@@ -1,9 +1,0 @@
-1719122347016	Rename package 'com.hms.notificationmicroservice'
-1719122369061	Rename package 'com.hms.notificationmicroservice.config'
-1719122404491	Rename package 'com.hms.notificationmicroservice.controller'
-1719122419834	Rename package 'com.hms.notificationmicroservice.entity'
-1719122431311	Rename package 'com.hms.notificationmicroservice.repository'
-1719122576524	Rename package 'com.hms.notificationmicroservice.util'
-1719122591377	Rename package 'com.hms.notificationmicroservice.service'
-1719126667773	Delete element
-1719674385669	Rename type 'NotificationListner'

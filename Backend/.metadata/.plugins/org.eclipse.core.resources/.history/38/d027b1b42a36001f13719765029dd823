@@ -1,5 +1,0 @@
-package com.postmicroservice.config;
-
-public class RabbitMQConfig {
-
-}

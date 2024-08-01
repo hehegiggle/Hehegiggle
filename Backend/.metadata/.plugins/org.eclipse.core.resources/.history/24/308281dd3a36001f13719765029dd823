@@ -1,5 +1,0 @@
-package com.notificationmicroservice.controller;
-
-public class RealTimeNotificationController {
-
-}

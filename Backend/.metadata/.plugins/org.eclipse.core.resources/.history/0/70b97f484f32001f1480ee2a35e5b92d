@@ -1,5 +1,0 @@
-package com.axis.messageservice.DTO;
-
-public class ChatMessage {
-
-}
