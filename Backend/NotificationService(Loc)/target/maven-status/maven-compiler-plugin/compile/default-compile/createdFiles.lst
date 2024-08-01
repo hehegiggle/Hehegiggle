@@ -1,0 +1,15 @@
+com\notificationmicroservice\NotificationmicroserviceApplication.class
+com\notificationmicroservice\entity\RealTimeNotification.class
+com\notificationmicroservice\service\RealTimeNotificationService.class
+com\notificationmicroservice\repository\RealTimeNotificationRepository.class
+com\notificationmicroservice\event\NotificationEvent.class
+com\notificationmicroservice\service\NotificationService.class
+com\notificationmicroservice\config\RabbitMQConfig.class
+com\notificationmicroservice\repository\NotificationRepository.class
+com\notificationmicroservice\service\NotificationListener.class
+com\notificationmicroservice\controller\RealTimeNotificationController.class
+com\notificationmicroservice\entity\User.class
+com\notificationmicroservice\util\EmailUtil.class
+com\notificationmicroservice\entity\Notification.class
+com\notificationmicroservice\config\MailConfig.class
+com\notificationmicroservice\controller\NotificationController.class

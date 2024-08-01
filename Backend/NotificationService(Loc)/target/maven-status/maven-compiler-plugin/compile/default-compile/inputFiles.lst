@@ -1,0 +1,15 @@
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\config\MailConfig.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\config\RabbitMQConfig.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\controller\NotificationController.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\controller\RealTimeNotificationController.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\entity\Notification.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\entity\RealTimeNotification.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\entity\User.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\event\NotificationEvent.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\NotificationmicroserviceApplication.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\repository\NotificationRepository.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\repository\RealTimeNotificationRepository.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\service\NotificationListener.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\service\NotificationService.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\service\RealTimeNotificationService.java
+C:\Users\HP\Downloads\NotificationService\src\main\java\com\notificationmicroservice\util\EmailUtil.java

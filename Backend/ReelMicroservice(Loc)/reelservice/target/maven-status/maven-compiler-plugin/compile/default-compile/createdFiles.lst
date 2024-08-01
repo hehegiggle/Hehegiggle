@@ -1,0 +1,8 @@
+com\axis\reelservice\ReelserviceApplication.class
+com\axis\reelservice\repo\ReelRepository.class
+com\axis\reelservice\service\ReelServiceImpl.class
+com\axis\reelservice\service\ReelService.class
+com\axis\reelservice\controller\ReelController.class
+com\axis\reelservice\dto\UserDTO.class
+com\axis\reelservice\entity\Reel.class
+com\axis\reelservice\request\LoginRequest.class
