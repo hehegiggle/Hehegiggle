@@ -1,0 +1,88 @@
+version: '3'
+services:
+  eureka-server:
+    image: surajp8523/eurekamicroservice:latest
+    restart: unless-stopped
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+  
+  frontend:
+    image:  surajp8523/hehefrontend:latest
+    restart: unless-stopped
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    
+  
+  api-gw-server:
+    image: surajp8523/apigatewaymicroservice:latest
+    restart: unless-stopped
+    container_name: apigw-service
+    ports:
+      - "8082:8082"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  userservice:
+    image: surajp8523/usermicroservice:latest
+    restart: unless-stopped
+    container_name: userservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  postservice:
+    image: surajp8523/postmicroservice:latest
+    restart: unless-stopped
+    container_name: postservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  reelservice:
+    image: surajp8523/reelmicroservice:latest
+    restart: unless-stopped
+    container_name: reelservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  commentservice:
+    image: surajp8523/commentmicroservice:latest
+    restart: unless-stopped
+    container_name: commentservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  notificationservice:
+    image: surajp8523/notificationmicroservice:latest
+    restart: unless-stopped
+    container_name: notificationservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+  messageservice:
+    image: surajp8523/messagemicroservice:latest
+    restart: unless-stopped
+    container_name: messageservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+
+ 
