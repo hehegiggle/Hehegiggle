@@ -11,11 +11,11 @@ import { CgProfile } from "react-icons/cg";
 import { BsPersonCircle, BsArrowLeftRight } from "react-icons/bs";
 
 export const mainu = [
-  // {
-  //  // title: "Collapse",
-  //   icon: <BsArrowLeftRight className="text-2xl mr-5" />,
-  //   activeIcon: <BsArrowLeftRight className="text-2xl mr-5" />,
-  // },
+  {
+    title: "Collapse",
+    icon: <BsArrowLeftRight className="text-2xl mr-5" />,
+    activeIcon: <BsArrowLeftRight className="text-2xl mr-5" />,
+  },
   {
     title: "Home",
     icon: <AiOutlineHome className="text-2xl mr-5" />,

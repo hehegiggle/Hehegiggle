@@ -37,7 +37,7 @@ const ProfilePostsPart = ({ user }) => {
 
   return (
     <Box>
-      <Flex justify="space-between" borderTop="1px solid" borderColor="gray.300" position="relative" >
+      <Flex justify="space-between" borderTop="1px solid" borderColor="gray.300" position="relative">
         {tabs.map((item) => (
           <Flex
             key={item.tab}
@@ -64,7 +64,7 @@ const ProfilePostsPart = ({ user }) => {
         <Flex wrap="wrap" justify="flex-start">
           {activeTab === "Post" && post.reqUserPost?.length > 0 ? (
             post.reqUserPost.map((item, index) => (
-              <ReqUserPostCard post={item} key={index} />
+              <ReqUserPostCard post={item} key={index} activeTab={activeTab} />
             ))
           ) : activeTab === "Post" && post.reqUserPost?.length === 0 ? (
             <Flex w="full" justify="center" align="center">
@@ -72,7 +72,7 @@ const ProfilePostsPart = ({ user }) => {
             </Flex>
           ) : activeTab === "Saved" && user?.savedPost?.length > 0 ? (
             user.savedPost.map((item, index) => (
-              <ReqUserPostCard post={item} key={index} />
+              <ReqUserPostCard post={item} key={index} activeTab={activeTab} />
             ))
           ) : activeTab === "Saved" && user?.savedPost?.length === 0 ? (
             <Flex w="full" justify="center" align="center">

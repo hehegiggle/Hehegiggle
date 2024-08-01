@@ -83,21 +83,6 @@ export const hasStory = (users) => {
   return temp;
 };
 
-export const activeStory = (stories) => {
-  const temp = stories.reduce((acc, item) => {
-    const time = getTimeInHours(
-      // item.stories[item.stories?.length - 1].timestamp
-      item.timestamp
-    );
-    if (time < 24) {
-      acc.push(item);
-    }
-
-    return acc;
-  }, []);
-
-  return temp;
-};
 
 export function timeDifference(timestamp) {
   // Convert the timestamp to a Date object
@@ -122,7 +107,7 @@ export function timeDifference(timestamp) {
     return hours + " hour" + (hours === 1 ? "" : "s") + " ago";
   } else if (minutes > 0) {
     return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
-  } else {
+  } else if (seconds > 0){
     return seconds + " second" + (seconds === 1 ? "" : "s") + " ago";
   }
 }

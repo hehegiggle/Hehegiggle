@@ -33,7 +33,7 @@ const DateInput = ({ field, form, ...props }) => {
         yearDropdownItemNumber={100}
         placeholderText="Date of Birth"
         onChange={(val) => {
-          const formattedDate = val.toISOString().split("T")[0];
+          const formattedDate = val.toISOString().split("T")[0]; //converts the selected date (val) to a string in ISO format(YYYY-MM-DDTHH:MM:SS.sssZ) using the toISOString method.
           form.setFieldValue(field.name, formattedDate);
         }}
         customInput={
@@ -54,20 +54,19 @@ const validationSchema = Yup.object().shape({
     .min(8, "Password must be at least 8 characters")
     .required("Required"),
   name: Yup.string()
-    .min(2, "Name must be at least 2 characters")
+    .min(4, "Name must be at least 4 characters")
     .required("Required"),
   dateOfBirth: Yup.date()
     .max(new Date(), "Date of Birth cannot be in the future")
     .required("Required")
-    .test("age", "You must be at least 18 years old", function (value) {
-      const today = new Date();
-      const birthDate = new Date(value);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const monthDifference = today.getMonth() - birthDate.getMonth();
-      if (
-        monthDifference < 0 ||
-        (monthDifference === 0 && today.getDate() < birthDate.getDate())
-      ) {
+    .test("age", "You must be at least 18 years old", function (value) { // custom validation - age, error message if the validation fails "You must be at least 18 years old", function performing the validation
+      const today = new Date(); // current date
+      const birthDate = new Date(value); // convert input value to date
+      let age = today.getFullYear() - birthDate.getFullYear(); // calculate age (year difference)
+      const monthDifference = today.getMonth() - birthDate.getMonth(); // calculate month difference (today.getMonth() -> 0 for January, 1 for February, etc.).
+
+      // For checking the exact age of the User whether in this year he has reached his birthday or not
+      if ( monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
       return age >= 18;
