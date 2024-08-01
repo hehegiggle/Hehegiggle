@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/Chetan
 Project name: Hehe-Where giggle matter
 
 🌟 Tech stack: SpringBoot + React + Socket.io 
@@ -16,8 +12,8 @@ Project name: Hehe-Where giggle matter
 🔊 Notification
 ⭐ Deployment 
 
-Features:
 
+Features:
 User Management: Secure user authentication/authorization using Spring Boot, JWT, and MySQL.
 
 Posts: Handle posts with Spring Data JPA and MongoDB.
@@ -34,7 +30,6 @@ Frontend: Interactive interface with React/Angular and Socket.IO.
 
 
 Contacts:
-
 Amar Kumal - amarkumal9137@gmail.com
 
 Suraj Padase - shripadase@gmail.com
@@ -46,15 +41,11 @@ Shreyansh Dubey - shrayanshdubey.sd@gmail.com
 Maheshwar Mitkari - maheshmitkari6229@gmail.com
 
 
-
-
 Project Link:  https://github.com/hehegiggle/Hehegiggle.git
 
-<<<<<<< HEAD
 Product and Sprint Backlog:  https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
-=======
+
 Product and Sprint Backlog:   https://1drv.ms/x/s!AltDnJQqRgq3mKhXYI_KunD72wj9YA
->>>>>>> origin/Chetan
 
 High Level Document:  https://1drv.ms/w/s!AltDnJQqRgq3mKhZ2uhud1kyvUDijw
 
@@ -62,8 +53,7 @@ Jira Board:   https://hehegiggle.atlassian.net/jira/software/projects/SCRUM/boar
 
 Confluence:  https://hehegiggle.atlassian.net/wiki/home
 
-<<<<<<< HEAD
-=======
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -134,6 +124,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> 67f573e (hehe giggle commited)
-=======
->>>>>>> origin/Chetan
+
