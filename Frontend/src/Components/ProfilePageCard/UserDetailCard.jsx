@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { followUserAction, unFollowUserAction } from "../../Redux/User/Action";
+import { followUserAction, unFollowUserAction, followerList, followingList } from "../../Redux/User/Action";
 import { useToast, Box, Image, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 
 const UserDetailCard = ({ user, isRequser, isFollowing }) => {
@@ -10,7 +10,11 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useToast();
-  const [isFollow, setIsFollow] = useState(false);
+  
+  // State variables for tracking follow status and follower/following counts
+  const [isFollow, setIsFollow] = useState(isFollowing);
+  const [followersCount, setFollowersCount] = useState(user?.follower?.length || 0);
+  const [followingCount, setFollowingCount] = useState(user?.following?.length || 0);
 
   const goToAccountEdit = () => {
     navigate("/account/edit");
@@ -24,6 +28,7 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
   const handleFollowUser = () => {
     dispatch(followUserAction(data));
     setIsFollow(true);
+    setFollowersCount(prev => prev + 1); // Increment followers count
     toast({
       title: "Follow request sent successfully 🫠🫠🫠",
       status: "success",
@@ -34,6 +39,8 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
 
   const handleUnFollowUser = () => {
     dispatch(unFollowUserAction(data));
+    setIsFollow(false);
+    setFollowersCount(prev => prev - 1); // Decrement followers count
     toast({
       title: "Unfollowed user 😔😔😔",
       status: "error",
@@ -42,9 +49,19 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
     });
   };
 
+  // const handleFollowerClick = () => {
+  //   dispatch(followerList(token));
+  // }
+
+  // const handleFollowingClick = () => {
+  //   dispatch(followingList(token));
+  // }
+
   useEffect(() => {
     setIsFollow(isFollowing);
-  }, [isFollowing]);
+    setFollowersCount(user?.follower?.length || 0);
+    setFollowingCount(user?.following?.length || 0);
+  }, [isFollowing, user]);
 
   return (
     <Box py={10} mb={5} bgGradient="linear(to-r, #8697C4, #EDE8F5)" borderRadius="20px">
@@ -65,7 +82,7 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
           <Flex alignItems="center" justifyContent={{ base: "center", md: "flex-start" }} mb={5}>
             <Text fontSize="xl">{user?.username}</Text>
             <Spacer mx={2} />
-            <Button size="xl" mr={{md:'66%'}} bg="white" onClick={isRequser ? goToAccountEdit : isFollow ? handleUnFollowUser : handleFollowUser}>
+            <Button size="xl" mr={{ md: '66%' }} bg="white" onClick={isRequser ? goToAccountEdit : isFollow ? handleUnFollowUser : handleFollowUser}>
               {isRequser ? "Edit profile" : isFollow ? "Unfollow" : "Follow"}
             </Button>
           </Flex>
@@ -78,13 +95,13 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
             </Box>
             <Box mr={10}>
               <Text as="span" fontWeight="semibold" mr={2}>
-                {user?.follower?.length}
+                {followersCount}
               </Text>
               <Text as="span">Followers</Text>
             </Box>
             <Box>
               <Text as="span" fontWeight="semibold" mr={2}>
-                {user?.following?.length}
+                {followingCount}
               </Text>
               <Text as="span">Following</Text>
             </Box>

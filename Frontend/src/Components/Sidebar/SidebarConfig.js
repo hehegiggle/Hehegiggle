@@ -12,7 +12,7 @@ import { BsPersonCircle, BsArrowLeftRight } from "react-icons/bs";
 
 export const mainu = [
   // {
-  //  // title: "Collapse",
+  //   title: "Collapse",
   //   icon: <BsArrowLeftRight className="text-2xl mr-5" />,
   //   activeIcon: <BsArrowLeftRight className="text-2xl mr-5" />,
   // },

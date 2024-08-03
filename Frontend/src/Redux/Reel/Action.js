@@ -8,8 +8,12 @@ import {
   GET_ALL_REELS_SUCCESS,
   REQ_USER_REELS_FAILURE,
   REQ_USER_REELS_SUCCESS,
+  DELETE_REEL_FAILURE,
+  DELETE_REEL_REQUEST,
+  DELETE_REEL_SUCCESS,
 } from "./ActionType";
 
+//Create Reel
 export const createReel = (data) => async (dispatch) => {
   dispatch({ type: CREATE_REEL_REQUEST });
   try {
@@ -39,37 +43,7 @@ export const createReel = (data) => async (dispatch) => {
   }
 };
 
-
-// export const deleteReel = (data) => async (dispatch) => {
-//   dispatch({ type: DELETE_REEL_REQUEST });
-//   try {
-//     const response = await fetch(
-//       `${BASE_URL}/api/reels/delete/${data.reelId}`,
-//       {
-//         method: "DELETE",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: "Bearer " + data.jwt,
-//         },
-//       }
-//     );
-//     if (!response.ok) {
-//       const errorData = await response.json();
-//       throw new Error(errorData.message || "Failed to delete reel");
-//     }
-//     const responseData = await response.json();
-//     dispatch({
-//       type: DELETE_REEL_SUCCESS,
-//       payload: responseData,
-//     });
-//   } catch (error) {
-//     dispatch({
-//       type: DELETE_REEL_FAILURE,
-//       payload: error.message,
-//     });
-//   }
-// };
-
+//Get all reels
 export const getAllReels = (jwt) => async (dispatch) => {
   dispatch({ type: GET_ALL_REELS_REQUEST });
   try {
@@ -85,7 +59,7 @@ export const getAllReels = (jwt) => async (dispatch) => {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to get reels");
     }
-    
+
     const responseData = await response.json();
     dispatch({
       type: GET_ALL_REELS_SUCCESS,
@@ -100,7 +74,7 @@ export const getAllReels = (jwt) => async (dispatch) => {
   }
 };
 
-
+//Get reel by userId
 export const getReelByUserId = (data) => async (dispatch) => {
   try {
     const res = await fetch(`${BASE_URL}/api/reels/user/${data.userId}`, {
@@ -125,6 +99,40 @@ export const getReelByUserId = (data) => async (dispatch) => {
     console.log("catch error ---- ", error);
     dispatch({
       type: REQ_USER_REELS_FAILURE,
+      payload: error.message,
+    });
+  }
+};
+
+// Delete reel by reelId
+export const deleteReelByReelId = (data) => async (dispatch) => {
+  dispatch({type: DELETE_REEL_REQUEST });
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/reels/user/delete-reel/${data.reelId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${data.jwt}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to Delete the reel");
+    }
+
+    const responseData = await response.json();
+    dispatch({
+      type: DELETE_REEL_SUCCESS,
+      payload: responseData,
+    });
+  } catch (error) {
+    console.log("An error occurred: ", error);
+    dispatch({
+      type: DELETE_REEL_FAILURE,
       payload: error.message,
     });
   }

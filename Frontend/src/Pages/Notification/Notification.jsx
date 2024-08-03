@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BASE_URL } from "../../Config/api";
+import { markAllAsRead } from "../../Redux/Notification/Action";
 import {
   Flex,
   Box,
@@ -15,6 +17,7 @@ import axios from "axios";
 function Notification() {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -35,7 +38,9 @@ function Notification() {
         ).length;
         setUnreadCount(unreadCount);
       } catch (error) {
-        console.error("Error fetching notifications:", error);
+        console.error("Notification fetching Response error:", error.response);
+        console.error("Notification fetching Request error:", error.request);
+        console.error("Notification fetching Error:", error.message);
       }
     };
     fetchNotifications();
@@ -43,18 +48,14 @@ function Notification() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const markAllAsRead = async () => {
-    try {
-      await axios.put(`${BASE_URL}/api/realtime-notifications/mark-as-read`);
-      const updatedNotifications = notifications.map((notification) => ({
-        ...notification,
-        read: true,
-      }));
-      setNotifications(updatedNotifications);
-      setUnreadCount(0);
-    } catch (error) {
-      console.error("Error marking notifications as read:", error);
-    }
+  const handlemarkAllAsRead = () => {
+    dispatch(markAllAsRead());
+    const updatedNotifications = notifications.map((notification) => ({
+      ...notification,
+      read: true,
+    }));
+    setNotifications(updatedNotifications);
+    setUnreadCount(0);
   };
 
   const timeDifference = (timestamp) => {
@@ -93,10 +94,10 @@ function Notification() {
           p={2}
           borderRadius="20px"
           boxShadow="2xl"
-          ml={{base:'12%', md:'21%'}}
-          width={{base:'85%', md:'77%'}}
-          mt={{base:'5%', md:'2%'}}
-          mb={{md:'2%', base: '4%'}}
+          ml={{ base: "12%", md: "21%" }}
+          width={{ base: "85%", md: "77%" }}
+          mt={{ base: "5%", md: "2%" }}
+          mb={{ md: "2%", base: "4%" }}
           style={{
             position: "relative",
             overflow: "hidden",
@@ -121,7 +122,7 @@ function Notification() {
                   </Badge>
                 </Box>
                 <Button
-                  onClick={markAllAsRead}
+                  onClick={handlemarkAllAsRead}
                   style={{
                     borderRadius: "20px",
                     backgroundColor: "#8697C4",
@@ -138,8 +139,8 @@ function Notification() {
                 overflowY="auto"
                 css={{
                   "&::-webkit-scrollbar": { display: "none" },
-                  "msOverflowStyle": "none" /* IE and Edge */,
-                  "scrollbarWidth": "none" /* Firefox */,
+                  msOverflowStyle: "none" /* IE and Edge */,
+                  scrollbarWidth: "none" /* Firefox */,
                 }}
               >
                 {notifications.map((notification) => (
