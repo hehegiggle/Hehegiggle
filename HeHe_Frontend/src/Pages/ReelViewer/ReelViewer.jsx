@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllReels, deleteReelByReelId } from "../../Redux/Reel/Action";
-import { Box, Flex, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Box, Flex, Text, useToast } from "@chakra-ui/react";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import "./ReelViewer.css";
 import { TbMoodSadDizzy } from "react-icons/tb";

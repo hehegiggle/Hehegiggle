@@ -37,7 +37,11 @@ const DateInput = ({ field, form, ...props }) => {
           form.setFieldValue(field.name, formattedDate);
         }}
         customInput={
-          <Input w={['100%', '178%', '178%', '178%']} bg="white" _placeholder={{ color: "black" }} />
+          <Input
+            w={["100%", "178%", "178%", "178%"]}
+            bg="white"
+            _placeholder={{ color: "black" }}
+          />
         }
       />
       <FormErrorMessage>{form.errors.dateOfBirth}</FormErrorMessage>
@@ -46,32 +50,39 @@ const DateInput = ({ field, form, ...props }) => {
 };
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email address").required("Required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .matches(/^[a-zA-Z0-9._%+-]+@(gmail|outlook)\.com$/, "Email must be a Gmail or Outlook address ending with .com")
+    .required("Required"),
   username: Yup.string()
-    .min(4, "Username must be at least 4 characters")
+    .min(5, "Username must be at least 5 characters")
     .required("Required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
+    .matches(/.*[^A-Za-z0-9].*[0-9]/, "Password must contain at least one special character followed by numbers")
     .required("Required"),
   name: Yup.string()
-    .min(4, "Name must be at least 4 characters")
+    .matches(/^[A-Za-z]*$/, "Name can only contain letters ")
+    .min(3, "Name must be at least 3 characters")
     .required("Required"),
   dateOfBirth: Yup.date()
     .max(new Date(), "Date of Birth cannot be in the future")
     .required("Required")
-    .test("age", "You must be at least 18 years old", function (value) { // custom validation - age, error message if the validation fails "You must be at least 18 years old", function performing the validation
-      const today = new Date(); // current date
-      const birthDate = new Date(value); // convert input value to date
-      let age = today.getFullYear() - birthDate.getFullYear(); // calculate age (year difference)
-      const monthDifference = today.getMonth() - birthDate.getMonth(); // calculate month difference (today.getMonth() -> 0 for January, 1 for February, etc.).
-
-      // For checking the exact age of the User whether in this year he has reached his birthday or not
-      if ( monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    .test("age", "You must be at least 13 years old", function (value) {
+      const today = new Date();
+      const birthDate = new Date(value);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDifference = today.getMonth() - birthDate.getMonth();
+      if (
+        monthDifference < 0 ||
+        (monthDifference === 0 && today.getDate() < birthDate.getDate())
+      ) {
         age--;
       }
-      return age >= 18;
+      return age >= 13;
     }),
 });
+
 
 const Signup = () => {
   const initialValues = {

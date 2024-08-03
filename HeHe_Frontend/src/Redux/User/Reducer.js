@@ -5,6 +5,12 @@ import {
   SEARCH_USER,
   SEARCH_USER_SUCCESS,
   UPDATE_USER,
+  FOLLOWER_LIST_FAILURE,
+  FOLLOWER_LIST_REQUEST,
+  FOLLOWER_LIST_SUCCESS,
+  FOLLOWING_LIST_FAILURE,
+  FOLLOWING_LIST_REQUEST,
+  FOLLOWING_LIST_SUCCESS,
 } from "./ActionType";
 
 const initialState = {
@@ -21,6 +27,16 @@ const initialState = {
     message: null,
     error: null,
   },
+  followerList: {
+    loading: false,
+    data: [],
+    error: null,
+  },
+  followingList: {
+    loading: false,
+    data: [],
+    error: null,
+  },
 };
 
 export const userReducer = (state = initialState, { type, payload }) => {
@@ -35,7 +51,7 @@ export const userReducer = (state = initialState, { type, payload }) => {
       return { ...state, userByIds: payload };
 
     case SEARCH_USER:
-      return { ...state, searchResult:payload};
+      return { ...state, searchResult: payload };
 
     case SEARCH_USER_SUCCESS:
       return {
@@ -50,6 +66,62 @@ export const userReducer = (state = initialState, { type, payload }) => {
 
     case UPDATE_USER:
       return { ...state, updatedUser: payload };
+
+    case FOLLOWER_LIST_REQUEST:
+      return {
+        ...state,
+        followerList: {
+          ...state.followerList,
+          loading: true,
+        },
+      };
+
+    case FOLLOWER_LIST_SUCCESS:
+      return {
+        ...state,
+        followerList: {
+          loading: false,
+          data: payload,
+          error: null,
+        },
+      };
+
+    case FOLLOWER_LIST_FAILURE:
+      return {
+        ...state,
+        followerList: {
+          loading: false,
+          error: payload,
+        },
+      };
+
+    case FOLLOWING_LIST_REQUEST:
+      return {
+        ...state,
+        followingList: {
+          ...state.followingList,
+          loading: true,
+        },
+      };
+
+    case FOLLOWING_LIST_SUCCESS:
+      return {
+        ...state,
+        followingList: {
+          loading: false,
+          data: payload,
+          error: null,
+        },
+      };
+
+    case FOLLOWING_LIST_FAILURE:
+      return {
+        ...state,
+        followingList: {
+          loading: false,
+          error: payload,
+        },
+      };
 
     default:
       return state;

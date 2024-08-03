@@ -3,7 +3,9 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Select,
   Stack,
+  FormErrorMessage,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -56,6 +58,15 @@ const EditProfileForm = () => {
 
   const formik = useFormik({
     initialValues: { ...initialValues },
+    validate: (values) => {
+      const errors = {};
+      if (values.mobile && !/^[6789]/.test(values.mobile)) {
+        errors.mobile = "Phone number must start with 6, 7, 8, or 9.";
+      } else if (values.mobile && !/^\d{10}$/.test(values.mobile)) {
+        errors.mobile = "Phone number must be exactly 10 digits.";
+      }
+      return errors;
+    },
     onSubmit: (values) => {
       const data = {
         jwt: token,
@@ -103,7 +114,7 @@ const EditProfileForm = () => {
         marginTop: "11%",
         marginBottom: "7%",
         width: "112%",
-        boxShadow:"lg",
+        boxShadow: "lg",
         background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
       }}
     >
@@ -131,10 +142,14 @@ const EditProfileForm = () => {
         <Button
           onClick={onOpen}
           className="font-boldcursor-pointer ml-auto"
-          color="white" // Text color
-          px={4} // Padding X
-          py={2} // Padding Y
-          style={{ borderRadius: "20px", backgroundColor: "#8697C4", borderWidth:"1px" }}
+          color="white"
+          px={4}
+          py={2}
+          style={{
+            borderRadius: "20px",
+            backgroundColor: "#8697C4",
+            borderWidth: "1px",
+          }}
         >
           Upload Profile Picture
         </Button>
@@ -183,7 +198,11 @@ const EditProfileForm = () => {
               />
             </div>
           </FormControl>
-          <FormControl className="flex " id="mobile">
+          <FormControl
+            isInvalid={formik.touched.mobile && formik.errors.mobile}
+            className="flex "
+            id="mobile"
+          >
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Phone number
             </FormLabel>
@@ -195,6 +214,9 @@ const EditProfileForm = () => {
                 type="tel"
                 {...formik.getFieldProps("mobile")}
               />
+              {formik.touched.mobile && formik.errors.mobile && (
+                <FormErrorMessage>{formik.errors.mobile}</FormErrorMessage>
+              )}
             </div>
           </FormControl>
           <FormControl className="flex " id="gender">
@@ -202,17 +224,26 @@ const EditProfileForm = () => {
               Gender
             </FormLabel>
             <div className="w-full">
-              <Input
+              <Select
+                placeholder="Select Gender"
                 borderColor="black"
-                placeholder="Gender"
-                className="w-full"
-                type="text"
                 {...formik.getFieldProps("gender")}
-              />
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+              </Select>
             </div>
           </FormControl>
           <div>
-            <Button type="submit" style={{ borderRadius: "20px", backgroundColor: "#8697C4", color:"white"}}>
+            <Button
+              type="submit"
+              style={{
+                borderRadius: "20px",
+                backgroundColor: "#8697C4",
+                color: "white",
+              }}
+            >
               Submit
             </Button>
           </div>

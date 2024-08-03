@@ -8,6 +8,12 @@ import {
   SEARCH_USER_FAILURE,
   SEARCH_USER_SUCCESS,
   UPDATE_USER,
+  FOLLOWER_LIST_FAILURE,
+  FOLLOWER_LIST_REQUEST,
+  FOLLOWER_LIST_SUCCESS,
+  FOLLOWING_LIST_FAILURE,
+  FOLLOWING_LIST_REQUEST,
+  FOLLOWING_LIST_SUCCESS,
 } from "./ActionType";
 
 export const getUserProfileAction = (token) => async (dispatch) => {
@@ -154,3 +160,47 @@ export const searchUser = (data) => async (dispatch) => {
     dispatch({ type: SEARCH_USER_FAILURE, payload: error.message });
   }
 };
+
+export const followerList = (token) => async (dispatch) => {
+  dispatch({type: FOLLOWER_LIST_REQUEST});
+  try{
+    const response = await fetch(`${BASE_URL}/api/users/follower-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+    const results = await response.json();
+    console.log("Followers List------------", results);
+    dispatch({
+      type: FOLLOWER_LIST_SUCCESS,
+      payload: results.message ? { isError: true, ...results } : results,
+    });
+  }catch(error){
+    console.log("Error while getting followers: ", error);
+    dispatch({ type: FOLLOWER_LIST_FAILURE, payload: error.message });
+  }
+}
+
+export const followingList = (token) => async (dispatch) => {
+  dispatch({type: FOLLOWING_LIST_REQUEST});
+  try{
+    const response = await fetch(`${BASE_URL}/api/users/following-list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+    const results = await response.json();
+    console.log("Following List------------", results);
+    dispatch({
+      type: FOLLOWING_LIST_SUCCESS,
+      payload: results.message ? { isError: true, ...results } : results,
+    });
+  }catch(error){
+    console.log("Error while getting followings: ", error);
+    dispatch({ type: FOLLOWING_LIST_FAILURE, payload: error.message });
+  }
+}

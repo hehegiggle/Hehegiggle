@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { followUserAction, unFollowUserAction } from "../../Redux/User/Action";
+import { followUserAction, unFollowUserAction, followerList, followingList } from "../../Redux/User/Action";
 import { useToast, Box, Image, Button, Text, Flex, Spacer } from "@chakra-ui/react";
 
 const UserDetailCard = ({ user, isRequser, isFollowing }) => {
@@ -48,6 +48,14 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
       isClosable: true,
     });
   };
+
+  // const handleFollowerClick = () => {
+  //   dispatch(followerList(token));
+  // }
+
+  // const handleFollowingClick = () => {
+  //   dispatch(followingList(token));
+  // }
 
   useEffect(() => {
     setIsFollow(isFollowing);
