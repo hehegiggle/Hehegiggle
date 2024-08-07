@@ -1,0 +1,5 @@
+package com.notificationmicroservice.config;
+
+public class RabbitMQConfig {
+
+}

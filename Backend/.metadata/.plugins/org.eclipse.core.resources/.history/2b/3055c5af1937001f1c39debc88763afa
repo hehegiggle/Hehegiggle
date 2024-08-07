@@ -1,0 +1,88 @@
+package com.notificationmicroservice.service;
+
+import com.notificationmicroservice.entity.RealTimeNotification;
+import com.notificationmicroservice.entity.User;
+import com.notificationmicroservice.repository.RealTimeNotificationRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class RealTimeNotificationService {
+
+	@Autowired
+	private RealTimeNotificationRepository realTimeNotificationRepo;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+
+	// Save a new real-time notification
+	public RealTimeNotification saveNotification(RealTimeNotification notification) {
+		return realTimeNotificationRepo.save(notification);
+	}
+
+	// Get all real-time notifications
+	public List<RealTimeNotification> getAllNotifications() {
+		return realTimeNotificationRepo.findAll();
+	}
+
+	// Get a real-time notification by ID
+	public Optional<RealTimeNotification> getNotificationById(String id) {
+		return realTimeNotificationRepo.findById(id);
+	}
+
+	// Delete a real-time notification by ID
+	public void deleteNotificationById(String id) {
+		realTimeNotificationRepo.deleteById(id);
+	}
+
+	// Update a real-time notification
+	public RealTimeNotification updateNotification(String id, RealTimeNotification updatedNotification) {
+		Optional<RealTimeNotification> optionalNotification = realTimeNotificationRepo.findById(id);
+		if (optionalNotification.isPresent()) {
+			RealTimeNotification notification = optionalNotification.get();
+			notification.setNotificationId(updatedNotification.getNotificationId());
+			notification.setType(updatedNotification.getType());
+			notification.setUserId(updatedNotification.getUserId());
+			notification.setPostId(updatedNotification.getPostId());
+			notification.setCommentId(updatedNotification.getCommentId());
+			notification.setSenderId(updatedNotification.getSenderId());
+			notification.setMessage(updatedNotification.getMessage());
+			return realTimeNotificationRepo.save(notification);
+		} else {
+			return null;
+		}
+	}
+
+	// Get real-time notifications by user ID
+	public List<RealTimeNotification> getNotificationsByUserId(String token) {
+
+		User user = getUserById(token);
+		System.out.println("I got User----"+user);
+		
+		return realTimeNotificationRepo.findByUserId(user.getId());
+	}
+
+	// JWT to UserID
+	private static final String url = "http://USER-SERVICE/api/users/req";
+
+	public User getUserById(String jwt) {
+		System.out.println("token----------" + jwt);
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.set("Authorization", jwt);
+		HttpEntity<User> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+		System.out.println("got user+" + response);
+		return response.getBody();
+	}
+}

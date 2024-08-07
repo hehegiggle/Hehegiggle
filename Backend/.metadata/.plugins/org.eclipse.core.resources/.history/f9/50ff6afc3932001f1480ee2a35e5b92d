@@ -1,0 +1,25 @@
+package com.axis.messageservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
+
+import com.axis.messageservice.entity.Message;
+
+@Controller
+public class RealTimeChat {
+
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
+
+	@MessageMapping("/api/messages/chat/{chatId}")
+	public Message sendToUser(@Payload Message message) {
+
+		simpMessagingTemplate.convertAndSendToUser(message.getUser(), "/private", message);
+		return message;
+
+	}
+}
