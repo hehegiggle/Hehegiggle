@@ -1,0 +1,5 @@
+package com.postmicroservice.event;
+
+public class NotificationEvent {
+
+}
