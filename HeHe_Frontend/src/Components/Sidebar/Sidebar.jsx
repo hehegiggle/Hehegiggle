@@ -92,7 +92,7 @@ const Sidebar = () => {
       position="fixed"
       top={{ base: "44%", md: "45%" }}
       transform="translateY(-50%)"
-      w={{ base: "90px", md: isExpanded ? "300px" : "90px" }} // Responsive width
+      w={{ base: "90px", md: isExpanded ? "305px" : "90px" }}
       h="60%"
       display="flex"
       flexDirection="column"

@@ -13,6 +13,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { TbMoodSadFilled } from "react-icons/tb";
 
 function Notification() {
   const [notifications, setNotifications] = useState([]);
@@ -48,7 +49,7 @@ function Notification() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handlemarkAllAsRead = () => {
+  const handleMarkAllAsRead = () => {
     dispatch(markAllAsRead());
     const updatedNotifications = notifications.map((notification) => ({
       ...notification,
@@ -59,20 +60,14 @@ function Notification() {
   };
 
   const timeDifference = (timestamp) => {
-    // Convert the timestamp to a Date object
     const date = new Date(timestamp);
-
-    // Calculate the time difference in milliseconds
     const diff = Date.now() - date.getTime();
-
-    // Convert the time difference to seconds, minutes, hours, and days
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
     const weeks = Math.floor(days / 7);
 
-    // Format the time difference as a string
     if (weeks > 0) {
       return weeks + " week" + (weeks === 1 ? "" : "s") + " ago";
     } else if (days > 0) {
@@ -82,7 +77,7 @@ function Notification() {
     } else if (minutes > 0) {
       return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
     } else {
-      return seconds + " second" + (seconds === 1 ? "" : "s") + " ago";
+      return " less than a minute ago";
     }
   };
 
@@ -106,34 +101,38 @@ function Notification() {
         >
           <Container maxW="2xl" mt={10}>
             <Stack spacing={6}>
-              <Flex justifyContent="space-between" alignItems="center">
-                <Box>
-                  <Badge
-                    colorScheme="green"
-                    variant="solid"
-                    fontSize="md"
-                    style={{
-                      borderRadius: "5px",
-                      backgroundColor: "#8697C4",
-                      color: "white",
-                    }}
-                  >
-                    Unread Notifications: {unreadCount}
-                  </Badge>
-                </Box>
-                <Button
-                  onClick={handlemarkAllAsRead}
-                  style={{
-                    borderRadius: "20px",
-                    backgroundColor: "#8697C4",
-                    color: "white",
-                  }}
-                  size="sm"
-                >
-                  Mark All as Read
-                </Button>
-              </Flex>
-              <Divider />
+              {notifications.length > 0 && (
+                <>
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Box>
+                      <Badge
+                        colorScheme="green"
+                        variant="solid"
+                        fontSize="md"
+                        style={{
+                          borderRadius: "5px",
+                          backgroundColor: "#8697C4",
+                          color: "white",
+                        }}
+                      >
+                        Unread Notifications: {unreadCount}
+                      </Badge>
+                    </Box>
+                    <Button
+                      onClick={handleMarkAllAsRead}
+                      style={{
+                        borderRadius: "20px",
+                        backgroundColor: "#8697C4",
+                        color: "white",
+                      }}
+                      size="sm"
+                    >
+                      Mark all as read
+                    </Button>
+                  </Flex>
+                  <Divider />
+                </>
+              )}
               <Box
                 maxHeight="450px"
                 overflowY="auto"
@@ -143,28 +142,37 @@ function Notification() {
                   scrollbarWidth: "none" /* Firefox */,
                 }}
               >
-                {notifications.map((notification) => (
-                  <Box
-                    key={notification.notificationId}
-                    p={6}
-                    shadow="lg"
-                    borderWidth="1px"
-                    borderRadius="lg"
-                    mb="3%"
-                  >
-                    <Text fontWeight="semibold" fontSize="lg">
-                      {notification.message}
-                    </Text>
-                    <Flex justifyContent="space-between" alignItems="center">
-                      {notification.read ? (
-                        <Badge colorScheme="green">Read</Badge>
-                      ) : (
-                        <Badge colorScheme="red">Unread</Badge>
-                      )}
-                      <Text>{timeDifference(notification.notificationAt)}</Text>
-                    </Flex>
-                  </Box>
-                ))}
+                {notifications.length === 0 ? (
+                  <Flex direction="column" align="center" mt={20}>
+                    <TbMoodSadFilled size="15rem" />
+                    <Text mt={2} fontSize="2xl" fontWeight="semibold">No recent notifications</Text>
+                  </Flex>
+                ) : (
+                  notifications.map((notification) => (
+                    <Box
+                      key={notification.notificationId}
+                      p={6}
+                      shadow="lg"
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      mb="3%"
+                    >
+                      <Text fontWeight="semibold" fontSize="lg">
+                        {notification.message}
+                      </Text>
+                      <Flex justifyContent="space-between" alignItems="center">
+                        {notification.read ? (
+                          <Badge colorScheme="green">Read</Badge>
+                        ) : (
+                          <Badge colorScheme="red">Unread</Badge>
+                        )}
+                        <Text>
+                          {timeDifference(notification.notificationAt)}
+                        </Text>
+                      </Flex>
+                    </Box>
+                  ))
+                )}
               </Box>
             </Stack>
           </Container>

@@ -1,6 +1,6 @@
 import { Modal, ModalBody, ModalContent, ModalOverlay } from "@chakra-ui/modal";
-import { Box, Flex, useToast } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Box, Flex, Icon, useToast } from "@chakra-ui/react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaPhotoVideo } from "react-icons/fa";
 import "./CreatePostModal.css";
 import { Button } from "@chakra-ui/button";
@@ -8,12 +8,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../../Redux/Post/Action";
 import { uploadToCloudinary } from "../../../Config/UploadToCloudinary";
 import SpinnerCard from "../../Spinner/Spinner";
+import EmojiPicker from "emoji-picker-react";
+import { GrEmoji } from "react-icons/gr";
 
 const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
   const finalRef = React.useRef(null);
   const [file, setFile] = useState(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isImageUploaded, setIsImageUploaded] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
   const toast = useToast();
 
   const dispatch = useDispatch();
@@ -60,6 +64,19 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
 
   const handleOnChange = async (e) => {
     const file = e.target.files[0];
+
+    const maxSize = 5 * 1024 * 1024; //Max size of video file is 5MB (5 * 1024 * 1024 converts MB's to bytes (MB * KB * byte))
+    
+    if (file.size > maxSize) {
+        toast({
+            title: "Image size exceeds the limit of 5 MB.",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+        });
+        return;
+    }
+
     if (file && file.type.startsWith("image/")) {
       setFile(file);
       setIsImageUploaded("uploading");
@@ -75,6 +92,13 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
         isClosable: true,
       });
     }
+  };
+
+  const handleEmojiClick = (emojiObject) => {
+    setPostData((prevValues) => ({
+      ...prevValues,
+      caption: prevValues.caption + emojiObject.emoji,
+    }));
   };
 
   const handleSubmit = async () => {
@@ -100,7 +124,25 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
     setIsDragOver(false);
     setPostData({ image: "", caption: "", location: "" });
     setIsImageUploaded("");
+    setShowEmojiPicker(false);
   };
+
+  const handleClickOutside = (event) => {
+    if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+      setShowEmojiPicker(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showEmojiPicker]);
 
   return (
     <div>
@@ -147,8 +189,8 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                     style={{ borderRadius: "20px", backgroundColor: isDragOver ? "#f0f0f0" : "transparent" }}
                   >
                     <Flex justify="center" direction="column" align="center">
-                      <FaPhotoVideo className={`text-3xl ${isDragOver ? "text-800" : ""}`} />
-                      <p>Drag photos here</p>
+                      <FaPhotoVideo size={'4rem'} className={`text-3xl ${isDragOver ? "text-800" : ""}`} />
+                      
                     </Flex>
 
                     <label
@@ -207,6 +249,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                   p={4}
                   mb={4}
                   shadow="md"
+                  position="relative"
                 >
                   <textarea
                     style={{ background: "transparent", color: "black", width: "100%", borderRadius: "10px" }}
@@ -215,10 +258,30 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                     name="caption"
                     rows="10"
                     onChange={handleInputChange}
+                    value={postData.caption}
                   />
                   <Flex justify="space-between" px={2}>
                     <p className="opacity-70">{postData.caption?.length}/2,200</p>
+                    <Icon
+                      mb="3"
+                      as={GrEmoji}
+                      boxSize={6}
+                      ml="5%"
+                      cursor="pointer"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    />
                   </Flex>
+                  {showEmojiPicker && (
+                    <Box
+                      ref={emojiPickerRef}
+                      position="absolute"
+                      bottom="50px"
+                      right="10px"
+                      zIndex="999"
+                    >
+                      <EmojiPicker onEmojiClick={handleEmojiClick} />
+                    </Box>
+                  )}
                 </Box>
 
                 <Box
@@ -236,6 +299,7 @@ const CreatePostModal = ({ onOpen, isOpen, onClose }) => {
                       placeholder="Add Location"
                       name="location"
                       onChange={handleInputChange}
+                      value={postData.location}
                     />
                   </Flex>
                 </Box>

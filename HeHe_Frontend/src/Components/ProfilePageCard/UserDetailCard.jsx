@@ -30,7 +30,7 @@ const UserDetailCard = ({ user, isRequser, isFollowing }) => {
     setIsFollow(true);
     setFollowersCount(prev => prev + 1); // Increment followers count
     toast({
-      title: "Follow request sent successfully 🫠🫠🫠",
+      title: "User followed successfully 🫠🫠🫠",
       status: "success",
       duration: 1000,
       isClosable: true,

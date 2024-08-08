@@ -11,10 +11,11 @@ import { MdDeleteForever } from "react-icons/md";
 
 const ReelViewer = ({ reels }) => {
   const [currentReel, setCurrentReel] = useState(0);
-  const { user } = useSelector(store => store);
+  const { user } = useSelector((store) => store);
   const [transitioning, setTransitioning] = useState(false);
   const dispatch = useDispatch();
   const containerRef = useRef(null);
+  const currentVideoRef = useRef(null); // Ref to store the current video element
   const navigate = useNavigate();
   const jwt = sessionStorage.getItem("token");
   const toast = useToast();
@@ -46,15 +47,23 @@ const ReelViewer = ({ reels }) => {
   }, [currentReel, transitioning]);
 
   const handleNextReel = () => {
+    pauseCurrentVideo(); // Pause the current video before moving to the next reel
     setCurrentReel((prevReel) =>
       prevReel === reels.length - 1 ? 0 : prevReel + 1
     );
   };
 
   const handlePrevReel = () => {
+    pauseCurrentVideo(); // Pause the current video before moving to the previous reel
     setCurrentReel((prevReel) =>
       prevReel === 0 ? reels.length - 1 : prevReel - 1
     );
+  };
+
+  const pauseCurrentVideo = () => {
+    if (currentVideoRef.current) {
+      currentVideoRef.current.pause(); // Pause the video
+    }
   };
 
   const handleUsernameClick = (username, event) => {
@@ -211,19 +220,22 @@ const ReelViewer = ({ reels }) => {
                               );
                               console.log("reelItem --------", reelItem);
                               console.log("reelitem user------", reelItem.user);
-                              console.log("user store reUser---------", user.reqUser);
+                              console.log(
+                                "user store reUser---------",
+                                user.reqUser
+                              );
                             }}
                           >
                             @{reelItem.user.username}
                           </div>
                         </div>
                       </div>
-                      {reelItem.user.id === user.reqUser.id? (
-                          <MdDeleteForever
-                            size={"1.5em"}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => handleReelDelete(reelItem.id)}
-                          />
+                      {reelItem.user.id === user.reqUser.id ? (
+                        <MdDeleteForever
+                          size={"1.5em"}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleReelDelete(reelItem.id)}
+                        />
                       ) : (
                         " "
                       )}
@@ -242,12 +254,17 @@ const ReelViewer = ({ reels }) => {
                       controls
                       controlsList="nodownload nofullscreen noremoteplayback"
                       onClick={() => {
-                        const video = document.querySelector(`#video-${index}`);
+                        const video = document.querySelector(
+                          `#video-${index}`
+                        );
                         if (video.paused) {
                           video.play();
                         } else {
                           video.pause();
                         }
+                      }}
+                      onPlay={(e) => {
+                        currentVideoRef.current = e.target; // Store the current video element
                       }}
                       id={`video-${index}`}
                     >
@@ -293,7 +310,7 @@ ReelViewer.propTypes = {
   reels: PropTypes.arrayOf(
     PropTypes.shape({
       video: PropTypes.string.isRequired,
-      caption: PropTypes.string
+      caption: PropTypes.string,
     })
   ).isRequired,
 };

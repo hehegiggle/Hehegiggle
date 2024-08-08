@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
-import { Formik, Form, Field } from "formik";
+import React, { useEffect,useState } from "react";
+import { InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import {Formik, Form, Field } from "formik";
 import {
   Box,
   Button,
@@ -38,7 +40,7 @@ const DateInput = ({ field, form, ...props }) => {
         }}
         customInput={
           <Input
-            w={["100%", "178%", "178%", "178%"]}
+            w={["100%", "178%", "178%", "180%"]}
             bg="white"
             _placeholder={{ color: "black" }}
           />
@@ -62,7 +64,7 @@ const validationSchema = Yup.object().shape({
     .matches(/.*[^A-Za-z0-9].*[0-9]/, "Password must contain at least one special character followed by numbers")
     .required("Required"),
   name: Yup.string()
-    .matches(/^[A-Za-z]*$/, "Name can only contain letters ")
+    .matches(/^[A-Za-z\s]*$/, "Name can only contain letters and spaces")
     .min(3, "Name must be at least 3 characters")
     .required("Required"),
   dateOfBirth: Yup.date()
@@ -102,6 +104,9 @@ const Signup = () => {
     dispatch(signupAction(values));
     actions.setSubmitting(false);
   };
+
+ const [showPassword, setShowPassword] = useState(false);
+ const handleClick = () => setShowPassword(!showPassword);
 
   useEffect(() => {
     if (auth.signup?.jwt) {
@@ -219,24 +224,34 @@ const Signup = () => {
                 )}
               </Field>
               <Field name="password">
-                {({ field, form }) => (
-                  <FormControl
-                    isInvalid={form.errors.password && form.touched.password}
-                    mb={4}
-                  >
-                    <Input
-                      {...field}
-                      type="password"
-                      id="password"
-                      placeholder="Password"
-                      background="white"
-                      _placeholder={{ color: "black" }}
-                      width="100%"
-                    />
-                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
+      {({ field, form }) => (
+        <FormControl
+          isInvalid={form.errors.password && form.touched.password}
+          mb={4}
+        >
+          <InputGroup>
+            <InputRightElement>
+              <IconButton
+                variant="link"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                onClick={handleClick}
+              />
+            </InputRightElement>
+            <Input
+              {...field}
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Password"
+              background="white"
+              _placeholder={{ color: "black" }}
+              width="100%"
+            />
+          </InputGroup>
+          <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+        </FormControl>
+      )}
+    </Field>
               <Field name="dateOfBirth" component={DateInput} />
               <Button
                 className="w-full"

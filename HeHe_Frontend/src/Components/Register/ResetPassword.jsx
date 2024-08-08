@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -7,8 +7,12 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
+  InputGroup,
+  InputRightElement,
+  IconButton,
   useToast,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPassword } from "../../Redux/Auth/Action";
@@ -25,6 +29,8 @@ const validationSchema = Yup.object().shape({
 });
 
 function ResetPassword() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -45,7 +51,7 @@ function ResetPassword() {
     if (values.password === values.confirmedPassword) {
       if (currentUser && values.password === currentUser.password) {
         toast({
-          title: "Password Cannot be Same as Current Password 🛑🛑🛑",
+          title: "Password cannot be the same as current password 🛑🛑🛑",
           status: "error",
           duration: 1000,
           isClosable: true,
@@ -85,7 +91,7 @@ function ResetPassword() {
       }
     } else {
       toast({
-        title: "Password Mismatch ⚠️⚠️⚠️",
+        title: "Password mismatch ⚠⚠⚠",
         status: "error",
         duration: 1000,
         isClosable: true,
@@ -145,15 +151,24 @@ function ResetPassword() {
                     isInvalid={form.errors.password && form.touched.password}
                     mb={4}
                   >
-                    <Input
-                      {...field}
-                      type="password"
-                      id="password"
-                      placeholder="Password"
-                      bg="white"
-                      _placeholder={{ color: "black" }}
-                      required="true"
-                    />
+                    <InputGroup>
+                      <InputRightElement>
+                        <IconButton
+                          variant="link"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      </InputRightElement>
+                      <Input
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        placeholder="Password"
+                        bg="white"
+                        _placeholder={{ color: "black" }}
+                      />
+                    </InputGroup>
                     <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -167,15 +182,24 @@ function ResetPassword() {
                     }
                     mb={4}
                   >
-                    <Input
-                      {...field}
-                      type="password"
-                      id="confirmedPassword"
-                      placeholder="Confirmed Password"
-                      bg="white"
-                      _placeholder={{ color: "black" }}
-                      required="true"
-                    />
+                    <InputGroup>
+                      <InputRightElement>
+                        <IconButton
+                          variant="link"
+                          aria-label={showConfirmedPassword ? "Hide password" : "Show password"}
+                          icon={showConfirmedPassword ? <ViewOffIcon /> : <ViewIcon />}
+                          onClick={() => setShowConfirmedPassword(!showConfirmedPassword)}
+                        />
+                      </InputRightElement>
+                      <Input
+                        {...field}
+                        type={showConfirmedPassword ? "text" : "password"}
+                        id="confirmedPassword"
+                        placeholder="Confirm Password"
+                        bg="white"
+                        _placeholder={{ color: "black" }}
+                      />
+                    </InputGroup>
                     <FormErrorMessage>
                       {form.errors.confirmedPassword}
                     </FormErrorMessage>

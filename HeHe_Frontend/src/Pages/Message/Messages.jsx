@@ -12,6 +12,7 @@ import {
   Center,
   Image,
   Tooltip,
+  useToast
 } from "@chakra-ui/react";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { IoClose } from "react-icons/io5";
@@ -29,6 +30,8 @@ import { BsEmojiFrown } from "react-icons/bs";
 import { uploadToCloudinary } from "../../Config/UploadToCloudinary";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../Config/api";
+import { GrEmoji } from "react-icons/gr";
+import EmojiPicker from "emoji-picker-react";
 
 function Messages() {
   const dispatch = useDispatch();
@@ -41,10 +44,16 @@ function Messages() {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const token = sessionStorage.getItem("token");
   const { message, user } = useSelector((state) => state);
   const chatContainerRef = useRef(null);
+  const toast = useToast();
 
+  const MAX_GIF_SIZE = 2 * 1024 * 1024; // 2MB
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_VIDEO_SIZE = 20 * 1024 * 1024; // 20MB
+  
   useEffect(() => {
     dispatch(getAllChats({ token }));
   }, [dispatch, token]);
@@ -82,9 +91,40 @@ function Messages() {
   }, [currentChat, token]);
 
   const handleSelectImage = async (e) => {
-    setLoading(true);
     const file = e.target.files[0];
     const fileType = file.type.split("/")[0];
+
+    if (fileType === "image" && file.size > MAX_IMAGE_SIZE) {
+      toast({
+        title: "Image size exceeds 5MB limit.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (fileType === "video" && file.size > MAX_VIDEO_SIZE) {
+      toast({
+        title: "Video size exceeds 20MB limit.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (file.type === "image/gif" && file.size > MAX_GIF_SIZE) {
+      toast({
+        title: "GIF size exceeds 2MB limit.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    setLoading(true);
 
     if (fileType === "image") {
       const imgurl = await uploadToCloudinary(file, "image");
@@ -202,10 +242,14 @@ function Messages() {
     navigate(`/${username}`);
   };
 
-  const handleCloseChat = () =>{
+  const handleCloseChat = () => {
     setCurrentChat(null);
-  }
+  };
 
+  const handleEmojiClick = (emojiObject) => {
+    setInputValue((prevInputValue) => prevInputValue + emojiObject.emoji);
+  };
+  
   return (
     <Box
       h="100vh"
@@ -325,9 +369,12 @@ function Messages() {
                       </Box>
                     </Tooltip>
                     <Tooltip label="Close Chat" placement="left">
-                    <Box style={{ cursor: "pointer" }} ml={2}>
-                      <IoClose size={"30px"} onClick={()=>handleCloseChat()}/>
-                    </Box>
+                      <Box style={{ cursor: "pointer" }} ml={2}>
+                        <IoClose
+                          size={"30px"}
+                          onClick={() => handleCloseChat()}
+                        />
+                      </Box>
                     </Tooltip>
                   </Flex>
                 </Flex>
@@ -393,13 +440,21 @@ function Messages() {
                       }
                     }}
                   />
-                  <Box mr="2%">
+                  <Box mr="1.5%">
                     <MdSend
                       size="24"
                       style={{ cursor: "pointer" }}
                       onClick={sendMessage}
                     />
                   </Box>
+                  <Icon
+                  mr="2%"
+                    as={GrEmoji}
+                    boxSize={6}
+                    ml={2}
+                    cursor="pointer"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  />
                   <input
                     type="file"
                     accept="image/*, video/*, image/gif"
@@ -407,6 +462,7 @@ function Messages() {
                     hidden
                     onChange={handleSelectImage}
                   />
+
                   <label
                     htmlFor="mediaUpload"
                     style={{ cursor: "pointer", marginRight: "1%" }}
@@ -414,12 +470,24 @@ function Messages() {
                     <MdOutlineAddLink size="28" />
                   </label>
                 </Flex>
+                {showEmojiPicker && (
+                  <Box
+                    position="absolute"
+                    bottom="60px"
+                    right="20px"
+                    zIndex="1000"
+                    boxShadow="md"
+                    borderRadius="md"
+                  >
+                    <EmojiPicker onEmojiClick={handleEmojiClick} />
+                  </Box>
+                )}
               </Box>
             </>
           ) : (
             <Center h="full">
               <Box textAlign="center">
-                <BsEmojiFrown size="15rem"/>
+                <BsEmojiFrown size="15rem" />
                 <Text fontSize="3xl" mb={5}>
                   No chats selected
                 </Text>
