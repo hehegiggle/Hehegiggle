@@ -26,21 +26,22 @@ import lombok.Data;
 
 public class PostDto {
 
+	private String id;
+	
+	private String caption;
 
-    private String id;
-    private String caption;
-    
+	private String image;
+	
+	private String location;
+	
+	private LocalDateTime createdAt;
 
-    private String image;
-    private String location;
-    private LocalDateTime createdAt;
-    
-    @Transient
-    private UserDto user;
+	@Transient
+	private UserDto user;
 
-    @Transient
-    private List<CommentDto> comments = new ArrayList<>();
-    
-    @Transient
-    private Set<UserDto> likedByUsers = new HashSet<>(); 
+	@Transient
+	private List<CommentDto> comments = new ArrayList<>();
+
+	@Transient
+	private Set<UserDto> likedByUsers = new HashSet<>();
 }

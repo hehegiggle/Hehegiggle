@@ -1,5 +1,6 @@
 package com.usermicroservice.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.usermicroservice.DTO.UserDto;
+import com.usermicroservice.Event.NotificationEvent;
 import com.usermicroservice.entity.Post;
 import com.usermicroservice.entity.User;
 import com.usermicroservice.exception.UserException;
 import com.usermicroservice.repository.PostRepository;
 import com.usermicroservice.repository.UserRepository;
 import com.usermicroservice.response.MessageResponse;
+import com.usermicroservice.service.NotificationService;
 import com.usermicroservice.service.UserService;
 
 @RestController
@@ -38,8 +42,11 @@ public class UserController {
 	@Autowired
 	private PostRepository postRepository;
 
+	@Autowired
+	private NotificationService notificationService;
+
 	@GetMapping("id/{id}")
-	public ResponseEntity<User> findUserByIdHandler(@PathVariable Integer id) throws UserException {
+	public ResponseEntity<User> findUserByIdHandler(@PathVariable("id") Integer id) throws UserException {
 
 		User user = userService.findUserById(id);
 
@@ -57,17 +64,28 @@ public class UserController {
 
 	@PutMapping("/follow/{followUserId}")
 	public ResponseEntity<MessageResponse> followUserHandler(@RequestHeader("Authorization") String token,
-			@PathVariable Integer followUserId) throws UserException {
+			@PathVariable("followUserId") Integer followUserId) throws UserException {
 		User reqUser = userService.findUserProfile(token);
 
 		String message = userService.followUser(reqUser.getId(), followUserId);
 		MessageResponse res = new MessageResponse(message);
+
+//		User followUserDetails = userService.findUserById(followUserId);
+//		System.out.println("Details-----"+followUserDetails);
+
+//		// Send Notification
+//		NotificationEvent notificationEvent = new NotificationEvent(null, // notificationId, will be generated
+//				"follow request", reqUser.getId().toString(), null, null, // commentId, not applicable
+//				followUserId.toString(), +" started following you", LocalDateTime.now());
+//
+//		notificationService.sendNotification(notificationEvent);
+
 		return new ResponseEntity<MessageResponse>(res, HttpStatus.OK);
 	}
 
 	@PutMapping("/unfollow/{unfollowUserId}")
 	public ResponseEntity<MessageResponse> unfollowUserHandler(@RequestHeader("Authorization") String token,
-			@PathVariable Integer unfollowUserId) throws UserException {
+			@PathVariable("unfollowUserId") Integer unfollowUserId) throws UserException {
 
 		User reqUser = userService.findUserProfile(token);
 
@@ -88,7 +106,7 @@ public class UserController {
 	}
 
 	@GetMapping("/m/{userIds}")
-	public ResponseEntity<List<User>> findAllUsersByUserIdsHandler(@PathVariable List<Integer> userIds) {
+	public ResponseEntity<List<User>> findAllUsersByUserIdsHandler(@PathVariable("userIds") List<Integer> userIds) {
 		List<User> users = userService.findUsersByUserIds(userIds);
 
 		System.out.println("userIds ------ " + userIds);
@@ -98,7 +116,7 @@ public class UserController {
 
 	@GetMapping("/search")
 	public ResponseEntity<List<User>> searchUserHandler(@RequestParam("q") String query) throws UserException {
-		
+
 		List<User> users = userService.searchUser(query);
 
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
@@ -154,7 +172,7 @@ public class UserController {
 	}
 
 	@GetMapping("/saved/{id}")
-	public Post removesavedpostHandler(@RequestHeader("Authorization") String token, @PathVariable String id)
+	public Post removesavedpostHandler(@RequestHeader("Authorization") String token, @PathVariable("id") String id)
 			throws UserException {
 
 		// List<User> populerUsers = userService.popularUser();
@@ -171,5 +189,19 @@ public class UserController {
 		userService.addpost(token, post);
 
 		return post;
+	}
+
+	@GetMapping("/follower-list/{userId}")
+	public Set<UserDto> getAllFollowers(@PathVariable("userId") Integer userId,
+			@RequestHeader("Authorization") String token) throws UserException {
+		System.out.println("FOLLOWER GOT USERID---------------------" + userId);
+		return userService.getAllFollowers(userId, token);
+	}
+
+	@GetMapping("/following-list/{userId}")
+	public Set<UserDto> getAllFollowings(@PathVariable("userId") Integer userId,
+			@RequestHeader("Authorization") String token) throws UserException {
+		System.out.println("FOLLOWING GOT USERID---------------------" + userId);
+		return userService.getAllFollowings(userId, token);
 	}
 }

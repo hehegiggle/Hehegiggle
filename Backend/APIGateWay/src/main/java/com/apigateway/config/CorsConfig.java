@@ -5,11 +5,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.cors.reactive.CorsWebFilter;
 
 @Configuration
 public class CorsConfig {
@@ -17,7 +12,10 @@ public class CorsConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.addAllowedOrigin("http://localhost:3000"); // Ensure only one origin is added
+        corsConfig.addAllowedOrigin("http://localhost:3000");
+        corsConfig.addAllowedOrigin("http://localhost:3001");
+        corsConfig.addAllowedOrigin("http://localhost:3002");
+        //        corsConfig.addAllowedOrigin("http://hehegiggle.online:3000");
         corsConfig.addAllowedMethod(CorsConfiguration.ALL);
         corsConfig.addAllowedHeader(CorsConfiguration.ALL);
         corsConfig.setAllowCredentials(true);

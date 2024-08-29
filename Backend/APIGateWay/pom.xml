@@ -89,8 +89,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>
-						com.apigateway.ApiGateWayApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -99,7 +97,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-		<plugin>
+			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>3.1.4</version>
@@ -108,16 +106,14 @@
 						<image>openjdk:17-alpine</image>
 					</from>
 					<to>
-						<image>shreyansh432/apigateway:latest</image>
+						<image>chetan1681/apigateway:latest</image>
 						<auth>
-							<username>shreyansh432</username>
-							<password>Jisheru33@</password>
+							<username>chetan1681</username>
+							<password>Chetan2001</password>
 						</auth>
 					</to>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
 </project>

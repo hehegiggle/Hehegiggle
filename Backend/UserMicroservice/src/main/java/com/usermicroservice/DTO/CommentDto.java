@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -21,22 +20,29 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Embeddable
-public class CommentDto implements Serializable{
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommentDto implements Serializable {
 
 	private Integer id;
 
 	private UserDto userDto;
-	
 
 	private String content;
 
-	private Set<UserDto> likedByUsers= new HashSet<>();
+	private Set<UserDto> likedByUsers = new HashSet<>();
 
 	private PostDto post;
-	
+
 	private LocalDateTime createdAt;
-	
+
 }

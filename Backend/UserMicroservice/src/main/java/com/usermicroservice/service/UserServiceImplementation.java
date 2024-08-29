@@ -1,9 +1,12 @@
 package com.usermicroservice.service;
 
 import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.usermicroservice.DTO.UserDto;
+import com.usermicroservice.Event.NotificationEvent;
 import com.usermicroservice.config.JwtGenratorFilter;
 import com.usermicroservice.entity.PasswordResetToken;
 import com.usermicroservice.entity.Post;
@@ -34,6 +38,9 @@ public class UserServiceImplementation implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@Autowired
 	private PasswordResetTokenRepository passwordResetTokenRepository;
@@ -117,9 +124,16 @@ public class UserServiceImplementation implements UserService {
 		followUser.getFollower().add(follower);
 		reqUser.getFollowing().add(following);
 
+		// Send Notification
+		NotificationEvent notificationEvent = new NotificationEvent(null, // notificationId, will be generated
+				"Follow Request", followUserId.toString(), null, null, null, // commentId, not applicable
+				reqUserId.toString(), reqUser.getUsername() + " started following you", LocalDateTime.now());
+
+		notificationService.sendNotification(notificationEvent);
+		System.out.println("Followed successfully------------------------------------------");
+
 		repo.save(followUser);
 		repo.save(reqUser);
-
 		return "you are following " + followUser.getUsername();
 	}
 
@@ -225,9 +239,6 @@ public class UserServiceImplementation implements UserService {
 		if (updatedUser.getGender() != null) {
 			existingUser.setGender(updatedUser.getGender());
 		}
-		if (updatedUser.getWebsite() != null) {
-			existingUser.setWebsite(updatedUser.getWebsite());
-		}
 		if (updatedUser.getImage() != null) {
 			existingUser.setImage(updatedUser.getImage());
 		}
@@ -277,6 +288,7 @@ public class UserServiceImplementation implements UserService {
 
 	@Override
 	public void addpost(String token, Post post) {
+		System.out.println("Post--------------" + post);
 		postRepository.save(post);
 
 	}
@@ -331,6 +343,7 @@ public class UserServiceImplementation implements UserService {
 		String emailBody = "Hey " + user.getName() + ",\n\n"
 				+ "Oops!!! Looks like your password might need a little revamping on HeHe Giggles. No worries, we've got you covered! 🛠️\n\n"
 				+ "Click-Click on the link below to reset your password and get back to experience new way of Socializing, sharing epic fails, and life updates with the world (because who wouldn't want more of those? 🐱🤣):\n\n"
+//				+ "http://hehegiggle.online:3000/resetpassword?token=" + resetToken + "\n\n"
 				+ "http://localhost:3000/resetpassword?token=" + resetToken + "\n\n"
 				+ "Remember, this link won't last forever, so hop to it like a kangaroo on a trampoline! 🦘\n\n"
 				+ "If you didn't request this reset (oops, our bad!), just ignore this email like you ignore Your Alarms⌚⌚. No hard feelings! 😉\n\n"
@@ -360,5 +373,41 @@ public class UserServiceImplementation implements UserService {
 		cal.setTime(new Date());
 		cal.add(Calendar.MINUTE, 10);
 		return cal.getTime();
+	}
+
+	@Override
+	public Set<UserDto> getAllFollowings(Integer userId, String token) throws UserException {
+
+		User reqUser = findUserProfile(token);
+		if (reqUser != null) {
+			User user = findUserById(userId);
+			Set<UserDto> allFollowings = user.getFollowing();
+			if (allFollowings.isEmpty()) {
+				return Collections.emptySet();
+			} else {
+				System.out.println("RETURENED FOLLOWINGS-----------" + allFollowings);
+				return allFollowings;
+			}
+		} else {
+			throw new UserException("Unauthorized Access");
+		}
+	}
+
+	@Override
+	public Set<UserDto> getAllFollowers(Integer userId, String token) throws UserException {
+
+		User reqUser = findUserProfile(token);
+		if (reqUser != null) {
+			User user = findUserById(userId);
+			Set<UserDto> allFollowers = user.getFollower();
+			if (allFollowers.isEmpty()) {
+				return Collections.emptySet();
+			} else {
+				System.out.println("RETURENED FOLLOWERS-----------" + allFollowers);
+				return allFollowers;
+			}
+		} else {
+			throw new UserException("Unauthorized Access");
+		}
 	}
 }

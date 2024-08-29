@@ -3,7 +3,7 @@ package com.usermicroservice;
 
 import org.junit.jupiter.api.Test;
 
-import com.usermicroservice.security.JwtTokenClaims;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 

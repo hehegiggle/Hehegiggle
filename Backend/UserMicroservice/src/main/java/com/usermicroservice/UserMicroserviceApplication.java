@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-
+@EnableConfigurationProperties
 public class UserMicroserviceApplication {
 
 	public static void main(String[] args) {
@@ -26,11 +26,18 @@ public class UserMicroserviceApplication {
 		return new RestTemplate();
 	}
 
-
+//	@Bean
+//	public WebMvcConfigurer configurer() {
+//	    return new WebMvcConfigurer() {
+//	        @Override
+//	        public void addCorsMappings(CorsRegistry registry) {
+//	            registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+//	        }
+//	    };
+//	}
 	@Bean
 	public ModelMapper mapper() {
-	    return new ModelMapper();
+		return new ModelMapper();
 
+	}
 }
-}
-

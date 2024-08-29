@@ -43,7 +43,7 @@ public class Post {
 	private String image;
 	private String location;
 	private LocalDateTime createdAt;
-
+//
 	@Embedded
 	@AttributeOverride(name = "id", column = @Column(name = "user_id"))
 	@AttributeOverride(name = "email", column = @Column(name = "user_email"))
@@ -56,4 +56,19 @@ public class Post {
 	@ElementCollection
 //	@JoinTable(name = "likeByUsers", joinColumns = @JoinColumn(name="user_id"))
 	private Set<UserDto> likedByUsers = new HashSet<>();
+//	
+//    @Column(name="user_id")
+//    private Integer userId;
+//
+//    @Column(name="user_email")
+//    private String userEmail;
+//
+//    @Column(name="user_username")
+//    private String userUsername;
+//
+//    @Column(name="user_image")
+//    private String userImage;
+
+//    @Column(name="user_name")
+//    private String userName;
 }

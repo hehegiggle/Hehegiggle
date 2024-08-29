@@ -50,7 +50,7 @@ class CommentDtoTest {
 		likedByUsers.add(userDto);
 		commentDto.setLikedByUsers(likedByUsers);
 		assertEquals(likedByUsers, commentDto.getLikedByUsers());
-		assertTrue(commentDto.getLikedByUsers().contains(userDto));
+		assertTrue(((Set<UserDto>) commentDto.getLikedByUsers()).contains(userDto));
 	}
 
 	@Test

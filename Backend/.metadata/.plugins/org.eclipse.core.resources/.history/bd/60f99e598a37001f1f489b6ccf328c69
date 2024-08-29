@@ -1,0 +1,5 @@
+package com.axis.commentservice.Config;
+
+public class RabbitMQConfig {
+
+}

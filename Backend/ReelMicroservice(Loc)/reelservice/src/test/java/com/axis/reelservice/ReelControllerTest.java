@@ -49,15 +49,13 @@ public class ReelControllerTest {
         
         user = new UserDTO();
         user.setId(1);
-        user.setFirstName("John");
-        user.setLastName("Doe");
+        user.setName("John");
         user.setEmail("john.doe@example.com");
 
         reel = new Reel();
         reel.setId(1);
-        reel.setTitle("Sample Reel");
         reel.setVideo("http://example.com/video.mp4");
-        reel.setUserId(user.getId());
+        reel.setId(user.getId());
     }
 
     @Test

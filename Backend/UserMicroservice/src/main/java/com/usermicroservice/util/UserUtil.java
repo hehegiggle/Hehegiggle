@@ -13,10 +13,10 @@ public class UserUtil {
 			@Override
 			public int compare(User u1, User u2) {
 				int follower1 = u1.getFollower().size();
-		        int follower2 = u2.getFollower().size();
-		        return follower2 - follower1;
-		      }
-		    };
-		    Collections.sort(users, comparator);
-		}	
+				int follower2 = u2.getFollower().size();
+				return follower2 - follower1;
+			}
+		};
+		Collections.sort(users, comparator);
+	}
 }

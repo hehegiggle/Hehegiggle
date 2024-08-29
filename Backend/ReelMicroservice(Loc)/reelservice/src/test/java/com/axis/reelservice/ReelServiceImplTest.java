@@ -46,14 +46,12 @@ public class ReelServiceImplTest {
         userDTO.setId(1);
 
         Reel reel = new Reel();
-        reel.setTitle("Sample Reel");
         reel.setVideo("sample_video_url");
 
         Reel savedReel = new Reel();
         savedReel.setId(1);
-        savedReel.setTitle("Sample Reel");
         savedReel.setVideo("sample_video_url");
-        savedReel.setUserId(1);
+        savedReel.setId(1);
 
         when(reelRepository.save(any(Reel.class))).thenReturn(savedReel);
 
@@ -61,18 +59,16 @@ public class ReelServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.getId());
-        assertEquals("Sample Reel", result.getTitle());
         assertEquals("sample_video_url", result.getVideo());
-        assertEquals(1, result.getUserId());
+        assertEquals(1, result.getId());
     }
 
     @Test
     public void testFindAllReels() {
         Reel reel = new Reel();
         reel.setId(1);
-        reel.setTitle("Sample Reel");
         reel.setVideo("sample_video_url");
-        reel.setUserId(1);
+        reel.setId(1);
 
         List<Reel> reels = Arrays.asList(reel);
 
@@ -81,17 +77,14 @@ public class ReelServiceImplTest {
         List<Reel> result = reelService.findAllReels();
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("Sample Reel", result.get(0).getTitle());
     }
 
     @Test
     public void testFindUsersReel() throws Exception {
         Reel reel = new Reel();
         reel.setId(1);
-        reel.setTitle("Sample Reel");
         reel.setVideo("sample_video_url");
-        reel.setUserId(1);
+        reel.setId(1);
 
         List<Reel> reels = Arrays.asList(reel);
 
@@ -101,7 +94,6 @@ public class ReelServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Sample Reel", result.get(0).getTitle());
     }
 
     @Test

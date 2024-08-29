@@ -1,0 +1,98 @@
+package com.axis.messageservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.axis.messageservice.entity.Chat;
+import com.axis.messageservice.entity.User;
+import com.axis.messageservice.request.CreateChatRequest;
+import com.axis.messageservice.request.CreateChatRequest;
+import com.axis.messageservice.service.ChatService;
+
+@RestController
+public class ChatController {
+	
+	@Autowired
+	private ChatService chatService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+//	@Autowired
+//	private UserService userService;
+	
+	
+	@PostMapping("/api/chats")
+	public Chat createChat(@RequestHeader("Authorization") String jwt, @RequestBody CreateChatRequest req) throws Exception {
+		System.out.println("chat------------ ");
+		User reqUser = getUserById(jwt);
+		System.out.println("reqUser " + reqUser);
+		User users2 = getUser(jwt, req.getUserId());
+
+		System.out.println("ReqUser---------" + reqUser);
+
+		System.out.println("User2---------" + users2);
+		Chat chat = chatService.createChat(reqUser, users2);
+		System.out.println("chat " + chat);
+		return chat;
+	}
+	
+	
+	
+	@GetMapping("/api/chats")
+	public List<Chat> findUsersChat(@RequestHeader("Authorization") String jwt) {
+		User reqUser = getUserById(jwt);
+		System.out.println("Requesting chats for userId: " + reqUser.getId());
+		List<Chat> chat = chatService.findUsersChat(reqUser.getId());
+		System.out.println("Retrieved chats: " + chat);
+		return chat;
+	}
+	
+	
+	
+	private static final String url = "http://USER-SERVICE/api/users/req";
+
+
+	public User getUserById(String jwt) {
+		System.out.println("token------------- +" + jwt);
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.set("Authorization", jwt);
+		HttpEntity<User> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+		System.out.println("got user+" + response);
+		return response.getBody();
+	}
+	
+	
+	
+	private static String url1 = "http://USER-SERVICE/api/users/id/";
+
+
+	public User getUser(String jwt, Integer id) {
+		System.out.println("token +" + jwt);
+		HttpHeaders headers = new HttpHeaders();
+		System.out.println("Id is____" +id);
+        url1 = url1 + id;
+		headers.set("Authorization", jwt);
+		HttpEntity<User> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<User> response = restTemplate.exchange(url1, HttpMethod.GET, entity, User.class);
+		System.out.println("got user11222121+" + response);
+		return response.getBody();
+	}
+
+
+}
