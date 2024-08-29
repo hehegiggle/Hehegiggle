@@ -8,6 +8,12 @@ import {
   SEARCH_USER_FAILURE,
   SEARCH_USER_SUCCESS,
   UPDATE_USER,
+  FOLLOWER_LIST_FAILURE,
+  FOLLOWER_LIST_REQUEST,
+  FOLLOWER_LIST_SUCCESS,
+  FOLLOWING_LIST_FAILURE,
+  FOLLOWING_LIST_REQUEST,
+  FOLLOWING_LIST_SUCCESS,
 } from "./ActionType";
 
 export const getUserProfileAction = (token) => async (dispatch) => {
@@ -20,7 +26,6 @@ export const getUserProfileAction = (token) => async (dispatch) => {
       },
     });
     const reqUser = await res.json();
-    console.log("Response from profile action:", reqUser);
     dispatch({ type: GET_USER_PROFILE, payload: reqUser });
   } catch (error) {
     console.log("catch error - ", error);
@@ -38,8 +43,6 @@ export const findByUsernameAction = (data) => async (dispatch) => {
     });
 
     const user = await res.json();
-    console.log("--- find by username ---", user);
-
     dispatch({ type: GET_USER_BY_USERNAME, payload: user });
   } catch (error) {
     console.log("catch error - ", error);
@@ -57,8 +60,6 @@ export const findByUserIdsAction = (data) => async (dispatch) => {
     });
 
     const users = await res.json();
-    console.log("--- find by user IDs ---", users);
-
     dispatch({ type: GET_USERS_BY_USER_IDS, payload: users });
   } catch (error) {
     console.log("catch error -  ", error);
@@ -76,8 +77,6 @@ export const followUserAction = (data) => async (dispatch) => {
     });
 
     const users = await res.json();
-    console.log("--- follow user ---", users);
-
     dispatch({ type: FOLLOW_USER, payload: users });
   } catch (error) {
     console.log("catch error -  ", error);
@@ -95,8 +94,6 @@ export const unFollowUserAction = (data) => async (dispatch) => {
     });
 
     const users = await res.json();
-    console.log("--- unfollow user ---", users);
-
     dispatch({ type: FOLLOW_USER, payload: users });
   } catch (error) {
     console.log("catch error -  ", error);
@@ -104,7 +101,6 @@ export const unFollowUserAction = (data) => async (dispatch) => {
 };
 
 export const searchUserAction = (data) => async (dispatch) => {
-  console.log("jwt --- ", data.jwt);
   try {
     const res = await fetch(`${BASE_URL}/api/users/search?q=${data.query}`, {
       method: "GET",
@@ -115,8 +111,6 @@ export const searchUserAction = (data) => async (dispatch) => {
     });
 
     const users = await res.json();
-    console.log("--- search user ---", users);
-
     dispatch({
       type: SEARCH_USER,
       payload: users.message ? { isError: true, ...users } : users,
@@ -127,7 +121,6 @@ export const searchUserAction = (data) => async (dispatch) => {
 };
 
 export const editUserDetailsAction = (data) => async (dispatch) => {
-  console.log("data edit user --- ", data);
   try {
     const res = await fetch(`${BASE_URL}/api/users/account/edit`, {
       method: "PUT",
@@ -139,8 +132,6 @@ export const editUserDetailsAction = (data) => async (dispatch) => {
     });
 
     const users = await res.json();
-    console.log("--- updated user ---", users);
-
     dispatch({ type: UPDATE_USER, payload: users });
   } catch (error) {
     console.log("catch error -  ", error);
@@ -149,7 +140,6 @@ export const editUserDetailsAction = (data) => async (dispatch) => {
 
 // For Chat SearchUser
 export const searchUser = (data) => async (dispatch) => {
-  console.log("JWT------", data.token);
   try {
     const res = await fetch(`${BASE_URL}/api/users/search?q=${data.query}`, {
       method: "GET",
@@ -164,11 +154,53 @@ export const searchUser = (data) => async (dispatch) => {
     
     const users = await res.json();
     const filteredUsers = users.filter(user => user.id !== data.loggedInuser);
-    console.log("Filtered user list---------", filteredUsers)
-    
     dispatch({ type: SEARCH_USER_SUCCESS, payload: filteredUsers });
   } catch (error) {
     console.log("Error while getting users: ", error);
     dispatch({ type: SEARCH_USER_FAILURE, payload: error.message });
   }
 };
+
+export const followerList = (data) => async (dispatch) => {
+  dispatch({type: FOLLOWER_LIST_REQUEST});
+  try{
+    const response = await fetch(`${BASE_URL}/api/users/follower-list/${data.userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + data.token,
+      },
+    });
+    const results = await response.json();
+    console.log("Followers List------------", results);
+    dispatch({
+      type: FOLLOWER_LIST_SUCCESS,
+      payload: results.message ? { isError: true, ...results } : results,
+    });
+  }catch(error){
+    console.log("Error while getting followers: ", error);
+    dispatch({ type: FOLLOWER_LIST_FAILURE, payload: error.message });
+  }
+}
+
+export const followingList = (data) => async (dispatch) => {
+  dispatch({type: FOLLOWING_LIST_REQUEST});
+  try{
+    const response = await fetch(`${BASE_URL}/api/users/following-list/${data.userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + data.token,
+      },
+    });
+    const results = await response.json();
+    console.log("Following List------------", results);
+    dispatch({
+      type: FOLLOWING_LIST_SUCCESS,
+      payload: results.message ? { isError: true, ...results } : results,
+    });
+  }catch(error){
+    console.log("Error while getting followings: ", error);
+    dispatch({ type: FOLLOWING_LIST_FAILURE, payload: error.message });
+  }
+}

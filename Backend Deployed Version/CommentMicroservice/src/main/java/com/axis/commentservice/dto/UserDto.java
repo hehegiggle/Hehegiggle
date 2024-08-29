@@ -8,19 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
 
-    private Integer id;
-    private String email;
-    private String username;
-    private String name; // Ensure this is properly handled in the embedding classes
-    private String userimage;
+	private Integer id;
+	private String email;
+	private String username;
+	private String name; // Ensure this is properly handled in the embedding classes
+	private String userimage;
 }
-
-

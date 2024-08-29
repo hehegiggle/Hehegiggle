@@ -1,7 +1,7 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { BsBookmark, BsBookmarkFill, BsDot, BsThreeDots } from "react-icons/bs";
+import { BsBookmark, BsBookmarkFill, BsDot } from "react-icons/bs";
 import { FaRegComment } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +11,6 @@ import {
   isSavedPost,
   timeDifference,
 } from "../../../Config/Logic";
-
-import { createComment } from "../../../Redux/Comment/Action";
 import {
   deletePostAction,
   likePostAction,
@@ -21,16 +19,14 @@ import {
   unSavePostAction,
 } from "../../../Redux/Post/Action";
 import CommentModal from "../../Comment/CommentModal";
-
 import "./PostCard.css";
 import EditPostModal from "../Create/EditPostModal";
 import { CgMoreVertical } from "react-icons/cg";
 
 const PostCard = ({ username, location, postImage, post }) => {
-  const [commentContent, setCommentContent] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { user } = useSelector((store) => store);
   const [isSaved, setIsSaved] = useState(false);
   const [isPostLiked, setIsPostLiked] = useState(false);
@@ -53,36 +49,14 @@ const PostCard = ({ username, location, postImage, post }) => {
     postId: post?.id,
   };
 
-  const handleCommentInputChange = (e) => {
-    setCommentContent(e.target.value);
-  };
-
-  const handleAddComment = () => {
-    const data = {
-      jwt: token,
-      postId: post.id,
-      data: {
-        content: commentContent,
-      },
-    };
-    console.log("comment content ", commentContent);
-    dispatch(createComment(data));
-  };
-
-  const handleOnEnterPress = (e) => {
-    if (e.key === "Enter") {
-      handleAddComment();
-    } else return;
-  };
-
   const handleLikePost = () => {
     dispatch(likePostAction(data));
     setIsPostLiked(true);
     setNumberOfLike(numberOfLikes + 1);
     toast({
-      title: "You have liked the post.",
+      title: "You have liked the post 💝💝💝",
       status: "success",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };
@@ -92,9 +66,9 @@ const PostCard = ({ username, location, postImage, post }) => {
     setIsPostLiked(false);
     setNumberOfLike(numberOfLikes - 1);
     toast({
-      title: "You have unliked the post.",
+      title: "You have disliked the post 💔💔💔",
       status: "error",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };
@@ -103,9 +77,9 @@ const PostCard = ({ username, location, postImage, post }) => {
     dispatch(savePostAction(data));
     setIsSaved(true);
     toast({
-      title: "You have saved the post.",
+      title: "You have saved the post 🔐🔐🔐",
       status: "success",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };
@@ -114,9 +88,9 @@ const PostCard = ({ username, location, postImage, post }) => {
     dispatch(unSavePostAction(data));
     setIsSaved(false);
     toast({
-      title: "You have unsaved the post.",
+      title: "You have unsaved the post 🔓🔓🔓",
       status: "error",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };
@@ -126,10 +100,7 @@ const PostCard = ({ username, location, postImage, post }) => {
   };
 
   function handleClick() {
-    console.log("3 Dots clicked");
     setShowDropdown(!showDropdown);
-    console.log(setShowDropdown);
-    console.log(showDropdown);
   }
 
   function handleWindowClick(event) {
@@ -153,7 +124,14 @@ const PostCard = ({ username, location, postImage, post }) => {
     };
     dispatch(deletePostAction(data));
     window.location.reload();
+    toast({
+      title: "Post deleted 😭😭😭",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    });
   };
+
   const isOwnPost = user && user.reqUser && isReqUserPost(post, user.reqUser);
 
   const handleOpenCommentModal = () => {
@@ -171,14 +149,18 @@ const PostCard = ({ username, location, postImage, post }) => {
   };
 
   if (!post) {
-    return null; // Early return if post is undefined
+    return null;
   }
 
   return (
-    <div className="w-full mb-6" style={{ maxWidth: "70%" }}>
+    <div className="mb-6" style={{ maxWidth: "70%"}}>
       <div
-        className="shadow-xl rounded-md overflow-hidden"
-        style={{ borderRadius: 20, background: "linear-gradient(135deg, #8697C4, #EDE8F5)", color:"#000000"}}
+        className="shadow-2xl rounded-md overflow-hidden"
+        style={{
+          borderRadius: 20,
+          background: "linear-gradient(135deg, #8697C4, #EDE8F5)",
+          color: "#000000",
+        }}
       >
         <div className="flex justify-between items-center w-full py-4 px-10">
           <div className="flex items-center">
@@ -213,14 +195,21 @@ const PostCard = ({ username, location, postImage, post }) => {
               <CgMoreVertical
                 size={25}
                 onClick={handleClick}
-                className="dots cursor-pointer"
+                className="dots"
+                style={{
+                  cursor: isOwnPost ? 'pointer' : 'default', // Conditional cursor style
+                }}
               />
               {isOwnPost && (
                 <div className="dropdown-content">
                   {showDropdown && (
                     <div
                       className="p-2 w-[15rem] shadow-xl"
-                      style={{ borderRadius: "20px", backgroundColor:"#8697C4", fontSize:"20px" }}
+                      style={{
+                        borderRadius: "20px",
+                        backgroundColor: "#8697C4",
+                        fontSize: "20px",
+                      }}
                     >
                       <p
                         onClick={handleOpenEditPostModal}
@@ -283,7 +272,12 @@ const PostCard = ({ username, location, postImage, post }) => {
           )}
           {post.caption && (
             <p className="py-2">
-              <span className="font-semibold mr-2" style={{fontSize:"15px", color:"#1E263D"}}>{username} </span>
+              <span
+                className="font-semibold mr-2"
+                style={{ fontSize: "15px", color: "#1E263D" }}
+              >
+                {username}{" "}
+              </span>
               {post.caption}
             </p>
           )}

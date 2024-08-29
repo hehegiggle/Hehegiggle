@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "@chakra-ui/react";
 import { isCommentLikedByUser, timeDifference } from "../../Config/Logic";
 import {
   deleteComment,
@@ -16,7 +17,8 @@ const CommentCard = ({ comment }) => {
   const { user } = useSelector((store) => store);
   const [commentLikes, setCommentLikes] = useState(0);
   const dispatch = useDispatch();
-  const jwt = localStorage.getItem("token");
+  const toast = useToast();
+  const jwt = sessionStorage.getItem("token");
   const [isEditCommentInputOpen, setIsEditCommentInputOpen] = useState(false);
   const [commentContent, setCommentContent] = useState("");
 
@@ -28,12 +30,24 @@ const CommentCard = ({ comment }) => {
     dispatch(likeComment({ jwt, commentId: comment.commentId }));
     setIsCommentLike(true);
     setCommentLikes(commentLikes + 1);
+    toast({
+      title: "Comment liked successfully 😍😍😍",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+    })
   };
 
   const handleUnLikeComment = () => {
     dispatch(unLikeComment({ jwt, commentId: comment.commentId }));
     setIsCommentLike(false);
     setCommentLikes(commentLikes - 1);
+    toast({
+      title: "Comment disliked 😔😔😔",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    })
   };
 
   useEffect(() => {
@@ -54,6 +68,12 @@ const CommentCard = ({ comment }) => {
 
   const handleDeleteComment = () => {
     dispatch(deleteComment({ commentId: comment.commentId, jwt }));
+    toast({
+      title: "Comment deleted 💀💀💀",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    })
   };
 
   const handleEditComment = (e) => {
@@ -68,6 +88,12 @@ const CommentCard = ({ comment }) => {
           }
         })
       );
+      toast({
+        title: "Comment updated successfully 😉😉😉",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      })
     }
   };
 

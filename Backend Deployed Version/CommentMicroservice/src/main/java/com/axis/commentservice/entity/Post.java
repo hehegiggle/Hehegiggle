@@ -1,4 +1,5 @@
 package com.axis.commentservice.entity;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,39 +27,36 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Post {
 
-    private String id;
-    private String caption;
-    private String image;
-    private String location;
+	@Column(name = "post_id")
+	private String id;
+	@Column(name = "post_caption")
+	private String caption;
+	@Column(name = "post_image")
+	private String image;
+	@Column(name = "post_location")
+	private String location;
 
 //    @Embedded
 //    @Transient
 //    private UserDto user;
 
-    @ElementCollection
-    @Transient
-    @JsonIgnore
-    private List<Comments> comments = new ArrayList<>();
+	@ElementCollection
+	@Transient
+	@JsonIgnore
+	private List<Comments> comments = new ArrayList<>();
 
 //    @ElementCollection
 //    private Set<UserDto> likedByUsers = new HashSet<>();
-    
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", caption=" + caption +
-                ", image='" + image +", location=" + location + '\'' +
-              // Handle collections properly
-               
-                '}';
-    }
-    
 
-    @Column(name="user_id")
-    private Integer userId;
- 
-    @Column(name="user_username")
-    private String userUsername;
+	@Override
+	public String toString() {
+		return "Post{" + "id=" + id + ", caption=" + caption + ", image='" + image + ", location=" + location + '\'' +
+		// Handle collections properly
+
+				'}';
+	}
+
+	@Column(name = "user_id")
+	private Integer userId;
 
 }

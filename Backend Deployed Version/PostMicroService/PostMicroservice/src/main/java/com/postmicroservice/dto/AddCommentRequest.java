@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddCommentRequest {
-    private CommentDto comment;
-    private String postId;
+	private CommentDto comment;
+	private String postId;
 
-    // Getters and setters
+	// Getters and setters
 }
-

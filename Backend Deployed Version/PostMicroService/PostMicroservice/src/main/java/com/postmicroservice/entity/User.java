@@ -15,12 +15,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-	
+
 	private Integer id;
 	private String username;
 	private String email;
@@ -30,21 +29,21 @@ public class User {
 	private String bio;
 	private String gender;
 	private String image;
-	
+
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
-	
+
 	@ElementCollection
 	@Embedded
 	private Set<UserDto> follower = new HashSet<UserDto>();
-	
+
 	@ElementCollection
 	@Embedded
 	private Set<UserDto> following = new HashSet<UserDto>();
-	
+
 	@ElementCollection
 	@Embedded
-	private List<Post> savedPost=new ArrayList<>();
+	private List<Post> savedPost = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -55,4 +54,3 @@ public class User {
 	}
 
 }
-

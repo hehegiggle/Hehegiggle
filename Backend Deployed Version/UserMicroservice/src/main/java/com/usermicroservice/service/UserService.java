@@ -1,7 +1,9 @@
 package com.usermicroservice.service;
 
 import java.util.List;
+import java.util.Set;
 
+import com.usermicroservice.DTO.UserDto;
 import com.usermicroservice.entity.Post;
 import com.usermicroservice.entity.User;
 import com.usermicroservice.exception.UserException;
@@ -37,4 +39,8 @@ public interface UserService {
 	void updatePassword(User user, String newPassword);
 
 	void sendPasswordResetEmail(User user);
+
+	public Set<UserDto> getAllFollowings(Integer userId, String token) throws UserException;
+
+	public Set<UserDto> getAllFollowers(Integer userId, String token) throws UserException;
 }

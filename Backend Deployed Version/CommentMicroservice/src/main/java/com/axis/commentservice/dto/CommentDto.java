@@ -25,22 +25,21 @@ import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Embeddable
-public class CommentDto implements Serializable{
+public class CommentDto implements Serializable {
 
 	private Integer commentId;
 	@Transient
 	private UserDto userDto;
-	
 
 	private String content;
 
 	@Transient
-	private Set<UserDto> likedByUsers= new HashSet<>();
+	private Set<UserDto> likedByUsers = new HashSet<>();
 
 	@Embedded
 	@Transient
 	private Post post;
-	
+
 	private LocalDateTime createdAt;
-	
+
 }

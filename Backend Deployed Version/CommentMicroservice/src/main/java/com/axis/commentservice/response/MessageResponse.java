@@ -1,9 +1,9 @@
 package com.axis.commentservice.response;
 
 public class MessageResponse {
-	
+
 	private String message;
-	
+
 	public MessageResponse() {
 		// TODO Auto-generated constructor stub
 	}

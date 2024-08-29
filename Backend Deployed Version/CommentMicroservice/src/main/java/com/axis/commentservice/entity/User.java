@@ -31,7 +31,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
-
 	private Integer id;
 	private String username;
 	private String email;
@@ -41,25 +40,22 @@ public class User {
 	private String bio;
 	private String gender;
 	private String image;
-	
+
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
-	
+
 	@ElementCollection
 	@Embedded
 	@Transient
 	private Set<UserDto> follower = new HashSet<UserDto>();
-	
+
 	@ElementCollection
 	@Embedded
 	@Transient
 	private Set<UserDto> following = new HashSet<UserDto>();
 
-	
 	@Embedded
 	@Transient
-	private List<Post> savedPost=new ArrayList<>();
+	private List<Post> savedPost = new ArrayList<>();
 
 }
-	
-

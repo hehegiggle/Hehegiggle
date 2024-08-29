@@ -33,35 +33,48 @@ public class RealTimeNotificationService {
 	}
 
 	// Get all real-time notifications
-	public List<RealTimeNotification> getAllNotifications() {
-		return realTimeNotificationRepo.findAll();
+	public List<RealTimeNotification> getAllNotifications(String token) throws Exception {
+		User reqUser = getUserById(token);
+		if (reqUser != null) {
+			return realTimeNotificationRepo.findAll();
+		} else {
+			throw new Exception("Unauthorized access!!!");
+		}
 	}
 
 	// Get a real-time notification by ID
-	public Optional<RealTimeNotification> getNotificationById(String id) {
-		return realTimeNotificationRepo.findById(id);
-	}
-
-	// Delete a real-time notification by ID
-	public void deleteNotificationById(String id) {
-		realTimeNotificationRepo.deleteById(id);
+	public Optional<RealTimeNotification> getNotificationById(String id, String token) throws Exception {
+		User reqUser = getUserById(token);
+		if (reqUser != null) {
+			return realTimeNotificationRepo.findById(id);
+		} else {
+			throw new Exception("Unauthorized access!!!");
+		}
 	}
 
 	// Update a real-time notification
-	public RealTimeNotification updateNotification(String id, RealTimeNotification updatedNotification) {
-		Optional<RealTimeNotification> optionalNotification = realTimeNotificationRepo.findById(id);
-		if (optionalNotification.isPresent()) {
-			RealTimeNotification notification = optionalNotification.get();
-			notification.setNotificationId(updatedNotification.getNotificationId());
-			notification.setType(updatedNotification.getType());
-			notification.setUserId(updatedNotification.getUserId());
-			notification.setPostId(updatedNotification.getPostId());
-			notification.setSenderId(updatedNotification.getSenderId());
-			notification.setMessage(updatedNotification.getMessage());
-			notification.setNotificationAt(LocalDateTime.now());
-			return realTimeNotificationRepo.save(notification);
+	public RealTimeNotification updateNotification(String id, RealTimeNotification updatedNotification, String jwt)
+			throws Exception {
+
+		User reqUser = getUserById(jwt);
+		if (reqUser != null && reqUser.getId().equals(updatedNotification.getSenderId())) {
+			Optional<RealTimeNotification> optionalNotification = realTimeNotificationRepo.findById(id);
+			if (optionalNotification.isPresent()) {
+				RealTimeNotification notification = optionalNotification.get();
+				notification.setType(updatedNotification.getType());
+				notification.setUserId(updatedNotification.getUserId());
+				notification.setPostId(updatedNotification.getPostId());
+				notification.setReelId(updatedNotification.getReelId());
+				notification.setCommentId(updatedNotification.getCommentId());
+				notification.setSenderId(updatedNotification.getSenderId());
+				notification.setMessage(updatedNotification.getMessage());
+				notification.setNotificationAt(LocalDateTime.now());
+				return realTimeNotificationRepo.save(notification);
+			} else {
+				return null;
+			}
 		} else {
-			return null;
+			throw new Exception("UnAuthorized access");
 		}
 	}
 
@@ -69,7 +82,6 @@ public class RealTimeNotificationService {
 	public List<RealTimeNotification> getNotificationsByUserId(String token) {
 
 		User user = getUserById(token);
-		System.out.println("I got User----" + user);
 		List<RealTimeNotification> notificationList = new ArrayList<>();
 		notificationList = realTimeNotificationRepo.findByUserId(user.getId());
 		Collections.reverse(notificationList);
@@ -78,7 +90,7 @@ public class RealTimeNotificationService {
 	}
 
 	// mark notifications as read for a specific user
-	public void markNotificationsAsRead(String jwt) {
+	public void markNotificationsAsRead(String jwt) throws Exception {
 		User user = getUserById(jwt);
 		if (user != null) {
 			List<RealTimeNotification> notifications = realTimeNotificationRepo.findByUserId(user.getId());
@@ -86,6 +98,59 @@ public class RealTimeNotificationService {
 				notification.setRead(true);
 				realTimeNotificationRepo.save(notification);
 			}
+		} else {
+			throw new Exception("Unauthorized access!!!");
+		}
+	}
+
+	// mark particular notifications as read for a specific user
+	public void markNotificationAsReadById(String notificationId, String jwt) throws Exception {
+		User reqUser = getUserById(jwt);
+
+		if (reqUser != null) {
+			Optional<RealTimeNotification> notificationOpt = realTimeNotificationRepo.findById(notificationId);
+			if (notificationOpt.isPresent()) {
+				RealTimeNotification notification = notificationOpt.get();
+				if (notification.getUserId().equals(reqUser.getId())) {
+					notification.setRead(true);
+					realTimeNotificationRepo.save(notification);
+				} else {
+					throw new Exception("Unauthorized access! You can only mark your own notifications as read.");
+				}
+			} else {
+				throw new Exception("No Notifications Found with ID: " + notificationId);
+			}
+		} else {
+			throw new Exception("Unauthorized access! Invalid user.");
+		}
+	}
+
+	// Delete all notifications of the receiver (Only receiver can delete)
+	public Void deleteAllNotifications(String jwt) throws Exception {
+		User reqUser = getUserById(jwt);
+		if (reqUser != null) {
+			List<RealTimeNotification> notifications = realTimeNotificationRepo.findByUserId(reqUser.getId());
+			realTimeNotificationRepo.deleteAll(notifications);
+		} else {
+			throw new Exception("Unauthorized access! Invalid user.");
+		}
+		return null;
+	}
+
+	// Delete particular notification of the receiver by notification ID (Only
+	// receiver can delete)
+	public void deleteNotificationById(String jwt, String notificationId) throws Exception {
+		User reqUser = getUserById(jwt);
+		if (reqUser != null) {
+			Optional<RealTimeNotification> optNoti = realTimeNotificationRepo.findById(notificationId);
+
+			if (optNoti.isPresent() && optNoti.get().getUserId().equals(reqUser.getId())) {
+				realTimeNotificationRepo.deleteById(notificationId);
+			} else {
+				throw new Exception("Cannot delete other users Notifications");
+			}
+		} else {
+			throw new Exception("Unauthorized access! Invalid user.");
 		}
 	}
 

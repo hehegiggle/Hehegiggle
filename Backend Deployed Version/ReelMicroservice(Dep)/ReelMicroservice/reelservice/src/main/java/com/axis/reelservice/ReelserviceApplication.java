@@ -12,11 +12,11 @@ public class ReelserviceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ReelserviceApplication.class, args);
 	}
-	
-	 @Bean
-	 @LoadBalanced
-	    public RestTemplate restTemplate() {
-	        return new RestTemplate();
-	    }
+
+	@Bean
+	@LoadBalanced
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 
 }

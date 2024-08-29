@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "../../Config/api";
-import { markAllAsRead } from "../../Redux/Notification/Action";
+import {
+  markAllAsRead,
+  markIndividulaAsRead,
+  deleteAllNotifications,
+  deleteParticularNotification
+} from "../../Redux/Notification/Action";
 import {
   Flex,
   Box,
@@ -10,15 +15,20 @@ import {
   Divider,
   Stack,
   Container,
-  Button,
+  Tooltip,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { TbMoodSadFilled } from "react-icons/tb";
+import { MdOutlineDeleteSweep } from "react-icons/md";
+import { GiCheckMark } from "react-icons/gi";
+import { FcCheckmark } from "react-icons/fc";
+import { TiDeleteOutline } from "react-icons/ti";
 
 function Notification() {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const dispatch = useDispatch();
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -50,14 +60,32 @@ function Notification() {
   }, []);
 
   const handleMarkAllAsRead = () => {
-    dispatch(markAllAsRead());
-    const updatedNotifications = notifications.map((notification) => ({
-      ...notification,
-      read: true,
-    }));
-    setNotifications(updatedNotifications);
-    setUnreadCount(0);
+    if (unreadCount > 0) {
+      dispatch(markAllAsRead());
+      const updatedNotifications = notifications.map((notification) => ({
+        ...notification,
+        read: true,
+      }));
+      setNotifications(updatedNotifications);
+      setUnreadCount(0);
+    }
   };
+
+  const handleMarkAsRead = (notificationId) => {
+    const data={
+      token: token,
+      notificationId: notificationId,
+    }
+    dispatch(markIndividulaAsRead(data));
+  }
+
+  const handleDeleteAllNotifications = () => {
+    dispatch(deleteAllNotifications());
+  }
+
+  const handleDeleteNotification = (notificationId) =>{
+    dispatch(deleteParticularNotification(notificationId));
+  }
 
   const timeDifference = (timestamp) => {
     const date = new Date(timestamp);
@@ -80,6 +108,8 @@ function Notification() {
       return " less than a minute ago";
     }
   };
+
+  const allNotificationsRead = unreadCount === 0 && notifications.length > 0;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -118,17 +148,31 @@ function Notification() {
                         Unread Notifications: {unreadCount}
                       </Badge>
                     </Box>
-                    <Button
-                      onClick={handleMarkAllAsRead}
-                      style={{
-                        borderRadius: "20px",
-                        backgroundColor: "#8697C4",
-                        color: "white",
-                      }}
-                      size="sm"
+                    <Flex
+                      justifyContent="flex-end"
+                      alignItems="center"
+                      gap={14}
                     >
-                      Mark all as read
-                    </Button>
+                      <Tooltip label="Mark All as Read" placement="top">
+                        <Box as="span">
+                          <GiCheckMark
+                            size={"22px"}
+                            cursor={allNotificationsRead ? "not-allowed" : "pointer"}
+                            onClick={handleMarkAllAsRead}
+                            color={allNotificationsRead ? "gray" : "black"}
+                          />
+                        </Box>
+                      </Tooltip>
+                      <Tooltip label="Delete All Notifications" placement="top">
+                        <Box as="span">
+                          <MdOutlineDeleteSweep
+                            size={"26px"}
+                            cursor="pointer"
+                            onClick={()=>handleDeleteAllNotifications()}
+                          />
+                        </Box>
+                      </Tooltip>
+                    </Flex>
                   </Flex>
                   <Divider />
                 </>
@@ -138,14 +182,16 @@ function Notification() {
                 overflowY="auto"
                 css={{
                   "&::-webkit-scrollbar": { display: "none" },
-                  msOverflowStyle: "none" /* IE and Edge */,
-                  scrollbarWidth: "none" /* Firefox */,
+                  msOverflowStyle: "none",
+                  scrollbarWidth: "none",
                 }}
               >
                 {notifications.length === 0 ? (
                   <Flex direction="column" align="center" mt={20}>
                     <TbMoodSadFilled size="15rem" />
-                    <Text mt={2} fontSize="2xl" fontWeight="semibold">No recent notifications</Text>
+                    <Text mt={2} fontSize="2xl" fontWeight="semibold">
+                      No recent notifications
+                    </Text>
                   </Flex>
                 ) : (
                   notifications.map((notification) => (
@@ -157,10 +203,38 @@ function Notification() {
                       borderRadius="lg"
                       mb="3%"
                     >
-                      <Text fontWeight="semibold" fontSize="lg">
-                        {notification.message}
-                      </Text>
                       <Flex justifyContent="space-between" alignItems="center">
+                        <Text fontWeight="semibold" fontSize="lg">
+                          {notification.message}
+                        </Text>
+                        <Flex alignItems="center" gap={6}>
+                          <Tooltip label="Mark as Read" placement="top">
+                            <Box as="span">
+                              <FcCheckmark
+                                size={"22px"}
+                                cursor={notification.read ? "not-allowed" : "pointer"}
+                                color={notification.read ? "gray" : "black"}
+                                onClick={() => handleMarkAsRead(notification.notificationId)}
+                              />
+                            </Box>
+                          </Tooltip>
+                          <Tooltip label="Delete Notification" placement="top">
+                            <Box as="span">
+                              <TiDeleteOutline
+                                color={"red"}
+                                size={"22px"}
+                                cursor="pointer"
+                                onClick={() => handleDeleteNotification(notification.notificationId)}
+                              />
+                            </Box>
+                          </Tooltip>
+                        </Flex>
+                      </Flex>
+                      <Flex
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mt={2}
+                      >
                         {notification.read ? (
                           <Badge colorScheme="green">Read</Badge>
                         ) : (

@@ -161,14 +161,14 @@ export const searchUser = (data) => async (dispatch) => {
   }
 };
 
-export const followerList = (token) => async (dispatch) => {
+export const followerList = (data) => async (dispatch) => {
   dispatch({type: FOLLOWER_LIST_REQUEST});
   try{
-    const response = await fetch(`${BASE_URL}/api/users/follower-list`, {
+    const response = await fetch(`${BASE_URL}/api/users/follower-list/${data.userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + data.token,
       },
     });
     const results = await response.json();
@@ -183,14 +183,14 @@ export const followerList = (token) => async (dispatch) => {
   }
 }
 
-export const followingList = (token) => async (dispatch) => {
+export const followingList = (data) => async (dispatch) => {
   dispatch({type: FOLLOWING_LIST_REQUEST});
   try{
-    const response = await fetch(`${BASE_URL}/api/users/following-list`, {
+    const response = await fetch(`${BASE_URL}/api/users/following-list/${data.userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + data.token,
       },
     });
     const results = await response.json();

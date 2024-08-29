@@ -1,23 +1,39 @@
-export const uploadToCloudinary = async (pics) => {
-  if (pics) {
-    
-    const data = new FormData();
-    data.append("file", pics);
-    data.append("upload_preset", "hehegiggles");
-    data.append("cloud_name", "duniqmfnz");
+export const uploadToCloudinary = async (file) => {
+  if (!file) {
+    console.log("No file provided");
+    return;
+  }
 
-    const res = await fetch("https://api.cloudinary.com/v1_1/duniqmfnz/image/upload", {
+  const fileType = file.type.split("/")[0];
+  let uploadUrl;
+
+  if (fileType === "image") {
+    uploadUrl = "https://api.cloudinary.com/v1_1/duniqmfnz/image/upload";
+  } else if (fileType === "video") {
+    uploadUrl = "https://api.cloudinary.com/v1_1/duniqmfnz/video/upload";
+  } else {
+    console.log("Unsupported file type");
+    return;
+  }
+
+  const data = new FormData();
+  data.append("file", file);
+  data.append("upload_preset", "hehegiggles");
+  data.append("cloud_name", "duniqmfnz");
+
+  try {
+    const res = await fetch(uploadUrl, {
       method: "post",
       body: data,
-    })
-      
-      const fileData=await res.json();
-      console.log("url : ", fileData);
-      return fileData.url.toString();
+    });
 
-  } else {
-    console.log("error");
+    if (!res.ok) {
+      throw new Error("Failed to upload file");
+    }
+
+    const fileData = await res.json();
+    return fileData.url.toString();
+  } catch (error) {
+    console.error("Error uploading file:", error);
   }
 };
-
-

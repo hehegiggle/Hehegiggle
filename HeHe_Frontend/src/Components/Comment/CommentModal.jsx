@@ -132,7 +132,7 @@ const CommentModal = ({
                       <p className="font-semibold">
                         {post.singlePost?.userName}
                       </p>
-                      <p>{post.singlePost?.userUsername}</p>
+                      <p>@{post.singlePost?.userUsername}</p>
                     </div>
                   </div>
                 </div>
@@ -143,8 +143,8 @@ const CommentModal = ({
                       <CommentCard comment={item} />
                     ))}
                 </div>
-                <div className=" absolute bottom-0 w-[90%]">
-                  <div className="flex justify-between items-center w-full mt-5">
+                <div className="absolute w-[90%]">
+                  <div className="flex justify-between items-center w-full mt-2">
                     <div className="flex items-center space-x-2 ">
                       {isPostLiked ? (
                         <AiFillHeart

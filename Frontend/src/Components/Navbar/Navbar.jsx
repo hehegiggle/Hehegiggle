@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Box,
   Flex,
@@ -7,7 +7,7 @@ import {
   InputRightElement,
   Spacer,
   IconButton,
-  useToast, // Import useToast hook
+  useToast,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import img from "../../Album/Images/hehe bgr.png";
@@ -22,21 +22,20 @@ function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const { user } = useSelector((state) => state);
   const dropdownRef = useRef(null);
-  const toast = useToast(); // Initialize useToast hook
+  const toast = useToast();
 
   const handleClick = () => {
     setShowDropdown(!showDropdown);
   };
 
   const handleLogout = () => {
-    // Display toast when logging out
     toast({
       title: "Come Back Soon 🥹🥹🥹",
       status: "error",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
-    localStorage.clear();
+    sessionStorage.clear();
     navigate("/login");
   };
 
@@ -48,13 +47,13 @@ function Navbar() {
     setTimeout(() => setIsSearchBoxVisible(false), 200);
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = useCallback((e) => {
     setSearchQuery(e.target.value);
-  };
+  }, []);
 
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     setSearchQuery("");
-  };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -73,7 +72,7 @@ function Navbar() {
     <div>
       <Box
         bg="#8697C4"
-        p={5}
+        p={{base:'4', md:'5'}}
         boxShadow="md"
         mb={5}
         position="fixed"
@@ -83,14 +82,14 @@ function Navbar() {
         zIndex={1000}
       >
         <Flex align="center">
-          <Box style={{ marginLeft: "90px" }}>
-            <img src={img} alt="" width={"150px"} height={"100px"} />
+          <Box ml={{base:'2%', md:'3%'}} style={{cursor:"pointer"}}>
+            <img src={img} alt="" width={"150px"} height={"100px"} onClick={()=>navigate("/Home")}/>
           </Box>
           <Spacer />
           <Box
             style={{
-              width: "600px",
-              marginRight: "100px",
+              width: "40%",
+              marginRight: "5%",
               position: "relative",
             }}
           >
@@ -101,6 +100,9 @@ function Navbar() {
                 borderRadius="20px"
                 border="1px"
                 borderColor="grey"
+                bg="white" // Ensure the background color is white
+                _focus={{ bg: "white", borderColor: "grey" }} // Keep white background on focus
+                _hover={{ bg: "white", borderColor: "grey" }} // Keep white background on hover
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
                 onChange={handleSearchChange}

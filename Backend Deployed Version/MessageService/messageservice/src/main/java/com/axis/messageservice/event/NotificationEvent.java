@@ -3,32 +3,35 @@ package com.axis.messageservice.event;
 import java.time.LocalDateTime;
 
 public class NotificationEvent {
-    private String notificationId;
-    private String type;
-    private String userId;
-    private String postId;
-    private String commentId;
-    private String senderId;
-    private String email;
-    private String subject;
-    private String message;
-    private LocalDateTime notificationAt;
+	private String notificationId;
+	private String type;
+	private String userId;
+	private String postId;
+	private String reelId;
+	private String commentId;
+	private String senderId;
+	private String email;
+	private String subject;
+	private String message;
+	private LocalDateTime notificationAt;
 
-    // Default constructor
-    public NotificationEvent() {}
+	// Default constructor
+	public NotificationEvent() {
+	}
 
-    // Parameterized constructor
-    public NotificationEvent(String notificationId, String type, String userId, String postId, String commentId,
-                             String senderId, String message, LocalDateTime notificationAt) {
-        this.notificationId = notificationId;
-        this.type = type;
-        this.userId = userId;
-        this.postId = postId;
-        this.commentId = commentId;
-        this.senderId = senderId;
-        this.message = message;
-        this.notificationAt = notificationAt;
-    }
+	// Parameterized constructor
+	public NotificationEvent(String notificationId, String type, String userId, String postId, String reelId,
+			String commentId, String senderId, String message, LocalDateTime notificationAt) {
+		this.notificationId = notificationId;
+		this.type = type;
+		this.userId = userId;
+		this.postId = postId;
+		this.reelId = reelId;
+		this.commentId = commentId;
+		this.senderId = senderId;
+		this.message = message;
+		this.notificationAt = notificationAt;
+	}
 
 	public String getNotificationId() {
 		return notificationId;
@@ -60,6 +63,14 @@ public class NotificationEvent {
 
 	public void setPostId(String postId) {
 		this.postId = postId;
+	}
+
+	public String getReelId() {
+		return reelId;
+	}
+
+	public void setReelId(String reelId) {
+		this.reelId = reelId;
 	}
 
 	public String getCommentId() {
@@ -101,7 +112,7 @@ public class NotificationEvent {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public LocalDateTime getNotificationAt() {
 		return notificationAt;
 	}

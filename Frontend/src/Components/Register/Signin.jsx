@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import {
   Box,
@@ -6,8 +6,12 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
+  InputGroup,
+  InputRightElement,
+  IconButton,
   useToast,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signinAction } from "../../Redux/Auth/Action";
@@ -15,6 +19,7 @@ import { getUserProfileAction } from "../../Redux/User/Action";
 import img from "../../Album/Images/hehe bgr.png";
 
 const Signin = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const initialValues = { email: "", password: "" };
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Hook for programmatic navigation
@@ -22,7 +27,7 @@ const Signin = () => {
   const { error } = useSelector((store) => store.auth);
   const toast = useToast();
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     if (token) dispatch(getUserProfileAction(token));
@@ -30,12 +35,11 @@ const Signin = () => {
 
   useEffect(() => {
     if (user?.reqUser?.username && token) {
-      console.log("Email and Password are correct");
       navigate(`/home`);
       toast({
         title: "Welcome to HeHe Giggle 🤭🤭🤭",
         status: "success",
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
     }
@@ -53,7 +57,7 @@ const Signin = () => {
       toast({
         title: errorMessage,
         status: "error",
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
     }
@@ -119,14 +123,24 @@ const Signin = () => {
                     isInvalid={form.errors.password && form.touched.password}
                     mb={4}
                   >
-                    <Input
-                      {...field}
-                      type="password"
-                      id="password"
-                      placeholder="Password"
-                      bg="white"
-                      _placeholder={{ color: "black" }}
-                    />
+                    <InputGroup>
+                      <InputRightElement>
+                        <IconButton
+                          variant="link"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      </InputRightElement>
+                      <Input
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        placeholder="Password"
+                        bg="white"
+                        _placeholder={{ color: "black" }}
+                      />
+                    </InputGroup>
                     <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -176,3 +190,4 @@ const Signin = () => {
 };
 
 export default Signin;
+

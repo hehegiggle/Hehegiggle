@@ -17,14 +17,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { findPostByIdAction, editPOst } from "../../../Redux/Post/Action";
 import { useParams } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 import "../../Post/Create/EditPostCard.css"; // Import CSS for additional styling
 
 const EditPostModal = ({ isOpen, onClose }) => {
   const finalRef = React.useRef(null);
   const [file, setFile] = useState(null);
   const { postId } = useParams();
+  const toast = useToast();
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { post, user } = useSelector((store) => store);
 
   const [postData, setPostData] = useState({
@@ -42,7 +44,10 @@ const EditPostModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (post.singlePost) {
       for (let key in post.singlePost) {
-        setPostData((prevValues) => ({ ...prevValues, [key]: post.singlePost[key] }));
+        setPostData((prevValues) => ({
+          ...prevValues,
+          [key]: post.singlePost[key],
+        }));
       }
     }
   }, [post.singlePost]);
@@ -54,7 +59,13 @@ const EditPostModal = ({ isOpen, onClose }) => {
     };
     if (token && postData.image) {
       await dispatch(editPOst(data)); // Dispatch editPOst action and wait for it to complete
-      handleClose(); // Close the modal after successful update
+      handleClose();
+      toast({
+        title: "Post updated successfully 🤗🤗🤗",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
     }
   };
 
@@ -76,11 +87,28 @@ const EditPostModal = ({ isOpen, onClose }) => {
   }, [postId]);
 
   return (
-    <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={handleClose} size="xl">
+    <Modal
+      finalFocusRef={finalRef}
+      isOpen={isOpen}
+      onClose={handleClose}
+      size="sm"
+    >
       <ModalOverlay />
-      <ModalContent style={{marginTop:"20px", borderRadius:"20px", background: "linear-gradient(180deg, #8697C4, #EDE8F5)"}}>
+      <ModalContent
+        style={{
+          marginTop: "4%",
+          borderRadius: "20px",
+          background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
+        }}
+      >
         <ModalBody>
-          <Box className="edit-post-card" padding="4" boxShadow="md" borderRadius="20px" style={{background: "linear-gradient(180deg, #8697C4, #EDE8F5)"}}>
+          <Box
+            className="edit-post-card"
+            padding="4"
+            boxShadow="md"
+            borderRadius="20px"
+            style={{ background: "linear-gradient(180deg, #8697C4, #EDE8F5)" }}
+          >
             <Flex justifyContent="space-between" alignItems="center" pb="4">
               <Text fontSize="lg">Edit Post</Text>
               <Flex>
@@ -91,17 +119,30 @@ const EditPostModal = ({ isOpen, onClose }) => {
               </Flex>
             </Flex>
 
-            <Box className="edit-post-image-card" borderWidth="1px" borderRadius="20px" overflow="hidden" mb="4">
+            <Box
+              className="edit-post-image-card"
+              borderWidth="1px"
+              borderRadius="20px"
+              overflow="hidden"
+              mb="4"
+            >
               <Image src={post.singlePost?.image} alt="Post image" />
             </Box>
 
-            <Box className="edit-post-caption-card" borderWidth="1px" borderRadius="20px" overflow="hidden" mb="4" p="4">
+            <Box
+              className="edit-post-caption-card"
+              borderWidth="1px"
+              borderRadius="20px"
+              overflow="hidden"
+              mb="4"
+              p="4"
+            >
               <Flex alignItems="center" mb="2">
                 <Avatar
                   size="sm"
                   src={
                     user?.reqUser?.image ||
-                    "https://cdn.pixabay.com/photo/2023/02/28/03/42/ibex-7819817_640.jpg"
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                   }
                   mr="4"
                 />
@@ -119,7 +160,13 @@ const EditPostModal = ({ isOpen, onClose }) => {
               </Flex>
             </Box>
 
-            <Box className="edit-post-location-card" borderWidth="1px" borderRadius="20px" overflow="hidden" p="4">
+            <Box
+              className="edit-post-location-card"
+              borderWidth="1px"
+              borderRadius="20px"
+              overflow="hidden"
+              p="4"
+            >
               <Flex alignItems="center">
                 <Input
                   placeholder="Add Location"

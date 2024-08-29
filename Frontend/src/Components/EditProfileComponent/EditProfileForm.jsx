@@ -3,7 +3,9 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Select,
   Stack,
+  FormErrorMessage,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -22,7 +24,7 @@ const EditProfileForm = () => {
   const { user } = useSelector((store) => store);
   const toast = useToast();
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
@@ -56,6 +58,15 @@ const EditProfileForm = () => {
 
   const formik = useFormik({
     initialValues: { ...initialValues },
+    validate: (values) => {
+      const errors = {};
+      if (values.mobile && !/^[6789]/.test(values.mobile)) {
+        errors.mobile = "Phone number must start with 6, 7, 8, or 9.";
+      } else if (values.mobile && !/^\d{10}$/.test(values.mobile)) {
+        errors.mobile = "Phone number must be exactly 10 digits.";
+      }
+      return errors;
+    },
     onSubmit: (values) => {
       const data = {
         jwt: token,
@@ -103,7 +114,7 @@ const EditProfileForm = () => {
         marginTop: "11%",
         marginBottom: "7%",
         width: "112%",
-        boxShadow:"lg",
+        boxShadow: "lg",
         background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
       }}
     >
@@ -130,11 +141,15 @@ const EditProfileForm = () => {
         </div>
         <Button
           onClick={onOpen}
-          className="font-boldcursor-pointer ml-auto"
-          color="white" // Text color
-          px={4} // Padding X
-          py={2} // Padding Y
-          style={{ borderRadius: "20px", backgroundColor: "#8697C4", borderWidth:"1px" }}
+          className="font-bold cursor-pointer ml-auto"
+          color="white"
+          px={4}
+          py={2}
+          style={{
+            borderRadius: "20px",
+            backgroundColor: "#8697C4",
+            borderWidth: "1px",
+          }}
         >
           Upload Profile Picture
         </Button>
@@ -147,72 +162,88 @@ const EditProfileForm = () => {
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Name"
-                className="w-full"
-                type="text"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("name")}
               />
             </div>
           </FormControl>
-          <FormControl className="flex " id="bio">
+          <FormControl className="flex" id="bio">
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Bio
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Bio"
-                className="w-full"
-                type="text"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("bio")}
               />
             </div>
           </FormControl>
-          <FormControl className="flex " id="email">
+          <FormControl className="flex" id="email">
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Email address
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Email"
-                className="w-full"
-                type="email"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("email")}
               />
             </div>
           </FormControl>
-          <FormControl className="flex " id="mobile">
+          <FormControl
+            isInvalid={formik.touched.mobile && formik.errors.mobile}
+            className="flex"
+            id="mobile"
+          >
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Phone number
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Phone"
-                className="w-full"
-                type="tel"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("mobile")}
               />
+              {formik.touched.mobile && formik.errors.mobile && (
+                <FormErrorMessage>{formik.errors.mobile}</FormErrorMessage>
+              )}
             </div>
           </FormControl>
-          <FormControl className="flex " id="gender">
+          <FormControl className="flex" id="gender">
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Gender
             </FormLabel>
             <div className="w-full">
-              <Input
-                borderColor="black"
-                placeholder="Gender"
-                className="w-full"
-                type="text"
+              <Select
+                placeholder="Select Gender"
+                background="white"
                 {...formik.getFieldProps("gender")}
-              />
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+              </Select>
             </div>
           </FormControl>
           <div>
-            <Button type="submit" style={{ borderRadius: "20px", backgroundColor: "#8697C4", color:"white"}}>
+            <Button
+              type="submit"
+              style={{
+                borderRadius: "20px",
+                backgroundColor: "#8697C4",
+                color: "white",
+              }}
+            >
               Submit
             </Button>
           </div>

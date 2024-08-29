@@ -1,5 +1,6 @@
 package com.postmicroservice.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,318 +28,310 @@ import com.postmicroservice.repository.PostRepository;
 @Service
 public class PostServiceImplementation implements PostService {
 
-    @Autowired
-    private PostRepository postRepo;
-
-    @Autowired
-    private RestTemplate restTemplate;
-    
-    @Autowired
-    private NotificationService notificationService;
-
-    @Override
-    public Post createPost(Post post, String token) throws UserException {
-        // Fetch user details using token
-        User user = getUserById(token);
-
-        // Set user details to the post
-        post.setUserId(user.getId());
-        post.setUserEmail(user.getEmail());
-        post.setUserUsername(user.getUsername());
-        post.setUserImage(user.getImage());
-        post.setUserName(user.getName());
-        post.setCreatedAt(LocalDateTime.now());
-        Post p = postRepo.save(post);
-        System.out.println("Posted: " + p);
-
-        //savepostforuser(token,p);
-        return p;
-    }
-
-    @Override
-    public List<Post> findAllPost() throws PostException {
-        List<Post> posts = postRepo.findAllPosts(Sort.by(Sort.Direction.DESC, "createdAt"));
-        if (posts.size() > 0) {
-            return posts;
-        }
-        throw new PostException("Post Not Exist");
-    }
-
-    @Override
-    public List<Post> findPostByUserId(Integer userId) throws UserException {
-        System.out.println("ifffffff" + userId);
-        List<Post> posts = postRepo.findByUserId(userId);
-
-        return posts;
-    }
-
-    @Override
-    public Post findePostById(String id) throws PostException {
-        Optional<Post> opt = postRepo.findById(id);
-        if (opt.isPresent()) {
-            return opt.get();
-        }
-        throw new PostException("Post not exist with id: " + id);
-    }
-
-    @Override
-    public Post likePost(String postId, String token) throws UserException, PostException {
-        // TODO Auto-generated method stub
-
-        User user = getUserById(token);
-
-        UserDto userDto = new UserDto();
-
-        userDto.setEmail(user.getEmail());
-        userDto.setUsername(user.getUsername());
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setImage(user.getImage());
-
-        Post post = findePostById(postId);
-        post.getLikedByUsers().add(userDto);
-
-        // Send Notification
-        NotificationEvent notificationEvent = new NotificationEvent(
-            null, // notificationId, will be generated
-            "like",
-            post.getUserId().toString(),
-            postId,
-            null, // commentId, not applicable
-            user.getId().toString(),
-            user.getUsername() + " liked your post",
-            LocalDateTime.now()
-        );
-
-        if(!post.getUserId().toString().equals(user.getId().toString())) {
-        	notificationService.sendNotification(notificationEvent);
-        	return postRepo.save(post);
-        }
-        else {
-        	return postRepo.save(post);
-        }
-    }
-
-    @Override
-    public Post unLikePost(String postId, String token) throws UserException, PostException {
-        // TODO Auto-generated method stub
-
-        User user = getUserById(token);
-        UserDto userDto = new UserDto();
-
-        userDto.setEmail(user.getEmail());
-        userDto.setUsername(user.getUsername());
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setImage(user.getImage());
+	@Autowired
+	private PostRepository postRepo;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Autowired
+	private NotificationService notificationService;
+
+	@Override
+	public Post createPost(Post post, String token) throws UserException {
+		// Fetch user details using token
+		User user = getUserById(token);
+
+		// Set user details to the post
+		post.setUserId(user.getId());
+		post.setUserEmail(user.getEmail());
+		post.setUserUsername(user.getUsername());
+		post.setUserImage(user.getImage());
+		post.setUserName(user.getName());
+		post.setCreatedAt(LocalDateTime.now());
+		Post p = postRepo.save(post);
+		System.out.println("Posted: " + p);
+
+		// savepostforuser(token,p);
+		return p;
+	}
+
+	@Override
+	public List<Post> findAllPost() throws PostException {
+		List<Post> posts = postRepo.findAllPosts(Sort.by(Sort.Direction.DESC, "createdAt"));
+		if (posts.size() > 0) {
+			return posts;
+		}
+		throw new PostException("Post Not Exist");
+	}
+
+	@Override
+	public List<Post> findPostByUserId(Integer userId) throws UserException {
+		System.out.println("ifffffff" + userId);
+		List<Post> posts = postRepo.findByUserId(userId);
+
+		return posts;
+	}
+
+	@Override
+	public Post findePostById(String id) throws PostException {
+		Optional<Post> opt = postRepo.findById(id);
+		if (opt.isPresent()) {
+			return opt.get();
+		}
+		throw new PostException("Post not exist with id: " + id);
+	}
+
+	@Override
+	public Post likePost(String postId, String token) throws UserException, PostException {
+		// TODO Auto-generated method stub
+
+		User user = getUserById(token);
+
+		UserDto userDto = new UserDto();
+
+		userDto.setEmail(user.getEmail());
+		userDto.setUsername(user.getUsername());
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setImage(user.getImage());
+
+		Post post = findePostById(postId);
+		post.getLikedByUsers().add(userDto);
+
+		// Send Notification
+		NotificationEvent notificationEvent = new NotificationEvent(null, // notificationId, will be generated
+				"Post Like", post.getUserId().toString(), postId, null, null, // commentId, not applicable
+				user.getId().toString(), user.getUsername() + " liked your post", LocalDateTime.now());
+
+		if (!post.getUserId().toString().equals(user.getId().toString())) {
+			notificationService.sendNotification(notificationEvent);
+			return postRepo.save(post);
+		} else {
+			return postRepo.save(post);
+		}
+	}
+
+	@Override
+	public Post unLikePost(String postId, String token) throws UserException, PostException {
+		// TODO Auto-generated method stub
+
+		User user = getUserById(token);
+		UserDto userDto = new UserDto();
+
+		userDto.setEmail(user.getEmail());
+		userDto.setUsername(user.getUsername());
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setImage(user.getImage());
+
+		Post post = findePostById(postId);
+		post.getLikedByUsers().remove(userDto);
+
+		return postRepo.save(post);
+	}
 
-        Post post = findePostById(postId);
-        post.getLikedByUsers().remove(userDto);
+	@Override
+	public String deletePost(String postId, String token) throws UserException, PostException {
+		// TODO Auto-generated method stub
 
-        return postRepo.save(post);
-    }
+		Post post = findePostById(postId);
 
-    @Override
-    public String deletePost(String postId, String token) throws UserException, PostException {
-        // TODO Auto-generated method stub
+		User user = getUserById(token);
 
-        Post post = findePostById(postId);
+		if (post.getUserId().equals(user.getId())) {
+			System.out.println("inside delete");
+			postRepo.deleteById(postId);
 
-        User user = getUserById(token);
+			return "Post Deleted Successfully";
+		}
 
-        if (post.getUserId().equals(user.getId())) {
-            System.out.println("inside delete");
-            postRepo.deleteById(postId);
+		throw new PostException("You Dont have access to delete this post");
 
-            return "Post Deleted Successfully";
-        }
+	}
 
-        throw new PostException("You Dont have access to delete this post");
+	@Override
+	public List<Post> findAllPostByUserIds(List<Integer> userIds) throws PostException, UserException {
 
-    }
+		List<Post> posts = postRepo.findAllPostByUserIds(userIds);
 
-    @Override
-    public List<Post> findAllPostByUserIds(List<Integer> userIds) throws PostException, UserException {
+		if (posts.size() == 0) {
+			throw new PostException("No Post Available of your followings");
+		}
 
-        List<Post> posts = postRepo.findAllPostByUserIds(userIds);
+		return posts;
+	}
 
-        if (posts.size() == 0) {
-            throw new PostException("No Post Available of your followings");
-        }
+	@Override
+	public String savedPost(String postId, String token) throws PostException, UserException {
+		Post post = findePostById(postId);
+		User user = getUserById(token);
 
-        return posts;
-    }
+		System.out.println("Saved....");
+		if (!user.getSavedPost().contains(post)) {
+			user.getSavedPost().add(post);
+			savepostforuser(token, user);
+			return "Post Saved Successfully";
+		}
 
-    @Override
-    public String savedPost(String postId, String token) throws PostException, UserException {
-        Post post = findePostById(postId);
-        User user = getUserById(token);
+		return "Post is already saved";
+	}
 
-        System.out.println("Saved....");
-        if (!user.getSavedPost().contains(post)) {
-            user.getSavedPost().add(post);
-            savepostforuser(token, user);
-            return "Post Saved Successfully";
-        }
+	@Override
+	public Post editPost(Post post, Integer userId) throws PostException {
+		Post isPost = findePostById(String.valueOf(post.getId()));
 
-        return "Post is already saved";
-    }
+		if (post.getCaption() != null) {
+			isPost.setCaption(post.getCaption());
+		}
+		if (post.getLocation() != null) {
+			isPost.setLocation(post.getLocation());
+		}
+		// savepostforuser(null, post);
+		return postRepo.save(isPost);
+	}
 
-    @Override
-    public Post editPost(Post post, Integer userId) throws PostException {
-        Post isPost = findePostById(String.valueOf(post.getId()));
+	private static final String url = "http://USER-SERVICE/api/users/req";
 
-        if (post.getCaption() != null) {
-            isPost.setCaption(post.getCaption());
-        }
-        if (post.getLocation() != null) {
-            isPost.setLocation(post.getLocation());
-        }
-        // savepostforuser(null, post);
-        return postRepo.save(isPost);
-    }
+	@Override
+	public User getUserById(String jwt) {
+		System.out.println("token +" + jwt);
+		HttpHeaders headers = new HttpHeaders();
 
-    private static final String url = "http://USER-SERVICE/api/users/req";
+		headers.set("Authorization", jwt);
+		HttpEntity<User> entity = new HttpEntity<>(headers);
 
-    @Override
-    public User getUserById(String jwt) {
-        System.out.println("token +" + jwt);
-        HttpHeaders headers = new HttpHeaders();
+		ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+		System.out.println("got user+" + response);
+		return response.getBody();
+	}
 
-        headers.set("Authorization", jwt);
-        HttpEntity<User> entity = new HttpEntity<>(headers);
+	String url1 = "http://USER-SERVICE/api/users/add";
 
-        ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
-        System.out.println("got user+" + response);
-        return response.getBody();
-    }
+	public User savepostforuser(String jwt, User user) {
+		System.out.println("----" + user);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", jwt);
 
-    String url1 = "http://USER-SERVICE/api/users/add";
+		// Create an HttpEntity with the post object and the headers
+		HttpEntity<User> entity = new HttpEntity<>(user, headers);
+		System.out.println("user sednded" + user);
+		// Make the request and get the response
+		ResponseEntity<User> response = restTemplate.exchange(url1, HttpMethod.POST, entity, User.class);
 
-    public User savepostforuser(String jwt, User user) {
-        System.out.println("----" + user);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwt);
+		return response.getBody();
+	}
 
-        // Create an HttpEntity with the post object and the headers
-        HttpEntity<User> entity = new HttpEntity<>(user, headers);
-        System.out.println("user sednded" + user);
-        // Make the request and get the response
-        ResponseEntity<User> response = restTemplate.exchange(url1, HttpMethod.POST, entity, User.class);
+	String url2 = "http://USER-SERVICE/api/users/addpost";
 
-        return response.getBody();
-    }
+	public Post savepostforuser(String jwt, Post post) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", jwt);
 
-    String url2 = "http://USER-SERVICE/api/users/addpost";
+		// Create an HttpEntity with the post object and the headers
+		HttpEntity<Post> entity = new HttpEntity<>(post, headers);
+		System.out.println("as" + post);
+		// Make the request and get the response
+		ResponseEntity<Post> response = restTemplate.exchange(url2, HttpMethod.POST, entity, Post.class);
 
-    public Post savepostforuser(String jwt, Post post) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwt);
+		// Return the response body
+		return response.getBody();
+	}
 
-        // Create an HttpEntity with the post object and the headers
-        HttpEntity<Post> entity = new HttpEntity<>(post, headers);
-        System.out.println("as" + post);
-        // Make the request and get the response
-        ResponseEntity<Post> response = restTemplate.exchange(url2, HttpMethod.POST, entity, Post.class);
+	@Override
+	public String unSavePost(String postId, String token) throws PostException, UserException {
+		Post post = findePostById(postId);
+		User user = getUserById(token);
 
-        // Return the response body
-        return response.getBody();
-    }
+		if (user == null || post == null) {
+			throw new PostException("Post or User not found");
+		}
 
-    @Override
-    public String unSavePost(String postId, String token) throws PostException, UserException {
-        Post post = findePostById(postId);
-        User user = getUserById(token);
+		System.out.println("previous: " + user);
 
-        if (user == null || post == null) {
-            throw new PostException("Post or User not found");
-        }
+		unsavePostForUser(token, post.getId());
 
-        System.out.println("previous: " + user);
+		if (user.getSavedPost().contains(post)) {
+			// Remove the post from user's saved posts
+			user.getSavedPost().remove(post);
+			System.out.println("removed");
 
-        unsavePostForUser(token, post.getId());
+			// Save the updated user (assuming there's a method to update the user)
+			// updateUser(user);
 
-        if (user.getSavedPost().contains(post)) {
-            // Remove the post from user's saved posts
-            user.getSavedPost().remove(post);
-            System.out.println("removed");
+			System.out.println("check: " + user);
+		}
 
-            // Save the updated user (assuming there's a method to update the user)
-            // updateUser(user);
+		return "Post Removed Successfully";
+	}
 
-            System.out.println("check: " + user);
-        }
+	public Post unsavePostForUser(String jwt, String id) {
+		String url = "http://USER-SERVICE/api/users/saved/" + id; // Local variable for URL
 
-        return "Post Removed Successfully";
-    }
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", jwt);
 
-    public Post unsavePostForUser(String jwt, String id) {
-        String url = "http://USER-SERVICE/api/users/saved/" + id; // Local variable for URL
+		// Create an HttpEntity with the headers
+		HttpEntity<Post> entity = new HttpEntity<>(headers);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwt);
+		// Make the request and get the response
+		ResponseEntity<Post> response = restTemplate.exchange(url, HttpMethod.GET, entity, Post.class);
 
-        // Create an HttpEntity with the headers
-        HttpEntity<Post> entity = new HttpEntity<>(headers);
+		// Return the response body
+		return response.getBody();
+	}
 
-        // Make the request and get the response
-        ResponseEntity<Post> response = restTemplate.exchange(url, HttpMethod.GET, entity, Post.class);
+	private static String ur2 = "http://COMMENT-SERVICE/api/comments/post/";
 
-        // Return the response body
-        return response.getBody();
-    }
+	@Override
+	public ResponseEntity<List<Comments>> AddcommentPost(String id, String jwt) {
+		// Assuming ur2 is properly initialized before this point
+		String url = ur2 + id;
 
-    private static String ur2 = "http://COMMENT-SERVICE/api/comments/post/";
+		// Create HTTP headers and set the Authorization header with the JWT
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", jwt);
 
-    @Override
-    public ResponseEntity<List<Comments>> AddcommentPost(String id, String jwt) {
-        // Assuming ur2 is properly initialized before this point
-        String url = ur2 + id;
+		// Create an HTTP entity with the headers
+		HttpEntity<Comments> entity = new HttpEntity<>(headers);
 
-        // Create HTTP headers and set the Authorization header with the JWT
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwt);
-
-        // Create an HTTP entity with the headers
-        HttpEntity<Comments> entity = new HttpEntity<>(headers);
-
-        // Make a GET request to the external service
-        try {
-            ResponseEntity<List<Comments>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
-                    new ParameterizedTypeReference<List<Comments>>() {
-                    });
-            System.out.println(response); // Debugging statement to log the response
+		// Make a GET request to the external service
+		try {
+			ResponseEntity<List<Comments>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+					new ParameterizedTypeReference<List<Comments>>() {
+					});
+			System.out.println(response); // Debugging statement to log the response
 
 //	        // Extract the list of comments from the response
-            List<Comments> comments = response.getBody();
+			List<Comments> comments = response.getBody();
 //
-            // Convert List<Comments> to List<CommentDto
+			// Convert List<Comments> to List<CommentDto
 //	        List<CommentDto> commentDtos = comments.stream()
 //	            .map(this::convertToDto)
 //	            .collect(Collectors.toList());
 
-            // Assuming you have a Post object to set the comments to
-            Post post = postRepo.findById(id).get();
-            post.setCommentIds(comments);
-            postRepo.save(post);
-            // savepostforuser(jwt, post);
-            System.out.println("updated post" + post);
+			// Assuming you have a Post object to set the comments to
+			Post post = postRepo.findById(id).get();
+			post.setCommentIds(comments);
+			postRepo.save(post);
+			// savepostforuser(jwt, post);
+			System.out.println("updated post" + post);
 
-            return response;
-        } catch (Exception e) {
-            // Log the exception
-            System.err.println("Error occurred while fetching comments: " + e.getMessage());
-            return null;
-        }
-    }
+			return response;
+		} catch (Exception e) {
+			// Log the exception
+			System.err.println("Error occurred while fetching comments: " + e.getMessage());
+			return null;
+		}
+	}
 
-    // Helper method to convert Comments to CommentDto
-    private CommentDto convertToDto(Comments comment) {
-        CommentDto dto = new CommentDto();
-        // Assuming CommentDto has similar fields to Comments
-        dto.setId(comment.getCommentId());
+	// Helper method to convert Comments to CommentDto
+	private CommentDto convertToDto(Comments comment) {
+		CommentDto dto = new CommentDto();
+		// Assuming CommentDto has similar fields to Comments
+		dto.setId(comment.getCommentId());
 
-        // Set other fields as necessary
-        return dto;
-    }
+		// Set other fields as necessary
+		return dto;
+	}
 }

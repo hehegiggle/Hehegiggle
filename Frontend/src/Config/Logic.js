@@ -1,3 +1,6 @@
+import axios from "axios";
+import { BASE_URL } from "./api";
+
 export const isReqUser = (userId1, userId2) => {
   if (userId1 && userId2) return userId1 === userId2;
 };
@@ -12,21 +15,18 @@ export const isFollowing = (reqUser, user2) => {
   return false;
 };
 
-export const suggetions=(reqUser)=>{
+export const suggetions = (reqUser) => {
+  const set = new Set(reqUser.following.map((item) => JSON.stringify(item)));
 
-  const set=new Set(reqUser.following.map((item)=>JSON.stringify(item)));
-
-
-  const result = reqUser.follower.filter(item => {
-   
+  const result = reqUser.follower.filter((item) => {
     return !set.has(JSON.stringify(item));
-  })
+  });
 
-  
-// console.log("result ",result);
+  // console.log("result ",result);
 
   return result;
-}
+};
+
 export const isSavedPost = (user, postId) => {
   // Check if user.savedPost is null or undefined
   if (!user.savedPost) {
@@ -39,7 +39,7 @@ export const isSavedPost = (user, postId) => {
       return true;
     }
   }
-  
+
   return false;
 };
 
@@ -64,7 +64,6 @@ export const isReqUserPost = (post, reqUser) => {
   return post && reqUser && post.userId === reqUser.id;
 };
 
-
 function getTimeInHours(timestamp) {
   const date = new Date(timestamp);
   const hours = date.getHours();
@@ -72,7 +71,6 @@ function getTimeInHours(timestamp) {
 }
 
 export const hasStory = (users) => {
- 
   const temp = users.reduce((acc, item) => {
     if (item.stories?.length > 0) {
       const time = getTimeInHours(
@@ -87,25 +85,6 @@ export const hasStory = (users) => {
 
   return temp;
 };
-
-export const activeStory = (stories) => {
- 
-  const temp = stories.reduce((acc, item) => {
-    
-      const time = getTimeInHours(
-        // item.stories[item.stories?.length - 1].timestamp
-        item.timestamp
-      );
-      if (time < 24) {
-        acc.push(item);
-      }
-    
-    return acc;
-  }, []);
-
-  return temp;
-};
-
 
 export function timeDifference(timestamp) {
   // Convert the timestamp to a Date object
@@ -131,6 +110,7 @@ export function timeDifference(timestamp) {
   } else if (minutes > 0) {
     return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
   } else {
-    return seconds + " second" + (seconds === 1 ? "" : "s") + " ago";
+    return " less than a minute ago";
   }
 }
+

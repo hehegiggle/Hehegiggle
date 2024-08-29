@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "../../Config/Debounce";
 import { searchUserAction } from "../../Redux/User/Action";
-import { Box } from "@chakra-ui/react"; // Import Box from Chakra UI
+import { Box } from "@chakra-ui/react";
 import SearchUserCard from "./SearchUserCard";
 
 const SearchComponent = ({ setIsSearchVisible, searchQuery }) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
 

@@ -27,7 +27,6 @@ function ForgotPassword() {
 
   useEffect(() => {
     if (error) {
-      console.log("Got error message in Forgot Password: ", error);
       let errorMessage = "Failed to send reset email";
       if (error === "No value present") {
         errorMessage = "Invalid email ID ☠️☠️☠️";
@@ -35,7 +34,7 @@ function ForgotPassword() {
       toast({
         title: errorMessage,
         status: "error",
-        duration: 2000,
+        duration: 1000,
         isClosable: true,
       });
     }
@@ -47,7 +46,7 @@ function ForgotPassword() {
     toast({
       title: "Reset Email has been Sent 📧📧📧",
       status: "success",
-      duration: 2000,
+      duration: 1000,
       isClosable: true,
     });
   };

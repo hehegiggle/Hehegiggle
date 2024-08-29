@@ -7,7 +7,7 @@ import { reqUserPostAction } from "../../Redux/Post/Action";
 import { getReelByUserId } from "../../Redux/Reel/Action";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 
-const ProfilePostsPart = ({ user }) => {
+const ProfilePostsPart = ({ user, reqUserId}) => {
   const [activeTab, setActiveTab] = useState("Post");
   const { post } = useSelector((store) => store);
   const { reels } = useSelector((store) => store.reel);
@@ -70,11 +70,15 @@ const ProfilePostsPart = ({ user }) => {
             <Flex w="full" justify="center" align="center">
               <Text fontSize="xl">Nothing here yet, start sharing your Giggles!</Text>
             </Flex>
-          ) : activeTab === "Saved" && user?.savedPost?.length > 0 ? (
+          ) : activeTab === "Saved" && user.id !== reqUserId ? (
+            <Flex w="full" justify="center" align="center">
+              <Text fontSize="xl">Saved content is hidden from other users</Text>
+            </Flex>
+          ) : activeTab === "Saved" && user?.savedPost?.length > 0 && user.id === reqUserId ? (
             user.savedPost.map((item, index) => (
               <ReqUserPostCard post={item} key={index} activeTab={activeTab} />
             ))
-          ) : activeTab === "Saved" && user?.savedPost?.length === 0 ? (
+          ) : activeTab === "Saved" && user?.savedPost?.length === 0 && user.id === reqUserId ? (
             <Flex w="full" justify="center" align="center">
               <Text fontSize="xl">Nothing saved yet, bookmarking your favorite content!</Text>
             </Flex>

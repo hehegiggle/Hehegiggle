@@ -1,3 +1,6 @@
+import axios from "axios";
+import { BASE_URL } from "./api";
+
 export const isReqUser = (userId1, userId2) => {
   if (userId1 && userId2) return userId1 === userId2;
 };
@@ -110,3 +113,4 @@ export function timeDifference(timestamp) {
     return " less than a minute ago";
   }
 }
+

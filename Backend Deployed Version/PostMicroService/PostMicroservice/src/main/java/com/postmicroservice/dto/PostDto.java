@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,27 +17,23 @@ import lombok.Data;
 
 @Data
 public class PostDto {
-	
 
 	private Integer id;
-	
+
 	private String caption;
-	
+
 	private String image;
 
-	private LocalDateTime createdAt; 
-	
-	private UserDto user;
-	
+	private LocalDateTime createdAt;
 
-	
-	private List<CommentDto> comments=new ArrayList<>();
-	
-	private List<UserDto> liked= new ArrayList<>(); 
-	
+	private UserDto user;
+
+	private List<CommentDto> comments = new ArrayList<>();
+
+	private List<UserDto> liked = new ArrayList<>();
+
 	private boolean likedByRequser;
-	
+
 	private boolean savedByRequser;
-	
 
 }

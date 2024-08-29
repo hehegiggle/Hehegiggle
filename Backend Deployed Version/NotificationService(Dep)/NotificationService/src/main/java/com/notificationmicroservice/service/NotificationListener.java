@@ -10,26 +10,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificationListener {
 
-    @Autowired
-    private RealTimeNotificationRepository realTimeNotificationRepo;
+	@Autowired
+	private RealTimeNotificationRepository realTimeNotificationRepo;
 
-    @RabbitListener(queues = "${notification.queue}")
-    public void receiveMessage(NotificationEvent notificationEvent) {
-        System.out.println("Received notification: " + notificationEvent);
+	@RabbitListener(queues = "${notification.queue}")
+	public void receiveMessage(NotificationEvent notificationEvent) {
+		System.out.println("Received notification: " + notificationEvent);
 
-        // Save the notification to MongoDB
-        RealTimeNotification realTimeNotification = new RealTimeNotification(
-            notificationEvent.getNotificationId(),
-            notificationEvent.getType(),
-            notificationEvent.getUserId(),
-            notificationEvent.getPostId(),
-            notificationEvent.getCommentId(),
-            notificationEvent.getSenderId(),
-            notificationEvent.getMessage(),
-            false,
-            notificationEvent.getNotificationAt()
-        );
+		// Save the notification to MongoDB
+		RealTimeNotification realTimeNotification = new RealTimeNotification(notificationEvent.getNotificationId(),
+				notificationEvent.getType(), notificationEvent.getUserId(), notificationEvent.getPostId(),
+				notificationEvent.getReelId(), notificationEvent.getCommentId(), notificationEvent.getSenderId(),
+				notificationEvent.getMessage(), false, notificationEvent.getNotificationAt());
 
-        realTimeNotificationRepo.save(realTimeNotification);
-    }
+		realTimeNotificationRepo.save(realTimeNotification);
+	}
 }

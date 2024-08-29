@@ -10,16 +10,16 @@ import com.usermicroservice.Event.NotificationEvent;
 @Service
 public class NotificationService {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 
-    @Value("${notification.exchange}")
-    private String notificationExchange;
+	@Value("${notification.exchange}")
+	private String notificationExchange;
 
-    @Value("${notification.routingkey}")
-    private String notificationRoutingKey;
+	@Value("${notification.routingkey}")
+	private String notificationRoutingKey;
 
-    public void sendNotification(NotificationEvent notificationEvent) {
-        rabbitTemplate.convertAndSend(notificationExchange, notificationRoutingKey, notificationEvent);
-    }
+	public void sendNotification(NotificationEvent notificationEvent) {
+		rabbitTemplate.convertAndSend(notificationExchange, notificationRoutingKey, notificationEvent);
+	}
 }

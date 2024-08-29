@@ -1,18 +1,25 @@
-.comments{
-    /* overflow-y-scroll max-h-[50vh] */
+.comments {
+  /* overflow-y-scroll max-h-[50vh] */
 
-    overflow-y: scroll;
-    max-height: 40vh;
+  overflow-y: scroll;
+  max-height: 42vh;
+}
 
+.reelcomments {
+  overflow-y: scroll;
+  max-height: 57vh;
+}
+
+.reelcomments::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .comments::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-  }
+  display: none; /* Safari and Chrome */
+}
 
-  .commentInput{
-   
-    border: none;
-    outline: none;
-    padding: 5px;
-  }
+.commentInput {
+  border: none;
+  outline: none;
+  padding: 5px;
+}

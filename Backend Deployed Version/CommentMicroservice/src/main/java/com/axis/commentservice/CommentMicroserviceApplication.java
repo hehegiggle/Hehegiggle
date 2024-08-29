@@ -16,15 +16,16 @@ public class CommentMicroserviceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CommentMicroserviceApplication.class, args);
 	}
+
 	@Bean
-	 @LoadBalanced
-	    public RestTemplate restTemplate() {
-	        return new RestTemplate();
-	    }
-	
+	@LoadBalanced
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+
 	@Bean
 	public ModelMapper mapper() {
-	    return new ModelMapper();
+		return new ModelMapper();
 
-}
+	}
 }

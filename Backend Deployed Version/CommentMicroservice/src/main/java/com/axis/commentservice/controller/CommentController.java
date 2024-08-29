@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.axis.commentservice.entity.Comments;
-import com.axis.commentservice.entity.User;
 import com.axis.commentservice.exception.CommentException;
 import com.axis.commentservice.exception.PostException;
+import com.axis.commentservice.exception.ReelException;
 import com.axis.commentservice.exception.UserException;
 import com.axis.commentservice.response.MessageResponse;
 import com.axis.commentservice.service.CommentService;
@@ -50,6 +50,17 @@ public class CommentController {
 
 	}
 
+	// Create Reel Comment
+	@PostMapping("/create/reel/{reelId}")
+	public ResponseEntity<Comments> createReelComment(@RequestBody Comments comment,
+			@PathVariable("reelId") Integer reelId, @RequestHeader("Authorization") String token)
+			throws ReelException, UserException {
+
+		Comments createdReelComment = commentService.createReelComment(comment, reelId, token);
+
+		return new ResponseEntity<Comments>(createdReelComment, HttpStatus.OK);
+	}
+
 	@PutMapping("/like/{commentId}")
 	public ResponseEntity<Comments> likeCommentHandler(@PathVariable("commentId") Integer commentId,
 			@RequestHeader("Authorization") String token) throws UserException, CommentException {
@@ -59,26 +70,55 @@ public class CommentController {
 		return new ResponseEntity<Comments>(likedComment, HttpStatus.OK);
 	}
 
-	
-	
+	// Like Reel Comment
+	@PutMapping("/like/reel/{commentId}")
+	public ResponseEntity<Comments> likeReelComment(@PathVariable("commentId") Integer commentId,
+			@RequestHeader("Authorization") String token) throws UserException, CommentException {
+
+		Comments likedComment = commentService.likeReelComment(commentId, token);
+
+		return new ResponseEntity<Comments>(likedComment, HttpStatus.OK);
+	}
+
 	@PutMapping("/unlike/{commentId}")
 	public ResponseEntity<Comments> unlikeCommentHandler(@RequestHeader("Authorization") String token,
 			@PathVariable("commentId") Integer commentId) throws UserException, CommentException {
-		
+
 		Comments likedComment = commentService.unlikeComment(commentId, token);
 
 		return new ResponseEntity<Comments>(likedComment, HttpStatus.OK);
 	}
 
-	@PutMapping(value = "/edit/{commentId}", consumes = "application/json")
-	public ResponseEntity<MessageResponse> editCommentHandler(@PathVariable("commentId") Integer commentId, @RequestBody Comments comment) throws CommentException {
-	    commentService.editComment(comment, commentId);
+	// Dislike reel comment like
+	@PutMapping("/dislike/reel/{commentId}")
+	public ResponseEntity<Comments> dislikeReelComment(@PathVariable("commentId") Integer commentId,
+			@RequestHeader("Authorization") String token) throws UserException, CommentException {
 
-	    MessageResponse res = new MessageResponse("Comment Updated Successfully");
-	    System.out.println("Comments changed: "+comment);
-	    return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+		Comments dislikedComment = commentService.dislikeReelComment(commentId, token);
+
+		return new ResponseEntity<Comments>(dislikedComment, HttpStatus.OK);
 	}
 
+	@PutMapping(value = "/edit/{commentId}", consumes = "application/json")
+	public ResponseEntity<MessageResponse> editCommentHandler(@PathVariable("commentId") Integer commentId,
+			@RequestBody Comments comment) throws CommentException {
+		commentService.editComment(comment, commentId);
+
+		MessageResponse res = new MessageResponse("Comment Updated Successfully");
+		System.out.println("Comments changed: " + comment);
+		return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+	}
+
+	// Update Reel Comment
+	@PutMapping("/edit/reel/{commentId}")
+	public ResponseEntity<MessageResponse> editReelComment(@PathVariable("commentId") Integer commentId,
+			@RequestBody Comments comment, @RequestHeader("Authorization") String token)
+			throws CommentException, UserException, ReelException {
+
+		commentService.editReelComment(comment, commentId, token);
+		MessageResponse res = new MessageResponse("Reel Comment Updated Successfully");
+		return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+	}
 
 	@DeleteMapping("/delete/{commentId}")
 	public ResponseEntity<MessageResponse> deleteCommentHandler(@PathVariable("commentId") Integer commentId)
@@ -91,21 +131,43 @@ public class CommentController {
 		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
 	}
 
+	// Delete Reel Comment
+	@DeleteMapping("/delete/reel/{commentId}")
+	public ResponseEntity<MessageResponse> deleteReelComment(@PathVariable("commentId") Integer commentId,
+			@RequestHeader("Authorization") String token) throws CommentException, UserException {
+
+		commentService.deleteReelCommentById(commentId, token);
+		MessageResponse res = new MessageResponse("Reel Comment Delete Successfully");
+
+		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
+	}
 
 	@GetMapping("/post/{postId}")
-	public ResponseEntity<List<Comments>> getCommentHandler(@PathVariable("postId") String postId, @RequestHeader("Authorization") String token)
-	        throws CommentException, PostException {
+	public ResponseEntity<List<Comments>> getCommentHandler(@PathVariable("postId") String postId,
+			@RequestHeader("Authorization") String token) throws CommentException, PostException {
 
-	    try {
-	        List<Comments> comments = commentService.findCommentByPostId(postId);
-	       System.out.println("got ttttttt"+comments);
-	        return new ResponseEntity<>(comments, HttpStatus.ACCEPTED);
-	    } catch (Exception e) {
-	        // Log the exception
-	        System.err.println("Error occurred while fetching comments: " + e.getMessage());
-	        // Return an appropriate response entity
-	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}}
+		try {
+			List<Comments> comments = commentService.findCommentByPostId(postId);
+			System.out.println("got ttttttt" + comments);
+			return new ResponseEntity<>(comments, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			// Log the exception
+			System.err.println("Error occurred while fetching comments: " + e.getMessage());
+			// Return an appropriate response entity
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-//
+	// Get All Comments of a Reel
+	@GetMapping("/reel/{reelId}")
+	public ResponseEntity<List<Comments>> getReelAllComments(@PathVariable("reelId") Integer reelId,
+			@RequestHeader("Authorization") String token) throws CommentException, UserException {
+
+		try {
+			List<Comments> comments = commentService.findCommentByReelId(reelId, token);
+			return new ResponseEntity<>(comments, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+}

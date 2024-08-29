@@ -38,12 +38,12 @@ public class AuthController {
 
 	@PostMapping("/get")
 	public String get(@RequestBody String ap) {
-		System.out.println("new" +ap);
+		System.out.println("new" + ap);
 		return "Welcome added";
 	}
 
-	public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtGenratorFilter jwtGenratorFilter,
-			UserUserDetailService customUserDetails) {
+	public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
+			JwtGenratorFilter jwtGenratorFilter, UserUserDetailService customUserDetails) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtGenratorFilter = jwtGenratorFilter;
@@ -59,7 +59,6 @@ public class AuthController {
 		String name = user.getName();
 		String username = user.getUsername();
 		LocalDate dateOfBirth = user.getDateOfBirth();
-		
 
 		Optional<User> isEmailExist = userRepository.findByEmail(email);
 		Optional<User> isUserNameExist = userRepository.findByUsername(username);
@@ -67,8 +66,8 @@ public class AuthController {
 		if (isEmailExist.isPresent()) {
 			throw new UserException("Email Is Already Used With Another Account");
 		}
-		
-		else if(isUserNameExist.isPresent()) {
+
+		else if (isUserNameExist.isPresent()) {
 			throw new UserException("Username Is Already Taken");
 		}
 
@@ -78,7 +77,7 @@ public class AuthController {
 		createdUser.setUsername(username);
 		createdUser.setName(name);
 		createdUser.setDateOfBirth(dateOfBirth);
-		
+
 		User savedUser = userRepository.save(createdUser);
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
@@ -105,10 +104,10 @@ public class AuthController {
 //			throw new UserException("user not found with username  "+ username);
 //		}
 
-		System.out.println(username + " ----- " + password);
+		System.out.println("Email-----------------" + username + " ----- " + "Password-------------" + password);
 
 		Authentication authentication = authenticate(username, password);
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 //
 		System.out.println("Passed Authentication");

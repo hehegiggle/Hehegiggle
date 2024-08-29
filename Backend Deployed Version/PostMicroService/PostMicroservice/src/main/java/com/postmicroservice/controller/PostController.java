@@ -96,6 +96,7 @@ public class PostController {
 
 		Post updatedPost = postService.likePost(postId, token);
 
+		System.out.println("--------------------I LIKED POST---------------------------");
 		return new ResponseEntity<Post>(updatedPost, HttpStatus.OK);
 
 	}

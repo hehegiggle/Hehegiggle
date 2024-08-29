@@ -12,38 +12,38 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificationService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-    
-    @Autowired
-    private NotificationRepository notificationRepo;
+	@Autowired
+	private JavaMailSender javaMailSender;
 
-    public void sendTestEmail(String to) {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+	@Autowired
+	private NotificationRepository notificationRepo;
 
-            helper.setTo(to);
-            String subject = "Welcome to HeHe Giggle! 🎉";
-            String emailBody = "Hey User,\n\n"
-                    + "\n\n Welcome to HeHe Giggle! You're officially part of our vibrant community where you can share epic fails, life updates, and more with the world. Get ready for some fun! 🎉🌟\n\n"
-                    + "To get started, log in with your credentials and start exploring.\n\n"
-                    + "\n\n If you have any questions or need assistance, feel free to reach out to our support team.\n\n"
-                    + "Stay awesome and keep on posting!\n\n" + "\n\n Cheers,\n" + "From Team HeHe Giggle!!!";
+	public void sendTestEmail(String to) {
+		try {
+			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-            helper.setSubject(subject);
-            helper.setText(emailBody, true);
-            javaMailSender.send(mimeMessage);
+			helper.setTo(to);
+			String subject = "Welcome to HeHe Giggle! 🎉";
+			String emailBody = "Hey User,\n\n"
+					+ "\n\n Welcome to HeHe Giggle! You're officially part of our vibrant community where you can share epic fails, life updates, and more with the world. Get ready for some fun! 🎉🌟\n\n"
+					+ "To get started, log in with your credentials and start exploring.\n\n"
+					+ "\n\n If you have any questions or need assistance, feel free to reach out to our support team.\n\n"
+					+ "Stay awesome and keep on posting!\n\n" + "\n\n Cheers,\n" + "From Team HeHe Giggle!!!";
 
-            Notification notification = new Notification();
-            notification.setEmail(to);
-            notification.setMessage(emailBody);
-            notification.setSubject(subject);
-            notification.setStatus("sent");
+			helper.setSubject(subject);
+			helper.setText(emailBody, true);
+			javaMailSender.send(mimeMessage);
 
-            notificationRepo.save(notification);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
+			Notification notification = new Notification();
+			notification.setEmail(to);
+			notification.setMessage(emailBody);
+			notification.setSubject(subject);
+			notification.setStatus("sent");
+
+			notificationRepo.save(notification);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -35,7 +35,6 @@ public class User {
 	private String email;
 	private String name;
 	private String mobile;
-	private String website;
 	private String bio;
 	private String gender;
 	private String image;

@@ -23,40 +23,39 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtValidationFilter extends OncePerRequestFilter {
 
-	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String jwt = request.getHeader(SecurityContest.HEADER);
-		
-		if(jwt!=null) {
-			jwt=jwt.substring(7);
-			System.out.println("jwt token"+jwt);
-			
+
+		if (jwt != null) {
+			jwt = jwt.substring(7);
+			System.out.println("jwt token" + jwt);
+
 			try {
-				
-				SecretKey key= Keys.hmacShaKeyFor(SecurityContest.JWT_KEY.getBytes());
-				
-			//	Claims claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-				Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(jwt).getBody();		
-				//String email=String.valueOf(claims.get("email"));
-				
-				String email=String.valueOf(claims.get("username"));
-				
-				String authorities=String.valueOf(claims.get("authorities"));
-				
-				List<GrantedAuthority> auths=AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-				Authentication athentication=new UsernamePasswordAuthenticationToken(email,null, auths);
-				
+
+				SecretKey key = Keys.hmacShaKeyFor(SecurityContest.JWT_KEY.getBytes());
+
+				// Claims
+				// claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+				Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+				// String email=String.valueOf(claims.get("email"));
+
+				String email = String.valueOf(claims.get("username"));
+
+				String authorities = String.valueOf(claims.get("authorities"));
+
+				List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+				Authentication athentication = new UsernamePasswordAuthenticationToken(email, null, auths);
+
 				SecurityContextHolder.getContext().setAuthentication(athentication);
-				
+
 			} catch (Exception e) {
 				throw new BadCredentialsException("invalid token...");
 			}
 		}
 		filterChain.doFilter(request, response);
-		
-	}
 
+	}
 
 }

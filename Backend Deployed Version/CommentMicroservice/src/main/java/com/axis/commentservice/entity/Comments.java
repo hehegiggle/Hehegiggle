@@ -27,36 +27,36 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Comments {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer commentId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer commentId;
 
-    @Embedded
-    @NotNull
-    @AttributeOverrides({
-        @AttributeOverride(name = "id", column = @Column(name = "user_idd")),
-        @AttributeOverride(name = "email", column = @Column(name = "user_email")),
-        @AttributeOverride(name = "username", column = @Column(name = "user_usernamee")),
-        @AttributeOverride(name = "name", column = @Column(name = "user_name")),
-        @AttributeOverride(name = "userimage", column = @Column(name = "user_image")) // Unique column name
-    })
-    private UserDto userDto;
+	@Embedded
+	@NotNull
+	@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "user_idd")),
+			@AttributeOverride(name = "email", column = @Column(name = "user_email")),
+			@AttributeOverride(name = "username", column = @Column(name = "user_usernamee")),
+			@AttributeOverride(name = "name", column = @Column(name = "user_name")),
+			@AttributeOverride(name = "userimage", column = @Column(name = "user_image")) // Unique column name
+	})
+	private UserDto userDto;
 
-    @NotNull
-    private String content;
+	@NotNull
+	private String content;
 
-    @ElementCollection
-    private Set<UserDto> likedByUsers = new HashSet<>();
+	@ElementCollection
+	private Set<UserDto> likedByUsers = new HashSet<>();
 
-    @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "id", column = @Column(name = "postid")),
-        @AttributeOverride(name = "email", column = @Column(name = "post_user_email")),
-        @AttributeOverride(name = "username", column = @Column(name = "post_user_username")),
-        @AttributeOverride(name = "name", column = @Column(name = "post_user_name")),
-        @AttributeOverride(name = "userimage", column = @Column(name = "post_user_image")) // Unique column name
-    })
-    private Post post;
+	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "postid")),
+			@AttributeOverride(name = "email", column = @Column(name = "post_user_email")),
+			@AttributeOverride(name = "username", column = @Column(name = "post_user_username")),
+			@AttributeOverride(name = "name", column = @Column(name = "post_user_name")),
+			@AttributeOverride(name = "userimage", column = @Column(name = "post_user_image")) // Unique column name
+	})
+	private Post post;
 
-    private LocalDateTime createdAt;
+	private Reel reel;
+
+	private LocalDateTime createdAt;
 }

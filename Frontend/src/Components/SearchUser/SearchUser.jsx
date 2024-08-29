@@ -21,7 +21,7 @@ const SearchUser = () => {
   const { user } = useSelector((state) => state);
   const [username, setUsername] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);

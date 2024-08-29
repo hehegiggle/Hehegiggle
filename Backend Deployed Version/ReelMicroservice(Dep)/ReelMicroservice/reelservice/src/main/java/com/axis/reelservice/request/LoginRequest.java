@@ -1,7 +1,5 @@
 package com.axis.reelservice.request;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class LoginRequest {
-	
+
 	private String email;
 	private String password;
-	
-	
-	
-	
 
 }

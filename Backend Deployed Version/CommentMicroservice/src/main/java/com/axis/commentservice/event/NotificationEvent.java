@@ -7,6 +7,7 @@ public class NotificationEvent {
 	private String type;
 	private String userId;
 	private String postId;
+	private Integer reelId;
 	private String commentId;
 	private String senderId;
 	private String email;
@@ -19,12 +20,13 @@ public class NotificationEvent {
 	}
 
 	// Parameterized constructor
-	public NotificationEvent(String notificationId, String type, String userId, String postId, String commentId,
-			String senderId, String message, LocalDateTime notificationAt) {
+	public NotificationEvent(String notificationId, String type, String userId, String postId, Integer reelId,
+			String commentId, String senderId, String message, LocalDateTime notificationAt) {
 		this.notificationId = notificationId;
 		this.type = type;
 		this.userId = userId;
 		this.postId = postId;
+		this.reelId = reelId;
 		this.commentId = commentId;
 		this.senderId = senderId;
 		this.message = message;
@@ -61,6 +63,14 @@ public class NotificationEvent {
 
 	public void setPostId(String postId) {
 		this.postId = postId;
+	}
+
+	public Integer getReelId() {
+		return reelId;
+	}
+
+	public void setReelId(Integer reelId) {
+		this.reelId = reelId;
 	}
 
 	public String getCommentId() {

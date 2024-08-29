@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
-import { Formik, Form, Field } from "formik";
+import React, { useEffect,useState } from "react";
+import { InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import {Formik, Form, Field } from "formik";
 import {
   Box,
   Button,
@@ -33,12 +35,15 @@ const DateInput = ({ field, form, ...props }) => {
         yearDropdownItemNumber={100}
         placeholderText="Date of Birth"
         onChange={(val) => {
-          const formattedDate = val.toISOString().split("T")[0];
-          console.log(formattedDate);
+          const formattedDate = val.toISOString().split("T")[0]; //converts the selected date (val) to a string in ISO format(YYYY-MM-DDTHH:MM:SS.sssZ) using the toISOString method.
           form.setFieldValue(field.name, formattedDate);
         }}
         customInput={
-          <Input width="178%" bg="white" _placeholder={{ color: "black" }} />
+          <Input
+            w={["100%", "178%", "178%", "180%"]}
+            bg="white"
+            _placeholder={{ color: "black" }}
+          />
         }
       />
       <FormErrorMessage>{form.errors.dateOfBirth}</FormErrorMessage>
@@ -47,20 +52,25 @@ const DateInput = ({ field, form, ...props }) => {
 };
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email address").required("Required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .matches(/^[a-zA-Z0-9._%+-]+@(gmail|outlook)\.com$/, "Email must be a Gmail or Outlook address ending with .com")
+    .required("Required"),
   username: Yup.string()
-    .min(4, "Username must be at least 4 characters")
+    .min(5, "Username must be at least 5 characters")
     .required("Required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
+    .matches(/.*[^A-Za-z0-9].*[0-9]/, "Password must contain at least one special character followed by numbers")
     .required("Required"),
   name: Yup.string()
-    .min(2, "Name must be at least 2 characters")
+    .matches(/^[A-Za-z\s]*$/, "Name can only contain letters and spaces")
+    .min(3, "Name must be at least 3 characters")
     .required("Required"),
   dateOfBirth: Yup.date()
     .max(new Date(), "Date of Birth cannot be in the future")
     .required("Required")
-    .test("age", "You must be at least 18 years old", function (value) {
+    .test("age", "You must be at least 13 years old", function (value) {
       const today = new Date();
       const birthDate = new Date(value);
       let age = today.getFullYear() - birthDate.getFullYear();
@@ -71,9 +81,10 @@ const validationSchema = Yup.object().shape({
       ) {
         age--;
       }
-      return age >= 18;
+      return age >= 13;
     }),
 });
+
 
 const Signup = () => {
   const initialValues = {
@@ -94,14 +105,15 @@ const Signup = () => {
     actions.setSubmitting(false);
   };
 
+ const [showPassword, setShowPassword] = useState(false);
+ const handleClick = () => setShowPassword(!showPassword);
+
   useEffect(() => {
-    console.log("auth state changed:", auth);
     if (auth.signup?.jwt) {
-      console.log("Signup successful, navigating to /login");
       toast({
         title: "Account Created Successfully",
         status: "success",
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
       navigate(`/login`);
@@ -116,7 +128,7 @@ const Signup = () => {
           : auth.error.includes("Username Is Already Taken")
           ? "Username Is Already Taken 😔😔😔"
           : auth.error,
-        duration: 4000,
+        duration: 1000,
         isClosable: true,
       });
     }
@@ -212,24 +224,34 @@ const Signup = () => {
                 )}
               </Field>
               <Field name="password">
-                {({ field, form }) => (
-                  <FormControl
-                    isInvalid={form.errors.password && form.touched.password}
-                    mb={4}
-                  >
-                    <Input
-                      {...field}
-                      type="password"
-                      id="password"
-                      placeholder="Password"
-                      background="white"
-                      _placeholder={{ color: "black" }}
-                      width="100%"
-                    />
-                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
+      {({ field, form }) => (
+        <FormControl
+          isInvalid={form.errors.password && form.touched.password}
+          mb={4}
+        >
+          <InputGroup>
+            <InputRightElement>
+              <IconButton
+                variant="link"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                onClick={handleClick}
+              />
+            </InputRightElement>
+            <Input
+              {...field}
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Password"
+              background="white"
+              _placeholder={{ color: "black" }}
+              width="100%"
+            />
+          </InputGroup>
+          <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+        </FormControl>
+      )}
+    </Field>
               <Field name="dateOfBirth" component={DateInput} />
               <Button
                 className="w-full"

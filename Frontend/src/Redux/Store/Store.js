@@ -6,6 +6,7 @@ import { postReducer } from "../Post/Reducer";
 import { userReducer } from "../User/Reducer";
 import { reelReducer } from "../Reel/Reducer";
 import { messageReducer } from "../Message/Reducer";
+import notificationReducer from "../Notification/Reducer";
 
 const rootReducers=combineReducers({
 
@@ -14,7 +15,8 @@ const rootReducers=combineReducers({
     user:userReducer,
     auth:AuthReducer,
     reel:reelReducer,
-    message:messageReducer
+    message:messageReducer,
+    notifications: notificationReducer
 
 });
 
