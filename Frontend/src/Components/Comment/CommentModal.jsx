@@ -1,4 +1,11 @@
-import { Modal, ModalBody, ModalContent, ModalOverlay } from "@chakra-ui/react";
+import {
+  Box,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
@@ -10,6 +17,8 @@ import { createComment, getAllComments } from "../../Redux/Comment/Action";
 import { findPostByIdAction } from "../../Redux/Post/Action";
 import CommentCard from "./CommentCard";
 import "./CommentModal.css";
+import { GrEmoji } from "react-icons/gr";
+import EmojiPicker from "emoji-picker-react";
 
 const CommentModal = ({
   isOpen,
@@ -23,11 +32,12 @@ const CommentModal = ({
 }) => {
   const dispatch = useDispatch();
   const jwt = sessionStorage.getItem("token");
-  const { post, comments} = useSelector((store) => store);
+  const { post, comments } = useSelector((store) => store);
   const [commentContent, setCommentContent] = useState("");
   const { postId } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     if (postId) {
@@ -61,7 +71,7 @@ const CommentModal = ({
       status: "success",
       duration: 1000,
       isClosable: true,
-    })
+    });
   };
 
   const handleCommnetInputChange = (e) => {
@@ -78,11 +88,22 @@ const CommentModal = ({
     navigate("/home");
   };
 
+  const handleEmojiClick = (emojiObject) => {
+    setCommentContent((prevInputValue) => prevInputValue + emojiObject.emoji);
+  };
+
   return (
     <div>
       <Modal size={"4xl"} onClose={handleClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
-        <ModalContent borderRadius="3xl" style={{background: "linear-gradient(180deg, #8697C4, #EDE8F5)", borderRadius:"20px", color:"#283351"}}>
+        <ModalContent
+          borderRadius="3xl"
+          style={{
+            background: "linear-gradient(180deg, #8697C4, #EDE8F5)",
+            borderRadius: "20px",
+            color: "#283351",
+          }}
+        >
           <ModalBody>
             <div className="flex h-[75vh]">
               <div className="w-[45%] flex flex-col justify-center">
@@ -90,7 +111,7 @@ const CommentModal = ({
                   className="max-h-full max-w-full"
                   src={post.singlePost?.image}
                   alt=""
-                  style={{borderRadius:"20px"}}
+                  style={{ borderRadius: "20px" }}
                 />
               </div>
               <div className="w-[55%] pl-10 relative">
@@ -108,8 +129,10 @@ const CommentModal = ({
                       />
                     </div>
                     <div className="ml-3">
-                      <p className="font-semibold">{post.singlePost?.userName}</p>
-                      <p>{post.singlePost?.userUsername}</p>
+                      <p className="font-semibold">
+                        {post.singlePost?.userName}
+                      </p>
+                      <p>@{post.singlePost?.userUsername}</p>
                     </div>
                   </div>
                 </div>
@@ -120,8 +143,8 @@ const CommentModal = ({
                       <CommentCard comment={item} />
                     ))}
                 </div>
-                <div className=" absolute bottom-0 w-[90%]">
-                  <div className="flex justify-between items-center w-full mt-5">
+                <div className="absolute w-[90%]">
+                  <div className="flex justify-between items-center w-full mt-2">
                     <div className="flex items-center space-x-2 ">
                       {isPostLiked ? (
                         <AiFillHeart
@@ -157,7 +180,7 @@ const CommentModal = ({
                   <p className="opacity-70 pb-5">
                     {timeDifference(post?.singlePost?.createdAt)}
                   </p>
-                  <div className=" flex items-center ">
+                  <div className="flex items-center ">
                     <input
                       className="commentInput w-[70%] mb-3"
                       placeholder="Add Comment..."
@@ -166,10 +189,30 @@ const CommentModal = ({
                       onKeyPress={handleOnEnterPress}
                       onChange={handleCommnetInputChange}
                       value={commentContent}
-                      style={{borderRadius:"20px"}}
+                      style={{ borderRadius: "20px" }}
+                    />
+                    <Icon
+                      mb="3"
+                      as={GrEmoji}
+                      boxSize={6}
+                      ml="5%"
+                      cursor="pointer"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                     />
                   </div>
                 </div>
+                {showEmojiPicker && (
+                  <Box
+                    position="absolute"
+                    bottom="60px"
+                    right="20px"
+                    zIndex="1000"
+                    boxShadow="md"
+                    borderRadius="md"
+                  >
+                    <EmojiPicker onEmojiClick={handleEmojiClick} />
+                  </Box>
+                )}
               </div>
             </div>
           </ModalBody>

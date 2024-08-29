@@ -24,33 +24,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comments {
-	
 
 	private Integer commentId;
-	
+
 	@Embedded
-	@AttributeOverride(name="id",column = @Column(name="user_id"))
+	@AttributeOverride(name = "id", column = @Column(name = "user_id"))
 	private UserDto userDto;
-	
 
 	private String content;
-	
+
 	@Embedded
 	@ElementCollection
-	private Set<UserDto> likedByUsers= new HashSet<>();
-	
+	private Set<UserDto> likedByUsers = new HashSet<>();
+
 	@Embedded
 	private Post post;
-	
+
 	private LocalDateTime createdAt;
-	
-	
 
 }

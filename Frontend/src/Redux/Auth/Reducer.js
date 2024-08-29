@@ -26,9 +26,9 @@ export const AuthReducer = (store = initialValue, { type, payload }) => {
     case SIGN_UP_FAILURE:
       return { ...store, signup: null, error: payload };
     case REQUEST_RESET_PASSWORD_SUCCESS:
-      return { ...store, forgot: payload, error:null};
+      return { ...store, forgot: payload, error: null };
     case REQUEST_RESET_PASSWORD_FAILURE:
-      return { ...store, forgot: null, error: payload};
+      return { ...store, forgot: null, error: payload };
     default:
       return store;
   }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.usermicroservice.DTO.UserDto;
 import com.usermicroservice.Event.NotificationEvent;
 import com.usermicroservice.entity.Post;
 import com.usermicroservice.entity.User;
@@ -40,7 +41,7 @@ public class UserController {
 
 	@Autowired
 	private PostRepository postRepository;
-	
+
 	@Autowired
 	private NotificationService notificationService;
 
@@ -68,7 +69,7 @@ public class UserController {
 
 		String message = userService.followUser(reqUser.getId(), followUserId);
 		MessageResponse res = new MessageResponse(message);
-		
+
 //		User followUserDetails = userService.findUserById(followUserId);
 //		System.out.println("Details-----"+followUserDetails);
 
@@ -188,5 +189,19 @@ public class UserController {
 		userService.addpost(token, post);
 
 		return post;
+	}
+
+	@GetMapping("/follower-list/{userId}")
+	public Set<UserDto> getAllFollowers(@PathVariable("userId") Integer userId,
+			@RequestHeader("Authorization") String token) throws UserException {
+		System.out.println("FOLLOWER GOT USERID---------------------" + userId);
+		return userService.getAllFollowers(userId, token);
+	}
+
+	@GetMapping("/following-list/{userId}")
+	public Set<UserDto> getAllFollowings(@PathVariable("userId") Integer userId,
+			@RequestHeader("Authorization") String token) throws UserException {
+		System.out.println("FOLLOWING GOT USERID---------------------" + userId);
+		return userService.getAllFollowings(userId, token);
 	}
 }

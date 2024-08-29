@@ -129,8 +129,9 @@ const PostCard = ({ username, location, postImage, post }) => {
       status: "error",
       duration: 1000,
       isClosable: true,
-    })
+    });
   };
+
   const isOwnPost = user && user.reqUser && isReqUserPost(post, user.reqUser);
 
   const handleOpenCommentModal = () => {
@@ -194,7 +195,10 @@ const PostCard = ({ username, location, postImage, post }) => {
               <CgMoreVertical
                 size={25}
                 onClick={handleClick}
-                className="dots cursor-pointer"
+                className="dots"
+                style={{
+                  cursor: isOwnPost ? 'pointer' : 'default', // Conditional cursor style
+                }}
               />
               {isOwnPost && (
                 <div className="dropdown-content">

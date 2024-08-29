@@ -20,6 +20,7 @@ const HomePage = () => {
   const { user, post } = useSelector((store) => store);
   const [suggestedUser, setSuggestedUser] = useState([]);
   const [posted, setPosted] = useState([]);
+  console.log("USER___________________", user);
 
   useEffect(() => {
     dispatch(getUserProfileAction(token));
@@ -109,10 +110,9 @@ const HomePage = () => {
             )}
           </Box>
         </Box>
-
         <Box
           display={{ base: "block", md: "block" }}
-          width="24%"
+          width="26%"
           p={7}
           position="fixed"
           top="80px"
@@ -120,7 +120,7 @@ const HomePage = () => {
           bottom={0}
           overflowY="auto"
         >
-          <HomeRight suggestedUser={suggestedUser} />
+        <HomeRight suggestedUser={suggestedUser}/>
         </Box>
       </Flex>
     </Flex>

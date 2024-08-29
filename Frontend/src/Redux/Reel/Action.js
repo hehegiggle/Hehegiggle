@@ -1,3 +1,4 @@
+import axios from "axios";
 import { BASE_URL } from "../../Config/api";
 import {
   CREATE_REEL_FAILURE,
@@ -11,6 +12,12 @@ import {
   DELETE_REEL_FAILURE,
   DELETE_REEL_REQUEST,
   DELETE_REEL_SUCCESS,
+  LIKE_REEL_FAILURE,
+  LIKE_REEL_SUCCESS,
+  LIKE_REEL_REQUEST,
+  DISLIKE_REEL_FAILURE,
+  DISLIKE_REEL_REQUEST,
+  DISLIKE_REEL_SUCCESS,
 } from "./ActionType";
 
 //Create Reel
@@ -106,7 +113,7 @@ export const getReelByUserId = (data) => async (dispatch) => {
 
 // Delete reel by reelId
 export const deleteReelByReelId = (data) => async (dispatch) => {
-  dispatch({type: DELETE_REEL_REQUEST });
+  dispatch({ type: DELETE_REEL_REQUEST });
   try {
     const response = await fetch(
       `${BASE_URL}/api/reels/user/delete-reel/${data.reelId}`,
@@ -135,5 +142,48 @@ export const deleteReelByReelId = (data) => async (dispatch) => {
       type: DELETE_REEL_FAILURE,
       payload: error.message,
     });
+  }
+};
+
+// Like Reel
+export const likeReel = (data) => async (dispatch) => {
+  dispatch({ type: LIKE_REEL_REQUEST });
+  try {
+    const req = await axios.post(`${BASE_URL}/api/reels/like/${data.reelId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${data.token}`,
+      },
+    });
+
+    const response = await req.json();
+    dispatch({ type: LIKE_REEL_SUCCESS, payload: response });
+  } catch (error) {
+    dispatch({ type: LIKE_REEL_FAILURE });
+    console.error("Error while liking the reel ", error);
+  }
+};
+
+// Dislike Reel
+export const dislikeReel = (data) => async (dispatch) => {
+  dispatch({ type: DISLIKE_REEL_REQUEST });
+  try {
+    const req = await axios.post(
+      `${BASE_URL}/api/reels/unlike/${data.reelId}`, {},
+      {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      }
+    );
+
+    if (!req.ok) {
+      throw new Error("Failed to Dislike reel");
+    }
+
+    const response = await req.json();
+    dispatch({ type: DISLIKE_REEL_SUCCESS, payload: response.data });
+  } catch (error) {
+    dispatch({ type: DISLIKE_REEL_FAILURE });
+    console.error("Error while disliking the reel ", error);
   }
 };

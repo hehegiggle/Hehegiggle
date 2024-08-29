@@ -1,9 +1,17 @@
 // Action.js
 import axios from "axios";
 import { BASE_URL } from "../../Config/api";
-import { SIGN_IN_SUCCESS, SIGN_IN_FAILURE, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, REQUEST_RESET_PASSWORD_FAILURE, REQUEST_RESET_PASSWORD_REQUEST, REQUEST_RESET_PASSWORD_SUCCESS,} from "./ActionType";
+import {
+  SIGN_IN_SUCCESS,
+  SIGN_IN_FAILURE,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
+  REQUEST_RESET_PASSWORD_FAILURE,
+  REQUEST_RESET_PASSWORD_REQUEST,
+  REQUEST_RESET_PASSWORD_SUCCESS,
+} from "./ActionType";
 
-// SignIn 
+// SignIn
 export const signinAction = (data) => async (dispatch) => {
   try {
     const res = await fetch(`${BASE_URL}/signin`, {
@@ -57,7 +65,7 @@ export const signupAction = (userData) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify( userData.email ),
+      body: JSON.stringify(userData.email),
     });
 
     if (!emailRes.ok) {
@@ -72,25 +80,30 @@ export const signupAction = (userData) => async (dispatch) => {
 
 // Reset Password Request
 export const resetPasswordRequest = (email) => async (dispatch) => {
-  dispatch({type:REQUEST_RESET_PASSWORD_REQUEST});
+  dispatch({ type: REQUEST_RESET_PASSWORD_REQUEST });
   try {
-    const {data} = await axios.post(`${BASE_URL}/resetpassword/reset?email=${email}`,{});
-    dispatch({type:REQUEST_RESET_PASSWORD_SUCCESS,payload:data});
+    const { data } = await axios.post(
+      `${BASE_URL}/resetpassword/reset?email=${email}`,
+      {}
+    );
+    dispatch({ type: REQUEST_RESET_PASSWORD_SUCCESS, payload: data });
   } catch (error) {
-    console.log("error ",error)
-    dispatch({type:REQUEST_RESET_PASSWORD_FAILURE,payload:error.message});
+    console.log("error ", error);
+    dispatch({ type: REQUEST_RESET_PASSWORD_FAILURE, payload: error.message });
   }
 };
 
-
 export const resetPassword = (reqData) => async (dispatch) => {
-  dispatch({type:REQUEST_RESET_PASSWORD_REQUEST});
+  dispatch({ type: REQUEST_RESET_PASSWORD_REQUEST });
   try {
-    const {data} = await axios.post(`${BASE_URL}/resetpassword`,reqData.data);
-    reqData.navigate("/login")
-    dispatch({type:REQUEST_RESET_PASSWORD_SUCCESS,payload:data});
+    const { data } = await axios.post(
+      `${BASE_URL}/resetpassword`,
+      reqData.data
+    );
+    reqData.navigate("/login");
+    dispatch({ type: REQUEST_RESET_PASSWORD_SUCCESS, payload: data });
   } catch (error) {
-    console.log("error ",error)
-    dispatch({type:REQUEST_RESET_PASSWORD_FAILURE,payload:error.message});
+    console.log("error ", error);
+    dispatch({ type: REQUEST_RESET_PASSWORD_FAILURE, payload: error.message });
   }
 };

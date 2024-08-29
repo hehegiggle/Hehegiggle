@@ -17,38 +17,36 @@ import org.springframework.web.client.RestTemplate;
 public class RabbitMQConfig {
 
 	@Bean
-	// For converting message to and from JSON format
-    public Jackson2JsonMessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
+	public Jackson2JsonMessageConverter jsonMessageConverter() {
+		return new Jackson2JsonMessageConverter();
+	}
 
-    @Bean
-    public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
-        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
-        return rabbitTemplate;
-    }
-	
-    @Bean
-    public Queue notificationQueue() {
-        return new Queue("notification-queue", true);
-    }
+	@Bean
+	public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		rabbitTemplate.setMessageConverter(jsonMessageConverter());
+		return rabbitTemplate;
+	}
 
-    @Bean
-    public Exchange notificationExchange() {
-        return ExchangeBuilder.directExchange("notification-exchange")
-                .durable(true)
-                .build();
-    }
+	@Bean
+	public Queue notificationQueue() {
+		return new Queue("notification-queue", true);
+	}
 
-    @Bean
-    public Binding binding(Queue notificationQueue, Exchange notificationExchange) {
-        return BindingBuilder.bind(notificationQueue).to(notificationExchange).with("notification-routing-key").noargs();
-    }
-    
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+	@Bean
+	public Exchange notificationExchange() {
+		return ExchangeBuilder.directExchange("notification-exchange").durable(true).build();
+	}
+
+	@Bean
+	public Binding binding(Queue notificationQueue, Exchange notificationExchange) {
+		return BindingBuilder.bind(notificationQueue).to(notificationExchange).with("notification-routing-key")
+				.noargs();
+	}
+
+	@Bean
+	@LoadBalanced
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }

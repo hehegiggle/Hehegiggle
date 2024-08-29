@@ -1,6 +1,7 @@
 package com.axis.reelservice.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.axis.reelservice.dto.CommentDto;
 import com.axis.reelservice.dto.UserDTO;
 import com.axis.reelservice.entity.Reel;
 import com.axis.reelservice.response.MessageResponse;
@@ -45,18 +47,19 @@ public class ReelController {
 	@GetMapping("/api/reels/user/{userId}")
 	public List<Reel> findUsersReels(@PathVariable Integer userId, @RequestHeader("Authorization") String jwt)
 			throws Exception {
-		
-		System.out.println("User Id--------"+userId);
-		//UserDTO reqUser = reelService.getUserById(jwt);
-		//System.out.println("Result------------"+reqUser);
+
+		System.out.println("User Id--------" + userId);
+		// UserDTO reqUser = reelService.getUserById(jwt);
+		// System.out.println("Result------------"+reqUser);
 		List<Reel> reels = reelService.findUsersReel(userId);
-		System.out.println("Reels o/p---"+reels);
+		System.out.println("Reels o/p---" + reels);
 		return reels;
 	}
-	
+
 	@DeleteMapping("/api/reels/user/delete-reel/{reelId}")
-	public ResponseEntity<MessageResponse> deleteReelByReelId(@PathVariable("reelId") Integer reelId, @RequestHeader("Authorization") String token) throws Exception{
-		
+	public ResponseEntity<MessageResponse> deleteReelByReelId(@PathVariable("reelId") Integer reelId,
+			@RequestHeader("Authorization") String token) throws Exception {
+
 		String message = reelService.deleteReelByReelId(reelId, token);
 
 		MessageResponse res = new MessageResponse(message);
@@ -64,4 +67,24 @@ public class ReelController {
 		return new ResponseEntity<MessageResponse>(res, HttpStatus.OK);
 	}
 
+	@PostMapping("/api/reels/like/{reelId}")
+	public ResponseEntity<String> likeReel(@PathVariable("reelId") Integer reelId,
+			@RequestHeader("Authorization") String token) throws Exception {
+		String message = reelService.likeReel(reelId, token);
+		return ResponseEntity.ok(message);
+	}
+
+	@PostMapping("/api/reels/unlike/{reelId}")
+	public ResponseEntity<String> unlikeReel(@PathVariable("reelId") Integer reelId,
+			@RequestHeader("Authorization") String token) throws Exception {
+		String message = reelService.unlikeReel(reelId, token);
+		return ResponseEntity.ok(message);
+	}
+
+	@GetMapping("/api/reels/get-reel/{reelId}")
+	public Optional<Reel> getReelById(@PathVariable("reelId") Integer reelId,
+			@RequestHeader("Authorization") String token) {
+		Optional<Reel> reelGot = reelService.getReelById(reelId, token);
+		return reelGot;
+	}
 }

@@ -141,7 +141,7 @@ const EditProfileForm = () => {
         </div>
         <Button
           onClick={onOpen}
-          className="font-boldcursor-pointer ml-auto"
+          className="font-bold cursor-pointer ml-auto"
           color="white"
           px={4}
           py={2}
@@ -162,45 +162,45 @@ const EditProfileForm = () => {
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Name"
-                className="w-full"
-                type="text"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("name")}
               />
             </div>
           </FormControl>
-          <FormControl className="flex " id="bio">
+          <FormControl className="flex" id="bio">
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Bio
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Bio"
-                className="w-full"
-                type="text"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("bio")}
               />
             </div>
           </FormControl>
-          <FormControl className="flex " id="email">
+          <FormControl className="flex" id="email">
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Email address
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Email"
-                className="w-full"
-                type="email"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("email")}
               />
             </div>
           </FormControl>
           <FormControl
             isInvalid={formik.touched.mobile && formik.errors.mobile}
-            className="flex "
+            className="flex"
             id="mobile"
           >
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
@@ -208,10 +208,10 @@ const EditProfileForm = () => {
             </FormLabel>
             <div className="w-full">
               <Input
-                borderColor="black"
                 placeholder="Phone"
-                className="w-full"
-                type="tel"
+                background="white"
+                _placeholder={{ color: "black" }}
+                width="100%"
                 {...formik.getFieldProps("mobile")}
               />
               {formik.touched.mobile && formik.errors.mobile && (
@@ -219,14 +219,14 @@ const EditProfileForm = () => {
               )}
             </div>
           </FormControl>
-          <FormControl className="flex " id="gender">
+          <FormControl className="flex" id="gender">
             <FormLabel className="w-[20%]" style={{ fontWeight: "bold" }}>
               Gender
             </FormLabel>
             <div className="w-full">
               <Select
                 placeholder="Select Gender"
-                borderColor="black"
+                background="white"
                 {...formik.getFieldProps("gender")}
               >
                 <option value="Male">Male</option>

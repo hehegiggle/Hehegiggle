@@ -71,7 +71,8 @@ public class MessageServiceImpl implements MessageService {
 				if (receivingUser != null) {
 					NotificationEvent notificationEvent = new NotificationEvent(null, // notificationId, will be
 																						// generated
-							"message", receivingUser.getId().toString(), null, null, // commentId, not applicable
+							"Message Sent", receivingUser.getId().toString(), null, null, null, // commentId, not
+																								// applicable
 							user.getId().toString(), user.getUsername() + " sent you a message", LocalDateTime.now());
 
 					notificationService.sendNotification(notificationEvent);

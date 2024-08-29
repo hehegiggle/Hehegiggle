@@ -16,6 +16,7 @@
     "axios": "^1.7.2",
     "cloudinary": "^1.35.0",
     "date-fns": "^3.6.0",
+    "emoji-picker-react": "^4.11.1",
     "formik": "^2.2.9",
     "framer-motion": "^10.18.0",
     "net": "^1.0.2",

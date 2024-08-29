@@ -100,6 +100,9 @@ function Navbar() {
                 borderRadius="20px"
                 border="1px"
                 borderColor="grey"
+                bg="white" // Ensure the background color is white
+                _focus={{ bg: "white", borderColor: "grey" }} // Keep white background on focus
+                _hover={{ bg: "white", borderColor: "grey" }} // Keep white background on hover
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
                 onChange={handleSearchChange}

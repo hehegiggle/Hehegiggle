@@ -56,24 +56,26 @@ public class MessageController {
 
 	// Delete All Messages by ChatId (Clear All messages)
 	@DeleteMapping("/api/messages/delete/{chatId}")
-	public ResponseEntity<MessageResponse> deleteAllMessages(@PathVariable("chatId") Integer chatId, @RequestHeader("Authorization") String jwt) throws Exception {
+	public ResponseEntity<MessageResponse> deleteAllMessages(@PathVariable("chatId") Integer chatId,
+			@RequestHeader("Authorization") String jwt) throws Exception {
 
 		messageService.deleteAllMessages(chatId, jwt);
 		MessageResponse res = new MessageResponse("All Messages Deleted Successfully");
 
 		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
 	}
-	
+
 	// Delete Individual message By MessageId
 	@DeleteMapping("/api/messages/deleteById/{messageId}")
-	public ResponseEntity<MessageResponse> deleteMessageById(@PathVariable("messageId") Integer messageId, @RequestHeader("Authorization") String jwt) throws Exception{
-		
+	public ResponseEntity<MessageResponse> deleteMessageById(@PathVariable("messageId") Integer messageId,
+			@RequestHeader("Authorization") String jwt) throws Exception {
+
 		messageService.deleteMessageById(messageId, jwt);
 		MessageResponse res = new MessageResponse("Messages Deleted Successfully");
 
 		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
 	}
-	
+
 	private static final String url = "http://USER-SERVICE/api/users/req";
 
 	public User getUserById(String jwt) {

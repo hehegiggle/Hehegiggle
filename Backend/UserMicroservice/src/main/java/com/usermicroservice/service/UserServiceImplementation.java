@@ -3,8 +3,10 @@ package com.usermicroservice.service;
 import java.util.Date;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +102,6 @@ public class UserServiceImplementation implements UserService {
 		throw new UserException("user not found with userid :" + userId);
 	}
 
-	
-	
 	@Override
 	public String followUser(Integer reqUserId, Integer followUserId) throws UserException {
 		User followUser = findUserById(followUserId);
@@ -124,15 +124,13 @@ public class UserServiceImplementation implements UserService {
 		followUser.getFollower().add(follower);
 		reqUser.getFollowing().add(following);
 
-
 		// Send Notification
 		NotificationEvent notificationEvent = new NotificationEvent(null, // notificationId, will be generated
-				"started following", followUserId.toString(),  null, null, // commentId, not applicable
+				"Follow Request", followUserId.toString(), null, null, null, // commentId, not applicable
 				reqUserId.toString(), reqUser.getUsername() + " started following you", LocalDateTime.now());
 
 		notificationService.sendNotification(notificationEvent);
 		System.out.println("Followed successfully------------------------------------------");
-
 
 		repo.save(followUser);
 		repo.save(reqUser);
@@ -290,9 +288,9 @@ public class UserServiceImplementation implements UserService {
 
 	@Override
 	public void addpost(String token, Post post) {
-		System.out.println("Post--------------"+post);
+		System.out.println("Post--------------" + post);
 		postRepository.save(post);
-		
+
 	}
 
 	@Override
@@ -375,5 +373,41 @@ public class UserServiceImplementation implements UserService {
 		cal.setTime(new Date());
 		cal.add(Calendar.MINUTE, 10);
 		return cal.getTime();
+	}
+
+	@Override
+	public Set<UserDto> getAllFollowings(Integer userId, String token) throws UserException {
+
+		User reqUser = findUserProfile(token);
+		if (reqUser != null) {
+			User user = findUserById(userId);
+			Set<UserDto> allFollowings = user.getFollowing();
+			if (allFollowings.isEmpty()) {
+				return Collections.emptySet();
+			} else {
+				System.out.println("RETURENED FOLLOWINGS-----------" + allFollowings);
+				return allFollowings;
+			}
+		} else {
+			throw new UserException("Unauthorized Access");
+		}
+	}
+
+	@Override
+	public Set<UserDto> getAllFollowers(Integer userId, String token) throws UserException {
+
+		User reqUser = findUserProfile(token);
+		if (reqUser != null) {
+			User user = findUserById(userId);
+			Set<UserDto> allFollowers = user.getFollower();
+			if (allFollowers.isEmpty()) {
+				return Collections.emptySet();
+			} else {
+				System.out.println("RETURENED FOLLOWERS-----------" + allFollowers);
+				return allFollowers;
+			}
+		} else {
+			throw new UserException("Unauthorized Access");
+		}
 	}
 }

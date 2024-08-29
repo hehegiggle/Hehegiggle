@@ -1,20 +1,32 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllReels, deleteReelByReelId } from "../../Redux/Reel/Action";
+import {
+  getAllReels,
+  deleteReelByReelId,
+  likeReel,
+  dislikeReel,
+} from "../../Redux/Reel/Action";
 import { Box, Flex, Text, useToast } from "@chakra-ui/react";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaRegCommentDots } from "react-icons/fa";
 import "./ReelViewer.css";
 import { TbMoodSadDizzy } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { MdDeleteForever } from "react-icons/md";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import CommentModal from "../../Components/Comment/CommentModal";
+import ReelCommentModal from "../../Components/Comment/ReelCommentModal";
 
 const ReelViewer = ({ reels }) => {
   const [currentReel, setCurrentReel] = useState(0);
-  const { user } = useSelector(store => store);
+  const { user } = useSelector((store) => store);
   const [transitioning, setTransitioning] = useState(false);
+  const [likesData, setLikesData] = useState({});
+  const [isCommentModalOpen, setCommentModalOpen] = useState(false);
+  const [selectedReel, setSelectedReel] = useState(null);
   const dispatch = useDispatch();
   const containerRef = useRef(null);
+  const currentVideoRef = useRef(null);
   const navigate = useNavigate();
   const jwt = sessionStorage.getItem("token");
   const toast = useToast();
@@ -22,6 +34,17 @@ const ReelViewer = ({ reels }) => {
   useEffect(() => {
     dispatch(getAllReels(jwt));
   }, [dispatch]);
+
+  useEffect(() => {
+    const initialLikesData = {};
+    reels.forEach((reel) => {
+      initialLikesData[reel.id] = {
+        isLiked: reel.likes.some((like) => like.user.id === user.reqUser.id),
+        likeCount: reel.likes.length,
+      };
+    });
+    setLikesData(initialLikesData);
+  }, [reels, user.reqUser.id]);
 
   useEffect(() => {
     const handleScroll = (event) => {
@@ -46,15 +69,23 @@ const ReelViewer = ({ reels }) => {
   }, [currentReel, transitioning]);
 
   const handleNextReel = () => {
+    pauseCurrentVideo(); // Pause the current video before moving to the next reel
     setCurrentReel((prevReel) =>
       prevReel === reels.length - 1 ? 0 : prevReel + 1
     );
   };
 
   const handlePrevReel = () => {
+    pauseCurrentVideo(); // Pause the current video before moving to the previous reel
     setCurrentReel((prevReel) =>
       prevReel === 0 ? reels.length - 1 : prevReel - 1
     );
+  };
+
+  const pauseCurrentVideo = () => {
+    if (currentVideoRef.current) {
+      currentVideoRef.current.pause(); // Pause the video
+    }
   };
 
   const handleUsernameClick = (username, event) => {
@@ -75,6 +106,73 @@ const ReelViewer = ({ reels }) => {
       duration: 1000,
       isClosable: true,
     });
+  };
+
+  const handleLikeReel = (reelId) => {
+    const data = {
+      reelId: reelId,
+      token: jwt,
+    };
+    dispatch(likeReel(data));
+    setLikesData((prevLikesData) => ({
+      ...prevLikesData,
+      [reelId]: {
+        ...prevLikesData[reelId],
+        isLiked: true,
+        likeCount: prevLikesData[reelId].likeCount + 1,
+      },
+    }));
+    toast({
+      title: "You have liked the Reel 💝💝💝",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+    });
+  };
+
+  const handleDislikeReel = (reelId) => {
+    const data = {
+      reelId: reelId,
+      token: jwt,
+    };
+    dispatch(dislikeReel(data));
+    setLikesData((prevLikesData) => ({
+      ...prevLikesData,
+      [reelId]: {
+        ...prevLikesData[reelId],
+        isLiked: false,
+        likeCount: prevLikesData[reelId].likeCount - 1,
+      },
+    }));
+
+    toast({
+      title: "You have disliked the Reel 💔",
+      status: "error",
+      duration: 1000,
+      isClosable: true,
+    });
+  };
+
+  const handleCommentClick = (reelId) => {
+    const selectedReel = reels.find((reel) => reel.id === reelId);
+    setSelectedReel(selectedReel);
+    setCommentModalOpen(true);
+  };
+
+  const closeCommentModal = () => {
+    setCommentModalOpen(false);
+    setSelectedReel(null);
+  };
+
+  const handleCommentSubmit = () => {
+    // Add the logic to handle comment submission
+    toast({
+      title: "Comment submitted.",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+    closeCommentModal(); // Close the modal after submitting the comment
   };
 
   return (
@@ -209,24 +307,54 @@ const ReelViewer = ({ reels }) => {
                                 reelItem.user.username,
                                 event
                               );
-                              console.log("reelItem --------", reelItem);
-                              console.log("reelitem user------", reelItem.user);
-                              console.log("user store reUser---------", user.reqUser);
                             }}
                           >
                             @{reelItem.user.username}
                           </div>
                         </div>
                       </div>
-                      {reelItem.user.id === user.reqUser.id? (
-                          <MdDeleteForever
-                            size={"1.5em"}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => handleReelDelete(reelItem.id)}
-                          />
+                      {reelItem.user.id === user.reqUser.id ? (
+                        <MdDeleteForever
+                          size={"1.5em"}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleReelDelete(reelItem.id)}
+                        />
                       ) : (
                         " "
                       )}
+                    </div>
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: "5%",
+                        top: "72%",
+                        transform: "translateY(-50%)",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "25px",
+                        zIndex: "1",
+                      }}
+                    >
+                      {likesData[reelItem.id]?.isLiked ? (
+                        <AiFillHeart
+                          onClick={() => handleDislikeReel(reelItem.id)}
+                          className="text-2xl hover:opacity-50 cursor-pointer text-red-600"
+                        />
+                      ) : (
+                        <AiOutlineHeart
+                          onClick={() => handleLikeReel(reelItem.id)}
+                          className="text-2xl hover:opacity-50 cursor-pointer"
+                        />
+                      )}
+                      {likesData[reelItem.id]?.likeCount > 0 && (
+                        <p className="text-sm" style={{ marginTop: "-18px" }}>
+                          {likesData[reelItem.id]?.likeCount} likes{" "}
+                        </p>
+                      )}
+                      <FaRegCommentDots
+                        className="text-xl ml-1 hover:opacity-50 cursor-pointer"
+                        onClick={() => handleCommentClick(reelItem.id)}
+                      />
                     </div>
                     <video
                       key={index}
@@ -248,6 +376,9 @@ const ReelViewer = ({ reels }) => {
                         } else {
                           video.pause();
                         }
+                      }}
+                      onPlay={(e) => {
+                        currentVideoRef.current = e.target; 
                       }}
                       id={`video-${index}`}
                     >
@@ -285,6 +416,14 @@ const ReelViewer = ({ reels }) => {
           </Box>
         </Box>
       </Flex>
+      {selectedReel && (
+        <ReelCommentModal
+          isOpen={isCommentModalOpen}
+          onClose={closeCommentModal}
+          reel={selectedReel}
+          onCommentSubmit={handleCommentSubmit}
+        />
+      )}
     </div>
   );
 };
@@ -293,7 +432,7 @@ ReelViewer.propTypes = {
   reels: PropTypes.arrayOf(
     PropTypes.shape({
       video: PropTypes.string.isRequired,
-      caption: PropTypes.string
+      caption: PropTypes.string,
     })
   ).isRequired,
 };

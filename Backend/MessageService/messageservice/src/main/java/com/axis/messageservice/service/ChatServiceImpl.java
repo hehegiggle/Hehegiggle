@@ -46,16 +46,16 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public Chat createChat(User reqUser, User user2) throws Exception{
+	public Chat createChat(User reqUser, User user2) throws Exception {
 		Chat existingChat = getExistingChat(reqUser, user2);
-		
+
 		if (existingChat != null) {
-			 // If chat exists but one user has deleted it, resume the chat
-			 if (existingChat.getDeletedByUsers().contains(reqUser.getId())) {
-	                existingChat.getDeletedByUsers().remove(reqUser.getId());
-	                return chatRepository.save(existingChat);
-	            }
-	            return existingChat;
+			// If chat exists but one user has deleted it, resume the chat
+			if (existingChat.getDeletedByUsers().contains(reqUser.getId())) {
+				existingChat.getDeletedByUsers().remove(reqUser.getId());
+				return chatRepository.save(existingChat);
+			}
+			return existingChat;
 		}
 
 		// Create a new chat if it doesn't exist
@@ -68,8 +68,8 @@ public class ChatServiceImpl implements ChatService {
 
 		// Send Notification
 		NotificationEvent notificationEvent = new NotificationEvent(null, // notificationId, will be generated
-				"message", user2.getId().toString(), null, null, // commentId, not applicable
-				reqUser.getId().toString(), reqUser.getUsername() + " started a Chat with you", LocalDateTime.now());
+				"Chat Creation", user2.getId().toString(), null, null, null, // commentId, not applicable
+				reqUser.getId().toString(), reqUser.getUsername() + " created a chat with you", LocalDateTime.now());
 
 		if (!user2.getId().toString().equals(reqUser.getId().toString())) {
 			notificationService.sendNotification(notificationEvent);

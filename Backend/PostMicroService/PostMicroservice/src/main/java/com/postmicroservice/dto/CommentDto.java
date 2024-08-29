@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,14 +20,13 @@ public class CommentDto {
 	private Integer id;
 
 	private UserDto userDto;
-	
 
 	private String content;
 
-	private Set<UserDto> likedByUsers= new HashSet<>();
+	private Set<UserDto> likedByUsers = new HashSet<>();
 
 	private PostDto post;
-	
+
 	private LocalDateTime createdAt;
-	
+
 }

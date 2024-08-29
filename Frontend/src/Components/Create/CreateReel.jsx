@@ -1,12 +1,14 @@
 import { Modal, ModalBody, ModalContent, ModalOverlay } from "@chakra-ui/modal";
-import React, { useState } from "react";
-import { useToast } from "@chakra-ui/react";
+import { Box, Flex, Icon, useToast } from "@chakra-ui/react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaPhotoVideo } from "react-icons/fa";
 import { Button } from "@chakra-ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import SpinnerCard from "../Spinner/Spinner";
 import { createReel } from "../../Redux/Reel/Action";
 import { uploadMediaToCloudinary } from "../../Config/UploadVideoToCloudnary";
+import EmojiPicker from "emoji-picker-react";
+import { GrEmoji } from "react-icons/gr";
 
 const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
   const finalRef = React.useRef(null);
@@ -14,6 +16,8 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isImageUploaded, setIsImageUploaded] = useState("");
   const [caption, setCaption] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
   const toast = useToast();
   const dispatch = useDispatch();
   const token = sessionStorage.getItem("token");
@@ -21,7 +25,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
   const [videoUrl, setVideoUrl] = useState();
   const [postData, setPostData] = useState({
     video: "",
-    caption: ""
+    caption: "",
   });
 
   const handleDragLeave = () => {
@@ -30,6 +34,18 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
 
   const handleOnChange = async (e) => {
     const file = e.target.files[0];
+    const maxSize = 20 * 1024 * 1024; //Max size of video file is 20MB (30 * 1024 * 1024 converts MB's to bytes (MB * KB * byte))
+
+    if (file.size > maxSize) {
+      toast({
+        title: "Video size exceeds the limit of 20 MB.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (file && file.type.startsWith("video/")) {
       setFile(file);
       const reader = new FileReader();
@@ -59,6 +75,14 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
     setPostData((prevValues) => ({ ...prevValues, caption: e.target.value }));
   };
 
+  const handleEmojiClick = (emojiObject) => {
+    setCaption((prevCaption) => prevCaption + emojiObject.emoji);
+    setPostData((prevValues) => ({
+      ...prevValues,
+      caption: prevValues.caption + emojiObject.emoji,
+    }));
+  };
+
   const handleSubmit = async () => {
     const data = {
       jwt: token,
@@ -83,7 +107,28 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
     setPostData({ video: "", caption: "" });
     setIsImageUploaded("");
     setCaption("");
+    setShowEmojiPicker(false);
   };
+
+  const handleClickOutside = (event) => {
+    if (
+      emojiPickerRef.current &&
+      !emojiPickerRef.current.contains(event.target)
+    ) {
+      setShowEmojiPicker(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showEmojiPicker]);
 
   return (
     <div>
@@ -107,7 +152,12 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
         >
           <div className="flex justify-between py-1 px-10 items-center text-white">
             <p>Create New Reel</p>
-            <Button onClick={handleSubmit} size={"sm"} variant="ghost" textColor="black">
+            <Button
+              onClick={handleSubmit}
+              size={"sm"}
+              variant="ghost"
+              textColor="black"
+            >
               Upload Reel
             </Button>
           </div>
@@ -121,7 +171,7 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                   className="card bg-white shadow-md rounded px-4 py-2 mb-5"
                   style={{
                     borderRadius: "20px",
-                    background: "linear-gradient(135deg, #8697C4, #EDE8F5)"
+                    background: "linear-gradient(135deg, #8697C4, #EDE8F5)",
                   }}
                 >
                   <div className="flex items-center px-2">
@@ -138,16 +188,48 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                       {user?.reqUser?.username}
                     </p>
                   </div>
-                  <textarea
-                    style={{ background: "transparent", color: "black", width: "100%", borderRadius: "10px" }}
-                    className="captionInput"
-                    placeholder="Write a Caption..."
-                    name="caption"
-                    rows="1"
-                    value={caption}
-                    onChange={handleCaptionChange}
-                  />
+                  <div style={{ position: "relative" }}>
+                    <textarea
+                      style={{
+                        background: "transparent",
+                        color: "black",
+                        width: "100%",
+                        borderRadius: "10px",
+                      }}
+                      className="captionInput"
+                      placeholder="Write a Caption..."
+                      name="caption"
+                      rows="1"
+                      value={caption}
+                      onChange={handleCaptionChange}
+                    />
+                    <Icon
+                      mb="3"
+                      as={GrEmoji}
+                      boxSize={6}
+                      ml="5%"
+                      cursor="pointer"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        bottom: "10px",
+                      }}
+                    />
+                  </div>
                 </div>
+
+                {showEmojiPicker && (
+                  <Box
+                    ref={emojiPickerRef}
+                    position="absolute"
+                    bottom="50px"
+                    right="10px"
+                    zIndex="999"
+                  >
+                    <EmojiPicker onEmojiClick={handleEmojiClick} />
+                  </Box>
+                )}
               </div>
 
               <div className="w-full flex flex-col justify-center items-center mb-2">
@@ -158,11 +240,10 @@ const CreateReelModal = ({ onOpen, isOpen, onClose }) => {
                   >
                     <div className="flex justify-center flex-col items-center">
                       <FaPhotoVideo
+                        size={"4rem"}
                         className={`text-3xl ${isDragOver ? "text-800" : ""}`}
                       />
-                      <p>Drag videos here</p>
                     </div>
-
                     <label
                       htmlFor="file-upload"
                       className="custom-file-upload"

@@ -26,27 +26,20 @@ public class AppConfig {
 //	CorsConfig conf=new CorsConfig();
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(
-        		management -> management.sessionCreationPolicy(
-        				SessionCreationPolicy.STATELESS)).authorizeHttpRequests(
-                Authorize -> Authorize.requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll()
-        )
-                .addFilterBefore(new JwtValidationFilter(), BasicAuthenticationFilter.class)
-                .csrf(csrf -> csrf.disable());
+		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(
+						Authorize -> Authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
+				.addFilterBefore(new JwtValidationFilter(), BasicAuthenticationFilter.class)
+				.csrf(csrf -> csrf.disable());
 //                .httpBasic(withDefaults())
 //                .formLogin(withDefaults());
-		
-		
+
 		return http.build();
 	}
-	
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-
 }
-

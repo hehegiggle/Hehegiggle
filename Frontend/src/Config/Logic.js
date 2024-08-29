@@ -1,3 +1,6 @@
+import axios from "axios";
+import { BASE_URL } from "./api";
+
 export const isReqUser = (userId1, userId2) => {
   if (userId1 && userId2) return userId1 === userId2;
 };
@@ -83,7 +86,6 @@ export const hasStory = (users) => {
   return temp;
 };
 
-
 export function timeDifference(timestamp) {
   // Convert the timestamp to a Date object
   const date = new Date(timestamp);
@@ -107,7 +109,8 @@ export function timeDifference(timestamp) {
     return hours + " hour" + (hours === 1 ? "" : "s") + " ago";
   } else if (minutes > 0) {
     return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
-  } else if (seconds > 0){
-    return seconds + " second" + (seconds === 1 ? "" : "s") + " ago";
+  } else {
+    return " less than a minute ago";
   }
 }
+

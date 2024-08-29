@@ -18,6 +18,8 @@ import { FiVideo } from "react-icons/fi";
 import CreatePostModal from "../Post/Create/CreatePostModal";
 import CreateReelModal from "../Create/CreateReel";
 import { fetchNotifications } from "../../Redux/Notification/Action";
+import { IoCameraOutline } from "react-icons/io5";
+import CaptureImage from "./CaptureImage";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -27,11 +29,17 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("Home");
   const [isCreateReelModalOpen, setIsCreateReelModalOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true); // Initialize as expanded
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [capturedImage, setCapturedImage] = useState(null); // State for captured image
 
   const showNotificationBadge = useBreakpointValue({ base: false, md: true });
   const showRedDot = useBreakpointValue({ lg: true, md: true, sm: true });
-  const showButtonText = useBreakpointValue({ base: false, sm: false, md: true });
+  const showButtonText = useBreakpointValue({
+    base: false,
+    sm: false,
+    md: true,
+  });
 
   useEffect(() => {
     if (location.pathname === "/Home") {
@@ -87,18 +95,33 @@ const Sidebar = () => {
     setIsCreateReelModalOpen(true);
   };
 
+  const handleOpenCameraModal = () => {
+    setIsCameraModalOpen(true);
+  };
+
+  const handleCloseCameraModal = () => {
+    setIsCameraModalOpen(false);
+  };
+
+  // Update captured image state
+  const handleImageCaptured = (image) => {
+    setCapturedImage(image);
+    setIsCameraModalOpen(false); // Close the camera modal after capturing the image
+    onOpen(); // Open the CreatePostModal
+  };
+
   return (
     <Box
       position="fixed"
       top={{ base: "44%", md: "45%" }}
       transform="translateY(-50%)"
-      w={{ base: "90px", md: isExpanded ? "300px" : "90px" }} // Responsive width
+      w={{ base: "90px", md: isExpanded ? "305px" : "90px" }}
       h="60%"
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
       px="10"
-      marginLeft={{ lg: '-3', md: '-3', sm: "-3" }}
+      marginLeft={{ lg: "-3", md: "-3", sm: "-3" }}
     >
       <Box
         boxShadow="2xl"
@@ -122,17 +145,19 @@ const Sidebar = () => {
               <Tooltip label={item.title} placement="right">
                 <Box mb="1" fontSize="20px" position="relative">
                   {activeTab === item.title ? item.activeIcon : item.icon}
-                  {item.title === "Notifications" && notifications.unreadCount > 0 && showRedDot && (
-                    <Box
-                      position="absolute"
-                      top="-2px"
-                      left="15%"
-                      width="10px"
-                      height="10px"
-                      borderRadius="50%"
-                      bg="red"
-                    />
-                  )}
+                  {item.title === "Notifications" &&
+                    notifications.unreadCount > 0 &&
+                    showRedDot && (
+                      <Box
+                        position="absolute"
+                        top="-2px"
+                        left="15%"
+                        width="10px"
+                        height="10px"
+                        borderRadius="50%"
+                        bg="red"
+                      />
+                    )}
                 </Box>
               </Tooltip>
               {isExpanded && (
@@ -140,14 +165,15 @@ const Sidebar = () => {
                   ml="2"
                   fontWeight={activeTab === item.title ? "bold" : "normal"}
                   fontSize="xl"
-                  display={showButtonText ? 'block' : 'none'} // Show text on medium screens
+                  display={showButtonText ? "block" : "none"} // Show text on medium screens
                 >
                   {item.title}
                 </Text>
               )}
               {item.title === "Notifications" &&
                 notifications.unreadCount > 0 &&
-                showNotificationBadge && isExpanded && (
+                showNotificationBadge &&
+                isExpanded && (
                   <Badge
                     style={{
                       backgroundColor: "red",
@@ -166,7 +192,6 @@ const Sidebar = () => {
           ))}
         </Stack>
       </Box>
-
       <Flex
         flexDirection="column"
         mt="5"
@@ -180,7 +205,7 @@ const Sidebar = () => {
               borderRadius="20px"
               bg="#8697C4"
               width="100%"
-              display={showButtonText ? 'block' : 'none'}
+              display={showButtonText ? "block" : "none"}
             >
               Create Post
             </Button>
@@ -189,16 +214,26 @@ const Sidebar = () => {
               borderRadius="20px"
               bg="#8697C4"
               width="100%"
-              display={showButtonText ? 'block' : 'none'}
+              mb="4"
+              display={showButtonText ? "block" : "none"}
             >
               Create Reel
+            </Button>
+            <Button
+              borderRadius="20px"
+              bg="#8697C4"
+              width="100%"
+              display={showButtonText ? "block" : "none"}
+              onClick={handleOpenCameraModal}
+            >
+              Take Picture
             </Button>
           </>
         ) : (
           <>
             <Tooltip label="Create Post" placement="right">
               <IconButton
-                marginLeft={{ lg: '0', md: '0', sm: "7" }}
+                marginLeft={{ lg: "0", md: "0", sm: "7" }}
                 aria-label="Create Post"
                 icon={<AiOutlinePlus />}
                 onClick={onOpen}
@@ -209,10 +244,21 @@ const Sidebar = () => {
             </Tooltip>
             <Tooltip label="Create Reel" placement="right">
               <IconButton
-                marginLeft={{ lg: '0', md: '0', sm: "7" }}
+                marginLeft={{ lg: "0", md: "0", sm: "7" }}
                 aria-label="Create Reel"
                 icon={<FiVideo />}
                 onClick={handleOpenCreateReelModal}
+                borderRadius="20px"
+                bg="#8697C4"
+                mb="4"
+              />
+            </Tooltip>
+            <Tooltip label="Take Picture" placement="right">
+              <IconButton
+                marginLeft={{ lg: "0", md: "0", sm: "7" }}
+                aria-label="Take Picture"
+                icon={<IoCameraOutline />}
+                onClick={handleOpenCameraModal}
                 borderRadius="20px"
                 bg="#8697C4"
               />
@@ -220,11 +266,21 @@ const Sidebar = () => {
           </>
         )}
       </Flex>
-      <CreatePostModal onClose={onClose} isOpen={isOpen} onOpen={onOpen} />
+      <CreatePostModal
+        onClose={onClose}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        capturedImage={capturedImage} // Pass the captured image as a prop
+      />
       <CreateReelModal
         onClose={handleCloseCreateReelModal}
         isOpen={isCreateReelModalOpen}
         onOpen={handleOpenCreateReelModal}
+      />
+      <CaptureImage
+        isOpen={isCameraModalOpen}
+        onClose={handleCloseCameraModal}
+        onImageCaptured={handleImageCaptured} // Pass the image capture handler
       />
     </Box>
   );

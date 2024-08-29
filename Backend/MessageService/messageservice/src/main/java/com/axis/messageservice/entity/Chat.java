@@ -21,27 +21,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
 @Entity
 public class Chat {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
 	@ElementCollection
 	private List<User> users = new ArrayList<>();
-	
-    private LocalDateTime timestamp;
-    
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
-    
-    // Track deleted chats for the users
-    @ElementCollection
-    private Set<Integer> deletedByUsers;
+
+	private LocalDateTime timestamp;
+
+	@OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Message> messages = new ArrayList<>();
+
+	// Track deleted chats for the users
+	@ElementCollection
+	private Set<Integer> deletedByUsers;
 }

@@ -37,8 +37,7 @@ public class UserMicroserviceApplication {
 //	}
 	@Bean
 	public ModelMapper mapper() {
-	    return new ModelMapper();
+		return new ModelMapper();
 
+	}
 }
-}
-

@@ -10,7 +10,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 @EnableDiscoveryClient
 @EnableConfigurationProperties
 public class PostMicroserviceApplication {
@@ -18,12 +18,11 @@ public class PostMicroserviceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PostMicroserviceApplication.class, args);
 	}
-	@Bean
-	 @LoadBalanced
-	    public RestTemplate restTemplate() {
-	        return new RestTemplate();
-	    }
 
-	
+	@Bean
+	@LoadBalanced
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 
 }

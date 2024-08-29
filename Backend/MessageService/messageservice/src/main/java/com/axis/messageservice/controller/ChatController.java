@@ -43,10 +43,10 @@ public class ChatController {
 		User users2 = getUser(jwt, req.getUserId());
 		Chat chat = chatService.createChat(reqUser, users2);
 		if (chat != null) {
-            return ResponseEntity.ok(chat);
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Chat already exists or is resumed.");
-        }
+			return ResponseEntity.ok(chat);
+		} else {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Chat already exists or is resumed.");
+		}
 	}
 
 	@GetMapping("/api/chats")
@@ -55,14 +55,15 @@ public class ChatController {
 		List<Chat> chat = chatService.findUsersChat(reqUser.getId(), false);
 		return chat;
 	}
-	
+
 	@DeleteMapping("/api/chats/delete/{chatId}")
-	public ResponseEntity<MessageResponse> deleteChatHandler(@PathVariable("chatId") Integer chatId, @RequestHeader("Authorization") String jwt) throws Exception{
-		
+	public ResponseEntity<MessageResponse> deleteChatHandler(@PathVariable("chatId") Integer chatId,
+			@RequestHeader("Authorization") String jwt) throws Exception {
+
 		chatService.deleteUserChat(chatId, jwt);
-		
+
 		MessageResponse res = new MessageResponse("Chat Deleted Successfully");
-		
+
 		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
 	}
 
@@ -77,7 +78,7 @@ public class ChatController {
 
 		ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
 		System.out.println("got user+" + response);
-		System.out.println("Userimage-----------------------"+response.getBody().getImage());
+		System.out.println("Userimage-----------------------" + response.getBody().getImage());
 		return response.getBody();
 	}
 
@@ -94,7 +95,7 @@ public class ChatController {
 
 		ResponseEntity<User> response = restTemplate.exchange(url2, HttpMethod.GET, entity, User.class);
 		System.out.println("got user11222121+" + response);
-		
+
 		return response.getBody();
 	}
 

@@ -6,8 +6,8 @@ import org.springframework.data.convert.ReadingConverter;
 
 @ReadingConverter
 public class ObjectIdToStringConverter implements Converter<ObjectId, String> {
-    @Override
-    public String convert(ObjectId source) {
-        return source.toHexString(); // Returns the hexadecimal string representation of the ObjectId
-    }
+	@Override
+	public String convert(ObjectId source) {
+		return source.toHexString(); // Returns the hexadecimal string representation of the ObjectId
+	}
 }
